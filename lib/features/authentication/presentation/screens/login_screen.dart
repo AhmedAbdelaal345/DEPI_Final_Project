@@ -1,3 +1,5 @@
+import 'package:depi_final_project/features/home/presentation/screens/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
 import '../widgets/custom_text_field.dart';
@@ -72,33 +74,58 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextButton(
                     onPressed: () {
                       // Handle forgot password
-
                     },
                     child: const Text(
                       'Forgot Password?',
-                      style: TextStyle(
-                        color: Color(0xFF2196F3),
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Color(0xFF2196F3), fontSize: 14),
                     ),
                   ),
                 ),
                 // const SizedBox(height: 24),
                 CustomButton(
                   text: 'Login',
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Handle login logic here
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Login successful!')),
-                      );
+                      try {
+                        final credential = await FirebaseAuth.instance
+                            .signInWithEmailAndPassword(
+                              email: _emailController.text.trim(),
+                              password: _passwordController.text.trim(),
+                            );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Login successful!',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => HomeScreen(
+                                  userName: credential.user!.email!.trim(),
+                                ),
+                          ),
+                        );
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          print('No user found for that email.');
+                        } else if (e.code == 'wrong-password') {
+                          print('Wrong password provided for that user.');
+                        }
+                      }
                     }
                   },
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   borderRadius: BorderRadius.circular(18),
-
                 ),
                 const SizedBox(height: 20),
                 AuthNavigationText(
@@ -107,7 +134,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CreateAccountScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => CreateAccountScreen(),
+                      ),
                     );
                   },
                 ),

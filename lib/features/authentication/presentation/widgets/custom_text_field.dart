@@ -28,6 +28,7 @@ class CustomTextField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
+      cursorColor: Colors.blue,
       style: const TextStyle(
         fontSize: 16,
         color: Colors.black87,

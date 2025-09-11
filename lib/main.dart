@@ -1,12 +1,15 @@
 import 'package:depi_final_project/features/authentication/presentation/screens/register_screen.dart';
+import 'package:depi_final_project/features/home/presentation/screens/home_screen.dart';
+import 'package:depi_final_project/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'features/Onboarding/Views/Screens/OnboardingScreen.dart';
 import 'features/authentication/presentation/screens/login_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // For full screen
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
@@ -32,8 +35,9 @@ class App extends StatelessWidget {
       ),
       home: Showcase(title: 'Quiz Master'),
       routes: {
-        '/login': (context) =>  LoginScreen(),
-        '/register': (context) =>  CreateAccountScreen(),
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => CreateAccountScreen(),
+      
       },
     );
   }

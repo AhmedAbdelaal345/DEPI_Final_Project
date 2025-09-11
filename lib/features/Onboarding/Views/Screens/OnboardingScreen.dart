@@ -18,7 +18,6 @@ class _ShowcaseState extends State<Showcase> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FluidCarousel(
-
         children: <Widget>[
           FluidCard(
             color: 'Yellow',
