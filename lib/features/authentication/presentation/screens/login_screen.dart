@@ -1,6 +1,8 @@
+import 'package:depi_final_project/features/authentication/presentation/screens/changePassword_screen.dart';
 import 'package:depi_final_project/features/home/presentation/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'register_screen.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_button.dart';
@@ -72,8 +74,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
-                      // Handle forgot password
+                    onPressed: () async {
+                   Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChangepasswordScreen(),
+                      ),
+                    );
                     },
                     child: const Text(
                       'Forgot Password?',
@@ -114,11 +121,56 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          print('No user found for that email.');
-                        } else if (e.code == 'wrong-password') {
-                          print('Wrong password provided for that user.');
+                        String errorMessage;
+
+                        switch (e.code) {
+                          case 'invalid-credential':
+                            errorMessage =
+                                "Invalid email or password. Please try again.";
+                            break;
+                          case 'user-not-found':
+                            errorMessage = "No user found for that email.";
+                            break;
+                          case 'wrong-password':
+                            errorMessage = "Wrong password provided.";
+                            break;
+                          case 'invalid-email':
+                            errorMessage = "Invalid email format.";
+                            break;
+                          case 'user-disabled':
+                            errorMessage =
+                                "This user account has been disabled.";
+                            break;
+                            case "network-request-failed":
+                            errorMessage =
+                                "Network error. Please check your internet connection and try again.";
+                          default:
+                            errorMessage = "Login failed: ${e.message}";
                         }
+
+                        Fluttertoast.showToast(
+                          msg: errorMessage,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+
+                        print('Firebase Auth Error: ${e.code} - ${e.message}');
+                      } catch (e) {
+                        print("Abdelaal: $e");
+                        Fluttertoast.showToast(
+                          msg:
+                              "An unexpected error occurred. Please try again later.",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
                       }
                     }
                   },
