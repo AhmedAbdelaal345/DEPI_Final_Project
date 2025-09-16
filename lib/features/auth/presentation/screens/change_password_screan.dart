@@ -1,7 +1,9 @@
-import 'package:depi_final_project/features/authentication/presentation/widgets/custom_button.dart';
-import 'package:depi_final_project/features/authentication/presentation/widgets/custom_text_field.dart';
+import 'package:depi_final_project/core/constants/color_app.dart';
+import 'package:depi_final_project/features/auth/presentation/widgets/custom_auth_button.dart';
+import 'package:depi_final_project/features/auth/presentation/widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChangepasswordScreen extends StatefulWidget {
   const ChangepasswordScreen({super.key});
@@ -19,9 +21,6 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
   final TextEditingController _confirmNewPasswordController =
       TextEditingController();
 
-  bool _isCurrentPasswordVisible = false;
-  bool _isNewPasswordVisible = false;
-  bool _isConfirmNewPasswordVisible = false;
   bool _isLoading = false;
 
   @override
@@ -131,10 +130,20 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorApp.backgroundColor,
       appBar: AppBar(
-        title: const Text("Change Password"),
+        backgroundColor: ColorApp.backgroundColor,
+        title: Text(
+          "Change Password",
+          style: GoogleFonts.irishGrover(
+            fontSize: 40,
+            fontWeight: FontWeight.w400,
+            color: ColorApp.whiteColor,
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
+        iconTheme: const IconThemeData(color: ColorApp.whiteColor),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -145,105 +154,45 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Change Your Password",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  Text(
+                    "Here WE Go Again ✌️!",
+                    style: GoogleFonts.irishGrover(
+                      fontSize: 35,
+                      fontWeight: FontWeight.w400,
+                      color: ColorApp.whiteColor,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 30),
+                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                   CustomTextField(
                     controller: _emailController,
                     hintText: 'Email',
                     isPassword: false,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!RegExp(
-                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                      ).hasMatch(value)) {
-                        return 'Please enter a valid email address';
-                      }
-                      User? currentUser = FirebaseAuth.instance.currentUser;
-                      if (currentUser != null &&
-                          currentUser.email != value.trim()) {
-                        return 'Email must match your registered email';
-                      }
-                      return null;
-                    },
+                    prefixIcon: Icons.email,
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
                     controller: _currentPasswordController,
                     hintText: 'Current Password',
                     isPassword: true,
-                    isPasswordVisible: _isCurrentPasswordVisible,
-                    onToggleVisibility: () {
-                      setState(() {
-                        _isCurrentPasswordVisible = !_isCurrentPasswordVisible;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your current password';
-                      }
-                      return null;
-                    },
+                    prefixIcon: Icons.lock_outline,
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
                     controller: _newPasswordController,
                     hintText: 'New Password',
                     isPassword: true,
-                    isPasswordVisible: _isNewPasswordVisible,
-                    onToggleVisibility: () {
-                      setState(() {
-                        _isNewPasswordVisible = !_isNewPasswordVisible;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a new password';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters long';
-                      }
-                      if (value == _currentPasswordController.text) {
-                        return 'New password must be different from current password';
-                      }
-                      return null;
-                    },
+                    prefixIcon: Icons.lock_outline,
                   ),
                   const SizedBox(height: 20),
                   CustomTextField(
                     controller: _confirmNewPasswordController,
-                    hintText: 'Confirm New Password',
+                    hintText: 'Enter your password',
+                    prefixIcon: Icons.lock_outline,
                     isPassword: true,
-                    isPasswordVisible: _isConfirmNewPasswordVisible,
-                    onToggleVisibility: () {
-                      setState(() {
-                        _isConfirmNewPasswordVisible =
-                            !_isConfirmNewPasswordVisible;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please confirm your new password';
-                      }
-                      if (value != _newPasswordController.text) {
-                        return 'Passwords do not match';
-                      }
-                      return null;
-                    },
                   ),
-                  const SizedBox(height: 30),
-                  CustomButton(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    borderRadius: BorderRadius.circular(18),
-
+                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                  CustomAuthButton(
                     text:
                         _isLoading ? "Changing Password..." : "Change Password",
                     onPressed: () {
