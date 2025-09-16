@@ -141,11 +141,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'Remember this device',
                                 style: TextStyle(
                                   color: ColorApp.whiteColor,
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              const Spacer(),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.05,
+                              ),
                               TextButton(
                                 onPressed: () {
                                   Navigator.push(
@@ -160,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   'Forget password',
                                   style: TextStyle(
                                     color: ColorApp.splashTextColor,
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
