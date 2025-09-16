@@ -142,12 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'Remember this device',
                                 style: TextStyle(
                                   color: ColorApp.whiteColor,
-                                  fontSize: screenWidth * 0.035,
+                                  fontSize: screenWidth * 0.03,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
                               SizedBox(
-                                width: screenWidth * 0.065,
+                                width: screenWidth * 0.06,
                               ),
                               TextButton(
                                 onPressed: () {
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   'Forget password',
                                   style: TextStyle(
                                     color: ColorApp.splashTextColor,
-                                    fontSize: screenWidth * 0.035,
+                                    fontSize: screenWidth * 0.03,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
