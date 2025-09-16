@@ -1,13 +1,12 @@
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/change_password_screan.dart';
-import 'package:depi_final_project/features/auth/presentation/screens/register_options_screen.dart';
+import 'package:depi_final_project/features/auth/presentation/screens/register_details_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
 import '../widgets/custom_auth_button.dart';
@@ -35,6 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
       create: (context) => LoginCubit(),
       child: Scaffold(
@@ -59,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 return Form(
                   key: _formKey,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 26),
+                    padding:  EdgeInsets.symmetric(horizontal: screenWidth * 0.065),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,21 +68,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             'Login',
                             style: GoogleFonts.irishGrover(
-                              fontSize: 40,
+                              fontSize: screenWidth * 0.1,
                               fontWeight: FontWeight.w400,
                               color: ColorApp.whiteColor,
                             ),
                           ),
-                          const SizedBox(height: 25),
-                          const Text(
+                          SizedBox(height: screenHeight * 0.035),
+                           Text(
                             'Welcome  ! please enter your details',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: screenWidth * 0.033,
                               fontWeight: FontWeight.w400,
                               color: ColorApp.whiteColor,
                             ),
                           ),
-                          const SizedBox(height: 45),
+                          SizedBox(height: screenHeight * 0.05),
                           CustomTextField(
                             controller: _emailController,
                             hintText: 'Enter your email',
@@ -98,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 27),
+                          SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _passwordController,
                             hintText: 'Enter your password',
@@ -115,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: screenHeight * 0.01),
 
                           Row(
                             children: [
@@ -137,16 +138,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: ColorApp.splashTextColor,
                                 ),
                               ),
-                              const Text(
+                               Text(
                                 'Remember this device',
                                 style: TextStyle(
                                   color: ColorApp.whiteColor,
-                                  fontSize: 12,
+                                  fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.05,
+                                width: screenWidth * 0.065,
                               ),
                               TextButton(
                                 onPressed: () {
@@ -158,11 +159,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   );
                                 },
-                                child: const Text(
+                                child:  Text(
                                   'Forget password',
                                   style: TextStyle(
                                     color: ColorApp.splashTextColor,
-                                    fontSize: 12,
+                                    fontSize: screenWidth * 0.035,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -170,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
 
-                          const SizedBox(height: 55),
+                          SizedBox(height: screenHeight * 0.055),
                           if (state.status == LoginStatus.loading)
                             const Center(child: CircularProgressIndicator())
                           else
@@ -251,21 +252,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                             ),
-                          const SizedBox(height: 44),
+                          SizedBox(height: screenHeight * 0.05),
                           Row(
                             children: [
                               const Expanded(
                                 child: Divider(color: ColorApp.whiteColor),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 3.0,
+                                padding:  EdgeInsets.symmetric(
+                                  horizontal: screenHeight * 0.003,
                                 ),
                                 child: Text(
                                   'OR Login with',
                                   style: GoogleFonts.irishGrover(
                                     color: ColorApp.whiteColor,
-                                    fontSize: 14,
+                                    fontSize: screenWidth * 0.035,
                                   ),
                                 ),
                               ),
@@ -274,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 44),
+                          SizedBox(height: screenHeight * 0.05),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -282,12 +283,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 iconPath: AppConstants.googleLogo,
                                 onPressed: () {},
                               ),
-                              const SizedBox(width: 20),
+                              SizedBox(width: screenWidth * 0.04),
                               SocialIconButton(
                                 iconPath: AppConstants.facebookLogo,
                                 onPressed: () {},
                               ),
-                              const SizedBox(width: 20),
+                              SizedBox(width: screenWidth * 0.04),
                               SocialIconButton(
                                 iconPath: AppConstants.appleLogo,
                                 onPressed: () {},
@@ -295,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
 
-                          const SizedBox(height: 44),
+                          SizedBox(height: screenHeight * 0.04),
 
                           TextButton(
                             onPressed: () {
@@ -304,14 +305,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 MaterialPageRoute(
                                   builder:
                                       (context) =>
-                                          const RegisterOptionsScreen(),
+                                          const RegisterDetailsScreen(),
                                 ),
                               );
                             },
                             child: RichText(
-                              text: const TextSpan(
+                              text:  TextSpan(
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w400,
                                 ),
                                 children: <TextSpan>[

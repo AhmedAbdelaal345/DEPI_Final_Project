@@ -26,15 +26,18 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+
   bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: 48,
+      height: screenHeight * 0.06,
       width: double.infinity,
       child: TextFormField(
-        scrollPadding: EdgeInsets.all(15),
+        scrollPadding: EdgeInsets.all(screenWidth * 0.04),
         validator:widget.validator ,
         controller: widget.controller,
         onChanged: widget.onChanged,
@@ -44,10 +47,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           filled: true,
           fillColor: ColorApp.textFieldBackgroundColor,
           hintText: widget.hintText,
-          hintStyle: const TextStyle(
+          hintStyle:  TextStyle(
             color: ColorApp.greyColor,
             fontWeight: FontWeight.w400,
-            fontSize: 14,
+            fontSize: screenWidth * 0.035,
           ),
           errorText: widget.errorText,
           prefixIcon: Icon(widget.prefixIcon, color: ColorApp.greyColor),
@@ -58,7 +61,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
                     color: ColorApp.greyColor,
-                    size: 22,
+                    size: screenWidth * 0.055,
                   ),
                   onPressed: () {
                     setState(() {
@@ -68,15 +71,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 )
               : null,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
             borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
             borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
             borderSide: BorderSide.none,
           ),
         ),

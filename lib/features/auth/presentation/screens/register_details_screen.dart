@@ -37,6 +37,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
       create: (context) => RegisterDetailsCubit(),
       child: Scaffold(
@@ -66,7 +68,9 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                 return Form(
                   key: _formKey,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 26),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.065,
+                    ),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,48 +78,50 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                           Text(
                             'Register',
                             style: GoogleFonts.irishGrover(
-                              fontSize: 40,
+                              fontSize: screenWidth * 0.1,
                               fontWeight: FontWeight.w400,
                               color: ColorApp.whiteColor,
                             ),
                           ),
-                          const SizedBox(height: 25),
-                          const Text(
+                          SizedBox(height: screenHeight * 0.035),
+                           Text(
                             'Welcome  ! please enter your details',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: screenWidth * 0.033,
                               fontWeight: FontWeight.w400,
                               color: ColorApp.whiteColor,
                             ),
                           ),
-                          const SizedBox(height: 45),
+                           SizedBox(height: screenHeight * 0.05),
                           CustomTextField(
                             controller: _fullNameController,
                             hintText: 'Full Name',
                             prefixIcon: Icons.person_outline,
                             errorText: state.fullNameError,
-                            validator: (String ?value) {
+                            validator: (String? value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your full name';
                               }
                             },
                           ),
-                          const SizedBox(height: 27),
+                          SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _emailController,
                             hintText: 'Enter your email',
                             prefixIcon: Icons.email_outlined,
                             errorText: state.emailError,
-                            validator: (String ?value) {
+                            validator: (String? value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';
                               }
-                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                              if (!RegExp(
+                                r'^[^@]+@[^@]+\.[^@]+',
+                              ).hasMatch(value)) {
                                 return 'Please enter a valid email';
                               }
                             },
                           ),
-                          const SizedBox(height: 27),
+                           SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _passwordController,
                             hintText: 'Enter your password',
@@ -131,7 +137,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-                          const SizedBox(height: 27),
+                           SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _confirmPasswordController,
                             hintText: 'Confirm your password',
@@ -148,15 +154,15 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 64),
+                           SizedBox(height: screenHeight * 0.07),
                           if (state.status == RegisterStatus.loading)
                             const Center(child: CircularProgressIndicator())
                           else
                             CustomAuthButton(
                               text: 'Register',
-                  
+
                               onPressed: () async {
-                                if(_formKey.currentState?.validate() != true){
+                                if (_formKey.currentState?.validate() != true) {
                                   return;
                                 }
                                 try {
@@ -186,7 +192,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                       backgroundColor: ColorApp.errorColor,
                                       gravity: ToastGravity.BOTTOM,
                                     );
-                  
+
                                     print(
                                       'The account already exists for that email.',
                                     );
@@ -201,21 +207,21 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 }
                               },
                             ),
-                          const SizedBox(height: 44),
+                           SizedBox(height: screenHeight * 0.05),
                           Row(
                             children: [
                               const Expanded(
                                 child: Divider(color: ColorApp.whiteColor),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 3.0,
+                                padding:  EdgeInsets.symmetric(
+                                  horizontal: screenHeight * 0.003,
                                 ),
                                 child: Text(
                                   'OR Register with',
                                   style: GoogleFonts.irishGrover(
                                     color: ColorApp.whiteColor,
-                                    fontSize: 14,
+                                    fontSize: screenWidth * 0.035,
                                   ),
                                 ),
                               ),
@@ -224,8 +230,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 44),
-                  
+                           SizedBox(height: screenHeight * 0.05),
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -233,21 +239,21 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 iconPath: AppConstants.googleLogo,
                                 onPressed: () {},
                               ),
-                              const SizedBox(width: 20),
+                               SizedBox(width: screenWidth * 0.04),
                               SocialIconButton(
                                 iconPath: AppConstants.facebookLogo,
                                 onPressed: () {},
                               ),
-                              const SizedBox(width: 20),
+                               SizedBox(width: screenWidth * 0.04),
                               SocialIconButton(
                                 iconPath: AppConstants.appleLogo,
                                 onPressed: () {},
                               ),
                             ],
                           ),
-                  
-                          const SizedBox(height: 48),
-                  
+
+                           SizedBox(height: screenHeight * 0.04),
+
                           TextButton(
                             onPressed: () {
                               Navigator.push(
@@ -258,15 +264,17 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               );
                             },
                             child: RichText(
-                              text: const TextSpan(
+                              text:  TextSpan(
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w400,
                                 ),
                                 children: <TextSpan>[
                                   TextSpan(
                                     text: 'Already have an account? ',
-                                    style: TextStyle(color: ColorApp.whiteColor),
+                                    style: TextStyle(
+                                      color: ColorApp.whiteColor,
+                                    ),
                                   ),
                                   TextSpan(
                                     text: 'Login',

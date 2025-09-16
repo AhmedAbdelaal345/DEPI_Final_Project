@@ -12,14 +12,15 @@ class SocialIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: onPressed,
       child: Container(
         color: Colors.white,
         child: Image.asset(
           iconPath,
-          width: 24,
-          height: 24,
+          width: screenWidth *0.06,
+          height: screenWidth *0.06,
         ),
       ),
     );
