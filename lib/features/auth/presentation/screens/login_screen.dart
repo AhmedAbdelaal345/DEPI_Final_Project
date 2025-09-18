@@ -1,8 +1,8 @@
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
-import 'package:depi_final_project/features/auth/presentation/screens/change_password_screan.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/forgotPasswordPage.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/register_options_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Login Successful!')),
                 );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
               } else if (state.status == LoginStatus.failure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
