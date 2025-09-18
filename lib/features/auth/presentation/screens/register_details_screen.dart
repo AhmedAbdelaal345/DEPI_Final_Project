@@ -1,39 +1,16 @@
-import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../cubit/register_details_cubit.dart';
 import '../cubit/register_details_state.dart';
-import '../widgets/custom_auth_button.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/social_icon_button.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/auth_navigation.dart';
+import '../widgets/register_form.dart';
+import '../widgets/social_login_section.dart';
 
-class RegisterDetailsScreen extends StatefulWidget {
+class RegisterDetailsScreen extends StatelessWidget {
   const RegisterDetailsScreen({super.key});
-
-  @override
-  State<RegisterDetailsScreen> createState() => _RegisterDetailsScreenState();
-}
-
-class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
-  final _fullNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void dispose() {
-    _fullNameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,236 +40,39 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                 );
               }
             },
-            child: BlocBuilder<RegisterDetailsCubit, RegisterDetailsState>(
-              builder: (context, state) {
-                return Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.065,
+
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.065),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AuthHeader(
+                      title: 'Register',
+                      subtitle: 'Welcome  ! please enter your details',
                     ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Register',
-                            style: GoogleFonts.irishGrover(
-                              fontSize: screenWidth * 0.1,
-                              fontWeight: FontWeight.w400,
-                              color: ColorApp.whiteColor,
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.035),
-                           Text(
-                            'Welcome  ! please enter your details',
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.033,
-                              fontWeight: FontWeight.w400,
-                              color: ColorApp.whiteColor,
-                            ),
-                          ),
-                           SizedBox(height: screenHeight * 0.05),
-                          CustomTextField(
-                            controller: _fullNameController,
-                            hintText: 'Full Name',
-                            prefixIcon: Icons.person_outline,
-                            errorText: state.fullNameError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your full name';
-                              }
-                            },
-                          ),
-                          SizedBox(height: screenHeight * 0.03),
-                          CustomTextField(
-                            controller: _emailController,
-                            hintText: 'Enter your email',
-                            prefixIcon: Icons.email_outlined,
-                            errorText: state.emailError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
-                              }
-                              if (!RegExp(
-                                r'^[^@]+@[^@]+\.[^@]+',
-                              ).hasMatch(value)) {
-                                return 'Please enter a valid email';
-                              }
-                            },
-                          ),
-                           SizedBox(height: screenHeight * 0.03),
-                          CustomTextField(
-                            controller: _passwordController,
-                            hintText: 'Enter your password',
-                            prefixIcon: Icons.lock_outline,
-                            isPassword: true,
-                            errorText: state.passwordError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
-                              }
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                            },
-                          ),
-                           SizedBox(height: screenHeight * 0.03),
-                          CustomTextField(
-                            controller: _confirmPasswordController,
-                            hintText: 'Confirm your password',
-                            prefixIcon: Icons.lock_outline,
-                            isPassword: true,
-                            errorText: state.confirmPasswordError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
-                              }
-                              if (value != _passwordController.text) {
-                                return 'Passwords do not match';
-                              }
-                              return null;
-                            },
-                          ),
-                           SizedBox(height: screenHeight * 0.07),
-                          if (state.status == RegisterStatus.loading)
-                            const Center(child: CircularProgressIndicator())
-                          else
-                            CustomAuthButton(
-                              text: 'Register',
+                    SizedBox(height: screenHeight * 0.05),
+                    RegisterForm(),
+                    SizedBox(height: screenHeight * 0.05),
+                    SocialLoginSection(text: 'OR Register with'),
 
-                              onPressed: () async {
-                                if (_formKey.currentState?.validate() != true) {
-                                  return;
-                                }
-                                try {
-                                  final credential = await FirebaseAuth.instance
-                                      .createUserWithEmailAndPassword(
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                      );
-                                  context.read<RegisterDetailsCubit>().register(
-                                    fullName: _fullNameController.text,
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    confirmPassword:
-                                        _confirmPasswordController.text,
-                                  );
-                                } on FirebaseAuthException catch (e) {
-                                  if (e.code == 'weak-password') {
-                                    print('The password provided is too weak.');
-                                    Fluttertoast.showToast(
-                                      msg: "The password provided is too weak.",
-                                      backgroundColor: ColorApp.errorColor,
-                                      gravity: ToastGravity.BOTTOM,
-                                    );
-                                  } else if (e.code == 'email-already-in-use') {
-                                    Fluttertoast.showToast(
-                                      msg: "email-already-in-use",
-                                      backgroundColor: ColorApp.errorColor,
-                                      gravity: ToastGravity.BOTTOM,
-                                    );
+                    SizedBox(height: screenHeight * 0.04),
 
-                                    print(
-                                      'The account already exists for that email.',
-                                    );
-                                  }
-                                } catch (e) {
-                                  Fluttertoast.showToast(
-                                    msg: e.toString(),
-                                    backgroundColor: ColorApp.errorColor,
-                                    gravity: ToastGravity.BOTTOM,
-                                  );
-                                  print(e);
-                                }
-                              },
-                            ),
-                           SizedBox(height: screenHeight * 0.05),
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Divider(color: ColorApp.whiteColor),
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.symmetric(
-                                  horizontal: screenHeight * 0.003,
-                                ),
-                                child: Text(
-                                  'OR Register with',
-                                  style: GoogleFonts.irishGrover(
-                                    color: ColorApp.whiteColor,
-                                    fontSize: screenWidth * 0.035,
-                                  ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: Divider(color: ColorApp.whiteColor),
-                              ),
-                            ],
+                    AuthNavigation(
+                      promptText: 'Already have an account? ',
+                      buttonText: 'Login',
+                      onNavPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
                           ),
-                           SizedBox(height: screenHeight * 0.05),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SocialIconButton(
-                                iconPath: AppConstants.googleLogo,
-                                onPressed: () {},
-                              ),
-                               SizedBox(width: screenWidth * 0.04),
-                              SocialIconButton(
-                                iconPath: AppConstants.facebookLogo,
-                                onPressed: () {},
-                              ),
-                               SizedBox(width: screenWidth * 0.04),
-                              SocialIconButton(
-                                iconPath: AppConstants.appleLogo,
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-
-                           SizedBox(height: screenHeight * 0.04),
-
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                              );
-                            },
-                            child: RichText(
-                              text:  TextSpan(
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.035,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: 'Already have an account? ',
-                                    style: TextStyle(
-                                      color: ColorApp.whiteColor,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Login',
-                                    style: TextStyle(
-                                      color: ColorApp.splashTextColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  ),
-                );
-              },
+                  ],
+                ),
+              ),
             ),
           ),
         ),

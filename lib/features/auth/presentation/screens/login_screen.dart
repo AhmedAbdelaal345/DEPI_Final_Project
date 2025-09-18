@@ -1,36 +1,16 @@
-import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
-import 'package:depi_final_project/features/auth/presentation/screens/change_password_screan.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/register_details_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
-import '../widgets/custom_auth_button.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/social_icon_button.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/auth_navigation.dart';
+import '../widgets/login_form.dart';
+import '../widgets/social_login_section.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,291 +35,45 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               }
             },
-            child: BlocBuilder<LoginCubit, LoginState>(
-              builder: (context, state) {
-                return Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: screenWidth * 0.065),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Login',
-                            style: GoogleFonts.irishGrover(
-                              fontSize: screenWidth * 0.1,
-                              fontWeight: FontWeight.w400,
-                              color: ColorApp.whiteColor,
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.035),
-                           Text(
-                            'Welcome  ! please enter your details',
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.033,
-                              fontWeight: FontWeight.w400,
-                              color: ColorApp.whiteColor,
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.05),
-                          CustomTextField(
-                            controller: _emailController,
-                            hintText: 'Enter your email',
-                            prefixIcon: Icons.email_outlined,
-                            errorText: state.emailError,
-                            validator: (String? value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your email';
-                              }
-                              final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                              if (!emailRegex.hasMatch(value)) {
-                                return 'Please enter a valid email';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: screenHeight * 0.03),
-                          CustomTextField(
-                            controller: _passwordController,
-                            hintText: 'Enter your password',
-                            prefixIcon: Icons.lock_outline,
-                            isPassword: true,
-                            errorText: state.passwordError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: screenHeight * 0.01),
+            child:  Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.065,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        AuthHeader(
+                          title: 'Login',
+                          subtitle:
+                              'Welcome back ! please enter your details',
+                        ),
+                        SizedBox(height: screenHeight * 0.05),
 
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: state.rememberMe,
-                                onChanged: (value) {
-                                  context.read<LoginCubit>().rememberMeChanged(
-                                    value,
-                                  );
-                                },
-                                fillColor: MaterialStateProperty.all(
-                                  ColorApp.whiteColor,
-                                ),
-                                checkColor: ColorApp.backgroundColor,
-                                activeColor: ColorApp.whiteColor,
+                        LoginForm(),
+                        SizedBox(height: screenHeight * 0.05),
+                        SocialLoginSection(text:'OR Login with'),
 
-                                side: const BorderSide(
-                                  width: 2,
-                                  color: ColorApp.splashTextColor,
-                                ),
+                        SizedBox(height: screenHeight * 0.04),
+                        AuthNavigation(
+                          promptText: 'Don’t have an account? ',
+                          buttonText: 'Create a new account',
+                          onNavPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                const RegisterDetailsScreen(),
                               ),
-                               Text(
-                                'Remember this device',
-                                style: TextStyle(
-                                  color: ColorApp.whiteColor,
-                                  fontSize: screenWidth * 0.03,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              SizedBox(
-                                width: screenWidth * 0.06,
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => ChangepasswordScreen(),
-                                    ),
-                                  );
-                                },
-                                child:  Text(
-                                  'Forget password',
-                                  style: TextStyle(
-                                    color: ColorApp.splashTextColor,
-                                    fontSize: screenWidth * 0.03,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: screenHeight * 0.055),
-                          if (state.status == LoginStatus.loading)
-                            const Center(child: CircularProgressIndicator())
-                          else
-                            CustomAuthButton(
-                              text: 'Login',
-                              onPressed: () async {
-                                if (!_formKey.currentState!.validate()) {
-                                  return;
-                                }
-                                try {
-                                  final credential = await FirebaseAuth.instance
-                                      .signInWithEmailAndPassword(
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                      );
-                                  context.read<LoginCubit>().login(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                  );
-                                  print(
-                                    'User logged in: ${credential.user?.email}',
-                                  );
-                                } on FirebaseAuthException catch (e) {
-                                  String errorMessage;
-
-                                  switch (e.code) {
-                                    case 'invalid-credential':
-                                      errorMessage =
-                                          "Invalid email or password. Please try again.";
-                                      break;
-                                    case 'user-not-found':
-                                      errorMessage =
-                                          "No user found for that email.";
-                                      break;
-                                    case 'wrong-password':
-                                      errorMessage = "Wrong password provided.";
-                                      break;
-                                    case 'invalid-email':
-                                      errorMessage = "Invalid email format.";
-                                      break;
-                                    case 'user-disabled':
-                                      errorMessage =
-                                          "This user account has been disabled.";
-                                      break;
-                                    case "network-request-failed":
-                                      errorMessage =
-                                          "Network error. Please check your internet connection and try again.";
-                                    default:
-                                      errorMessage =
-                                          "Login failed: ${e.message}";
-                                  }
-
-                                  Fluttertoast.showToast(
-                                    msg: errorMessage,
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0,
-                                  );
-
-                                  print(
-                                    'Firebase Auth Error: ${e.code} - ${e.message}',
-                                  );
-                                } catch (e) {
-                                  print("Abdelaal: $e");
-                                  Fluttertoast.showToast(
-                                    msg:
-                                        "An unexpected error occurred. Please try again later.",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0,
-                                  );
-                                }
-                              },
-                            ),
-                          SizedBox(height: screenHeight * 0.05),
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Divider(color: ColorApp.whiteColor),
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.symmetric(
-                                  horizontal: screenHeight * 0.003,
-                                ),
-                                child: Text(
-                                  'OR Login with',
-                                  style: GoogleFonts.irishGrover(
-                                    color: ColorApp.whiteColor,
-                                    fontSize: screenWidth * 0.035,
-                                  ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: Divider(color: ColorApp.whiteColor),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: screenHeight * 0.05),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SocialIconButton(
-                                iconPath: AppConstants.googleLogo,
-                                onPressed: () {},
-                              ),
-                              SizedBox(width: screenWidth * 0.04),
-                              SocialIconButton(
-                                iconPath: AppConstants.facebookLogo,
-                                onPressed: () {},
-                              ),
-                              SizedBox(width: screenWidth * 0.04),
-                              SocialIconButton(
-                                iconPath: AppConstants.appleLogo,
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: screenHeight * 0.04),
-
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                          const RegisterDetailsScreen(),
-                                ),
-                              );
-                            },
-                            child: RichText(
-                              text:  TextSpan(
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.035,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: 'Don’t have an account? ',
-                                    style: TextStyle(
-                                      color: ColorApp.whiteColor,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Create a new account',
-                                    style: TextStyle(
-                                      color: ColorApp.splashTextColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+
           ),
         ),
       ),
