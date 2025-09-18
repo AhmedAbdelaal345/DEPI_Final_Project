@@ -1,6 +1,7 @@
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/change_password_screan.dart';
+import 'package:depi_final_project/features/auth/presentation/screens/forgotPasswordPage.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/register_options_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder:
-                                          (context) => ChangepasswordScreen(),
+                                          (context) => ForgotPasswordPage(),
                                     ),
                                   );
                                 },
