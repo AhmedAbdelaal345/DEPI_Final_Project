@@ -37,6 +37,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
       create: (context) => RegisterDetailsCubit(),
       child: Scaffold(
@@ -74,21 +76,21 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                           Text(
                             'Register',
                             style: GoogleFonts.irishGrover(
-                              fontSize: 40,
+                              fontSize: screenWidth * 0.1,
                               fontWeight: FontWeight.w400,
                               color: ColorApp.whiteColor,
                             ),
                           ),
-                          const SizedBox(height: 25),
-                          const Text(
+                           SizedBox(height: screenHeight * 0.035),
+                           Text(
                             'Welcome  ! please enter your details',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: screenWidth * 0.033,
                               fontWeight: FontWeight.w400,
                               color: ColorApp.whiteColor,
                             ),
                           ),
-                          const SizedBox(height: 45),
+                           SizedBox(height: screenHeight * 0.05),
                           CustomTextField(
                             controller: _fullNameController,
                             hintText: 'Full Name',
@@ -100,7 +102,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-                          const SizedBox(height: 27),
+
                           CustomTextField(
                             controller: _emailController,
                             hintText: 'Enter your email',
@@ -115,7 +117,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-                          const SizedBox(height: 27),
+
                           CustomTextField(
                             controller: _passwordController,
                             hintText: 'Enter your password',
@@ -131,7 +133,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-                          const SizedBox(height: 27),
+
                           CustomTextField(
                             controller: _confirmPasswordController,
                             hintText: 'Confirm your password',
@@ -148,7 +150,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 64),
+                          SizedBox(height: screenHeight * 0.04),
                           if (state.status == RegisterStatus.loading)
                             const Center(child: CircularProgressIndicator())
                           else
@@ -201,21 +203,21 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 }
                               },
                             ),
-                          const SizedBox(height: 44),
+                           SizedBox(height: screenHeight * 0.05),
                           Row(
                             children: [
                               const Expanded(
                                 child: Divider(color: ColorApp.whiteColor),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 3.0,
+                                padding:  EdgeInsets.symmetric(
+                                  horizontal: screenHeight * 0.003,
                                 ),
                                 child: Text(
                                   'OR Register with',
                                   style: GoogleFonts.irishGrover(
                                     color: ColorApp.whiteColor,
-                                    fontSize: 14,
+                                    fontSize: screenWidth * 0.035,
                                   ),
                                 ),
                               ),
@@ -224,7 +226,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 44),
+                           SizedBox(height: screenHeight * 0.05),
                   
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -233,12 +235,12 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 iconPath: AppConstants.googleLogo,
                                 onPressed: () {},
                               ),
-                              const SizedBox(width: 20),
+                              SizedBox(width: screenWidth * 0.04),
                               SocialIconButton(
                                 iconPath: AppConstants.facebookLogo,
                                 onPressed: () {},
                               ),
-                              const SizedBox(width: 20),
+                               SizedBox(width: screenWidth * 0.04),
                               SocialIconButton(
                                 iconPath: AppConstants.appleLogo,
                                 onPressed: () {},
@@ -246,7 +248,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                             ],
                           ),
                   
-                          const SizedBox(height: 48),
+                           SizedBox(height: screenHeight * 0.035),
                   
                           TextButton(
                             onPressed: () {
@@ -258,9 +260,9 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               );
                             },
                             child: RichText(
-                              text: const TextSpan(
+                              text:  TextSpan(
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w400,
                                 ),
                                 children: <TextSpan>[
