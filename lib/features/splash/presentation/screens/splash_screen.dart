@@ -3,7 +3,7 @@ import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../auth/presentation/screens/register_options_screen.dart';
+import '../../../auth/presentation/screens/register_details_screen.dart';
 import '../cubit/splash_cubit.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -18,7 +18,7 @@ class SplashScreen extends StatelessWidget {
           if (state is SplashNavigateToRegister) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => RegisterOptionsScreen()),
+              MaterialPageRoute(builder: (context) => RegisterDetailsScreen()),
             );
           }
         },

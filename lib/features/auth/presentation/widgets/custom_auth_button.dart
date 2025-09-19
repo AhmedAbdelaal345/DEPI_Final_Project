@@ -13,19 +13,21 @@ class CustomAuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: double.infinity,
-      height: 48,
+      height: screenHeight * 0.07,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: ColorApp.primaryButtonColor,
           foregroundColor: ColorApp.backgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
           ),
           textStyle: GoogleFonts.judson(
-            fontSize: 32,
+            fontSize: screenWidth * 0.075,
             fontWeight: FontWeight.bold,
           ),
         ),
