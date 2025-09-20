@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
 import '../widgets/custom_auth_button.dart';
@@ -37,8 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
       create: (context) => LoginCubit(),
       child: Scaffold(
@@ -65,7 +64,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: _formKey,
                   child: Padding(
                     padding:  EdgeInsets.symmetric(horizontal: screenWidth * 0.065),
-                    padding:  EdgeInsets.symmetric(horizontal: screenWidth * 0.065),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,18 +72,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Login',
                             style: GoogleFonts.irishGrover(
                               fontSize: screenWidth * 0.1,
-                              fontSize: screenWidth * 0.1,
                               fontWeight: FontWeight.w400,
                               color: ColorApp.whiteColor,
                             ),
                           ),
                           SizedBox(height: screenHeight * 0.035),
                            Text(
-                          SizedBox(height: screenHeight * 0.035),
-                           Text(
                             'Welcome  ! please enter your details',
                             style: TextStyle(
-                              fontSize: screenWidth * 0.033,
                               fontSize: screenWidth * 0.033,
                               fontWeight: FontWeight.w400,
                               color: ColorApp.whiteColor,
@@ -146,7 +140,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                                Text(
-                               Text(
                                 'Remember this device',
                                 style: TextStyle(
                                   color: ColorApp.whiteColor,
@@ -165,7 +158,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   );
                                 },
-                                child:  Text(
                                 child:  Text(
                                   'Forget password',
                                   style: TextStyle(
@@ -268,14 +260,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               Padding(
                                 padding:  EdgeInsets.symmetric(
                                   horizontal: screenHeight * 0.003,
-                                padding:  EdgeInsets.symmetric(
-                                  horizontal: screenHeight * 0.003,
                                 ),
                                 child: Text(
                                   'OR Login with',
                                   style: GoogleFonts.irishGrover(
                                     color: ColorApp.whiteColor,
-                                    fontSize: screenWidth * 0.035,
                                     fontSize: screenWidth * 0.035,
                                   ),
                                 ),
@@ -307,7 +296,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
 
                           SizedBox(height: screenHeight * 0.04),
-                          SizedBox(height: screenHeight * 0.04),
 
                           TextButton(
                             onPressed: () {
@@ -317,15 +305,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   builder:
                                       (context) =>
                                           const RegisterDetailsScreen(),
-                                          const RegisterDetailsScreen(),
                                 ),
                               );
                             },
                             child: RichText(
                               text:  TextSpan(
-                              text:  TextSpan(
                                 style: TextStyle(
-                                  fontSize: screenWidth * 0.035,
                                   fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w400,
                                 ),
