@@ -83,7 +83,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               color: ColorApp.whiteColor,
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.035),
+                           SizedBox(height: screenHeight * 0.035),
                            Text(
                             'Welcome  ! please enter your details',
                             style: TextStyle(
@@ -104,7 +104,6 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _emailController,
                             hintText: 'Enter your email',
@@ -121,7 +120,6 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-                           SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _passwordController,
                             hintText: 'Enter your password',
@@ -137,7 +135,6 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-                           SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _confirmPasswordController,
                             hintText: 'Confirm your password',
@@ -154,7 +151,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               return null;
                             },
                           ),
-                           SizedBox(height: screenHeight * 0.07),
+                          SizedBox(height: screenHeight * 0.04),
                           if (state.status == RegisterStatus.loading)
                             const Center(child: CircularProgressIndicator())
                           else
@@ -241,7 +238,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 iconPath: AppConstants.googleLogo,
                                 onPressed: () {},
                               ),
-                               SizedBox(width: screenWidth * 0.04),
+                              SizedBox(width: screenWidth * 0.04),
                               SocialIconButton(
                                 iconPath: AppConstants.facebookLogo,
                                 onPressed: () {},
@@ -253,9 +250,9 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               ),
                             ],
                           ),
-
-                           SizedBox(height: screenHeight * 0.04),
-
+                  
+                           SizedBox(height: screenHeight * 0.035),
+                  
                           TextButton(
                             onPressed: () {
                               Navigator.push(
