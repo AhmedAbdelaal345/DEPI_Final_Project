@@ -68,7 +68,9 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                 return Form(
                   key: _formKey,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 26),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.065,
+                    ),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,7 +83,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               color: ColorApp.whiteColor,
                             ),
                           ),
-                           SizedBox(height: screenHeight * 0.035),
+                          SizedBox(height: screenHeight * 0.035),
                            Text(
                             'Welcome  ! please enter your details',
                             style: TextStyle(
@@ -96,28 +98,30 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                             hintText: 'Full Name',
                             prefixIcon: Icons.person_outline,
                             errorText: state.fullNameError,
-                            validator: (String ?value) {
+                            validator: (String? value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your full name';
                               }
                             },
                           ),
-
+                          SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _emailController,
                             hintText: 'Enter your email',
                             prefixIcon: Icons.email_outlined,
                             errorText: state.emailError,
-                            validator: (String ?value) {
+                            validator: (String? value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';
                               }
-                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                              if (!RegExp(
+                                r'^[^@]+@[^@]+\.[^@]+',
+                              ).hasMatch(value)) {
                                 return 'Please enter a valid email';
                               }
                             },
                           ),
-
+                           SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _passwordController,
                             hintText: 'Enter your password',
@@ -133,7 +137,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-
+                           SizedBox(height: screenHeight * 0.03),
                           CustomTextField(
                             controller: _confirmPasswordController,
                             hintText: 'Confirm your password',
@@ -150,15 +154,15 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: screenHeight * 0.04),
+                           SizedBox(height: screenHeight * 0.07),
                           if (state.status == RegisterStatus.loading)
                             const Center(child: CircularProgressIndicator())
                           else
                             CustomAuthButton(
                               text: 'Register',
-                  
+
                               onPressed: () async {
-                                if(_formKey.currentState?.validate() != true){
+                                if (_formKey.currentState?.validate() != true) {
                                   return;
                                 }
                                 try {
@@ -188,7 +192,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                       backgroundColor: ColorApp.errorColor,
                                       gravity: ToastGravity.BOTTOM,
                                     );
-                  
+
                                     print(
                                       'The account already exists for that email.',
                                     );
@@ -228,6 +232,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                           ),
                            SizedBox(height: screenHeight * 0.05),
                   
+                           SizedBox(height: screenHeight * 0.05),
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -235,7 +241,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 iconPath: AppConstants.googleLogo,
                                 onPressed: () {},
                               ),
-                              SizedBox(width: screenWidth * 0.04),
+                               SizedBox(width: screenWidth * 0.04),
                               SocialIconButton(
                                 iconPath: AppConstants.facebookLogo,
                                 onPressed: () {},
@@ -247,9 +253,9 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               ),
                             ],
                           ),
-                  
-                           SizedBox(height: screenHeight * 0.035),
-                  
+
+                           SizedBox(height: screenHeight * 0.04),
+
                           TextButton(
                             onPressed: () {
                               Navigator.push(
@@ -268,7 +274,9 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 children: <TextSpan>[
                                   TextSpan(
                                     text: 'Already have an account? ',
-                                    style: TextStyle(color: ColorApp.whiteColor),
+                                    style: TextStyle(
+                                      color: ColorApp.whiteColor,
+                                    ),
                                   ),
                                   TextSpan(
                                     text: 'Login',
