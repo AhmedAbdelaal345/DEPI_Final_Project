@@ -11,6 +11,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/divider_with_text.dart';
+import '../widgets/social_login_buttons.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/social_icon_button.dart';
@@ -68,23 +71,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'Login',
-                            style: GoogleFonts.irishGrover(
-                              fontSize: screenWidth * 0.1,
-                              fontWeight: FontWeight.w400,
-                              color: ColorApp.whiteColor,
-                            ),
+                          AuthHeader(
+                            title: 'Login',
+                            subtitle: 'Welcome  ! please enter your details',
                           ),
-                          SizedBox(height: screenHeight * 0.035),
-                           Text(
-                            'Welcome  ! please enter your details',
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.033,
-                              fontWeight: FontWeight.w400,
-                              color: ColorApp.whiteColor,
-                            ),
-                          ),
+
                            SizedBox(height: screenHeight * 0.05),
                           CustomTextField(
                             controller: _emailController,
@@ -252,48 +243,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                            SizedBox(height: screenHeight * 0.05),
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Divider(color: ColorApp.whiteColor),
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.symmetric(
-                                  horizontal: screenHeight * 0.003,
-                                ),
-                                child: Text(
-                                  'OR Login with',
-                                  style: GoogleFonts.irishGrover(
-                                    color: ColorApp.whiteColor,
-                                    fontSize: screenWidth * 0.035,
-                                  ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: Divider(color: ColorApp.whiteColor),
-                              ),
-                            ],
-                          ),
-                           SizedBox(height: screenHeight * 0.05),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SocialIconButton(
-                                iconPath: AppConstants.googleLogo,
-                                onPressed: () {},
-                              ),
-                               SizedBox(width: screenWidth * 0.04),
-                              SocialIconButton(
-                                iconPath: AppConstants.facebookLogo,
-                                onPressed: () {},
-                              ),
-                               SizedBox(width: screenWidth * 0.04),
-                              SocialIconButton(
-                                iconPath: AppConstants.appleLogo,
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
+                          DividerWithText(text:' OR Login with '),
+                          SizedBox(height: screenHeight * 0.05),
+
+                          SocialLoginButtons(),
 
                           SizedBox(height: screenHeight * 0.04),
 

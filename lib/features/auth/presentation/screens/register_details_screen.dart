@@ -8,6 +8,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../cubit/register_details_cubit.dart';
 import '../cubit/register_details_state.dart';
+import '../widgets/auth_header.dart';
+import '../widgets/auth_navigation_link.dart';
+import '../widgets/divider_with_text.dart';
+import '../widgets/social_login_buttons.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/social_icon_button.dart';
@@ -75,24 +79,11 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'Register',
-                            style: GoogleFonts.irishGrover(
-                              fontSize: screenWidth * 0.1,
-                              fontWeight: FontWeight.w400,
-                              color: ColorApp.whiteColor,
-                            ),
+                          AuthHeader(
+                            title: 'Register',
+                            subtitle: 'Welcome  ! please enter your details',
                           ),
-                           SizedBox(height: screenHeight * 0.035),
-                           Text(
-                            'Welcome  ! please enter your details',
-                            style: TextStyle(
-                              fontSize: screenWidth * 0.033,
-                              fontWeight: FontWeight.w400,
-                              color: ColorApp.whiteColor,
-                            ),
-                          ),
-                           SizedBox(height: screenHeight * 0.05),
+                          SizedBox(height: screenHeight * 0.05),
                           CustomTextField(
                             controller: _fullNameController,
                             hintText: 'Full Name',
@@ -204,56 +195,18 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 }
                               },
                             ),
-                           SizedBox(height: screenHeight * 0.05),
-                          Row(
-                            children: [
-                              const Expanded(
-                                child: Divider(color: ColorApp.whiteColor),
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.symmetric(
-                                  horizontal: screenHeight * 0.003,
-                                ),
-                                child: Text(
-                                  'OR Register with',
-                                  style: GoogleFonts.irishGrover(
-                                    color: ColorApp.whiteColor,
-                                    fontSize: screenWidth * 0.035,
-                                  ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: Divider(color: ColorApp.whiteColor),
-                              ),
-                            ],
-                          ),
-                           SizedBox(height: screenHeight * 0.05),
-                  
-                           SizedBox(height: screenHeight * 0.05),
+                          SizedBox(height: screenHeight * 0.05),
+                          DividerWithText(text: ' OR Register with '),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SocialIconButton(
-                                iconPath: AppConstants.googleLogo,
-                                onPressed: () {},
-                              ),
-                              SizedBox(width: screenWidth * 0.04),
-                              SocialIconButton(
-                                iconPath: AppConstants.facebookLogo,
-                                onPressed: () {},
-                              ),
-                               SizedBox(width: screenWidth * 0.04),
-                              SocialIconButton(
-                                iconPath: AppConstants.appleLogo,
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                  
-                           SizedBox(height: screenHeight * 0.035),
-                  
-                          TextButton(
+                          SizedBox(height: screenHeight * 0.05),
+
+                          SocialLoginButtons(),
+
+                          SizedBox(height: screenHeight * 0.035),
+
+                          AuthNavigationLink(
+                            baseText: 'Already have an account? ',
+                            clickableText: 'Login',
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -262,29 +215,6 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                 ),
                               );
                             },
-                            child: RichText(
-                              text:  TextSpan(
-                                style: TextStyle(
-                                  fontSize: screenWidth * 0.035,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: 'Already have an account? ',
-                                    style: TextStyle(
-                                      color: ColorApp.whiteColor,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Login',
-                                    style: TextStyle(
-                                      color: ColorApp.splashTextColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
                         ],
                       ),
