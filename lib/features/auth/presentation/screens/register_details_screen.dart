@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
@@ -26,9 +27,14 @@ class RegisterDetailsScreen extends StatefulWidget {
 class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _subjectController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final CollectionReference users = FirebaseFirestore.instance.collection(
+    'teacher',
+  );
 
   @override
   void dispose() {
@@ -36,6 +42,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _phoneController.dispose();
+    _subjectController.dispose();
     super.dispose();
   }
 
@@ -52,7 +60,11 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
             listener: (context, state) {
               if (state.status == RegisterStatus.success) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Registration Successful!')),
+                  const SnackBar(
+                    content: Text('Registration Successful!'),
+                    duration: Duration(seconds: 1),
+                    backgroundColor: ColorApp.successSnakBar,
+                  ),
                 );
                 // After successful registration, navigate to the login screen
                 Navigator.pushReplacement(
@@ -63,6 +75,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.generalError ?? 'An error occurred'),
+                    duration: Duration(seconds: 2),
+                    backgroundColor: ColorApp.errorColor,
                   ),
                 );
               }
@@ -142,6 +156,32 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               return null;
                             },
                           ),
+
+                          CustomTextField(
+                            controller: _phoneController,
+                            hintText: "Enter your Phone Number",
+                            prefixIcon: Icons.phone,
+                            errorText: state.phoneError,
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your phone number';
+                              }
+                              if (!AppConstants.phoneRegExp.hasMatch(value)) {
+                                return 'Please enter a valid phone number';
+                              }
+                            },
+                          ),
+                          CustomTextField(
+                            controller: _subjectController,
+                            hintText: "Enter your Subject",
+                            prefixIcon: Icons.school,
+                          
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your Subject';
+                              }
+                            },
+                          ),
                           SizedBox(height: screenHeight * 0.04),
                           if (state.status == RegisterStatus.loading)
                             const Center(child: CircularProgressIndicator())
@@ -166,6 +206,14 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                     confirmPassword:
                                         _confirmPasswordController.text,
                                   );
+                                  await users.doc(credential.user?.uid).set({
+                                    'fullName': _fullNameController.text,
+                                    'email': _emailController.text,
+                                    'password': _passwordController.text,
+                                    'phone': _phoneController.text,
+                                    "subject": _subjectController.text,
+                                    'uid': credential.user?.uid,
+                                  });
                                 } on FirebaseAuthException catch (e) {
                                   if (e.code == 'weak-password') {
                                     print('The password provided is too weak.');
@@ -185,6 +233,12 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                       'The account already exists for that email.',
                                     );
                                   }
+                                } on FirebaseException catch (e) {
+                                  Fluttertoast.showToast(
+                                    msg: e.toString(),
+                                    backgroundColor: ColorApp.errorColor,
+                                    gravity: ToastGravity.BOTTOM,
+                                  );
                                 } catch (e) {
                                   Fluttertoast.showToast(
                                     msg: e.toString(),

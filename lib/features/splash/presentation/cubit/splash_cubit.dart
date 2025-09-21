@@ -8,7 +8,7 @@ class SplashCubit extends Cubit<SplashState> {
 
   void startTimer() {
     Future.delayed(const Duration(seconds: 3), () {
-      emit(SplashNavigateToRegister());
+      emit(SplashNavigateToLogin());
     });
   }
 

@@ -1,4 +1,3 @@
-
 enum RegisterStatus { initial, loading, success, failure }
 
 class RegisterDetailsState {
@@ -8,7 +7,7 @@ class RegisterDetailsState {
   final String? emailError;
   final String? passwordError;
   final String? confirmPasswordError;
-
+  final String? phoneError;
   final String? generalError;
 
   const RegisterDetailsState({
@@ -18,6 +17,7 @@ class RegisterDetailsState {
     this.passwordError,
     this.confirmPasswordError,
     this.generalError,
+    this.phoneError
   });
 
   RegisterDetailsState copyWith({
@@ -27,6 +27,7 @@ class RegisterDetailsState {
     String? passwordError,
     String? confirmPasswordError,
     String? generalError,
+    String? phoneError,
   }) {
     return RegisterDetailsState(
       status: status ?? this.status,
@@ -35,8 +36,7 @@ class RegisterDetailsState {
       passwordError: passwordError,
       confirmPasswordError: confirmPasswordError,
       generalError: generalError,
+      phoneError: phoneError ?? this.phoneError,
     );
   }
-
 }
-

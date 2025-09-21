@@ -8,4 +8,5 @@ class ColorApp {
   static const Color greyColor = Color(0xFF1A1E2A);
   static const Color textFieldBackgroundColor = Color(0xFFD9D9D9);
   static const Color errorColor = Colors.red;
+  static const Color successSnakBar = Colors.white;
 }

@@ -1,3 +1,4 @@
+import 'package:depi_final_project/features/questions/presentation/screens/quiz_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/quiz_back_button.dart';
 import '../widgets/quiz_info_card.dart';
@@ -76,7 +77,7 @@ class QuizDetailsScreen extends StatelessWidget {
                       duration: const Duration(seconds: 2),
                     ),
                   );
-                  // Add your quiz start logic here
+                  Navigator.pushNamed(context, QuizPage.id);
                 },
               ),
               SizedBox(height: sy(context, 16)),

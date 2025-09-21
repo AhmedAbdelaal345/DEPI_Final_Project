@@ -1,9 +1,9 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'register_details_state.dart';
 
 class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
   RegisterDetailsCubit() : super(const RegisterDetailsState());
-
 
   void register({
     required String fullName,
@@ -11,22 +11,23 @@ class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
     required String password,
     required String confirmPassword,
   }) {
-
-    emit(state.copyWith(
-      fullNameError: null,
-      emailError: null,
-      passwordError: null,
-      confirmPasswordError: null,
-      generalError: null,
-    ));
-
+    emit(
+      state.copyWith(
+        fullNameError: null,
+        emailError: null,
+        passwordError: null,
+        confirmPasswordError: null,
+        generalError: null,
+      ),
+    );
 
     final bool isFullNameValid = _validateFullName(fullName);
     final bool isEmailValid = _validateEmail(email);
     final bool isPasswordValid = _validatePassword(password);
-    final bool isConfirmPasswordValid =
-    _validateConfirmPassword(password, confirmPassword);
-
+    final bool isConfirmPasswordValid = _validateConfirmPassword(
+      password,
+      confirmPassword,
+    );
 
     if (isFullNameValid &&
         isEmailValid &&
@@ -35,8 +36,6 @@ class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
       _performRegistration();
     }
   }
-
-
 
   bool _validateFullName(String fullName) {
     if (fullName.isEmpty) {
@@ -56,8 +55,19 @@ class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
 
   bool _validatePassword(String password) {
     if (password.length < 6) {
-      emit(state.copyWith(
-          passwordError: 'Password must be at least 6 characters'));
+      emit(
+        state.copyWith(passwordError: 'Password must be at least 6 characters'),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  bool _validatePhone(String phone) {
+    if (!AppConstants.phoneRegExp.hasMatch(phone)) {
+      emit(
+        state.copyWith(phoneError: 'the phone number is not valid'),
+      );
       return false;
     }
     return true;

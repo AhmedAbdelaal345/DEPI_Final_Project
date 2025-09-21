@@ -1,5 +1,6 @@
 import 'package:depi_final_project/features/Quiz/presentation/Screens/quiz_details_screen.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/features/questions/presentation/screens/quiz_page.dart';
 import 'package:depi_final_project/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/details': (_) => const QuizDetailsScreen(),
+        QuizPage.id: (_) => const QuizPage(),
       },
       home: SplashScreen(),
     );
