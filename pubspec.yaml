@@ -37,6 +37,8 @@ dependencies:
     sdk: flutter
   fluttertoast: ^8.2.12
   cloud_firestore: ^6.0.1
+  introduction_screen:
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
 

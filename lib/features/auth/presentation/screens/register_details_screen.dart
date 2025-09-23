@@ -18,7 +18,9 @@ import '../widgets/custom_text_field.dart';
 import '../widgets/social_icon_button.dart';
 
 class RegisterDetailsScreen extends StatefulWidget {
-  const RegisterDetailsScreen({super.key});
+  RegisterDetailsScreen({super.key, this.isTeacher = false});
+
+  bool isTeacher;
 
   @override
   State<RegisterDetailsScreen> createState() => _RegisterDetailsScreenState();
@@ -171,17 +173,18 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               }
                             },
                           ),
-                          CustomTextField(
-                            controller: _subjectController,
-                            hintText: "Enter your Subject",
-                            prefixIcon: Icons.school,
-                          
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your Subject';
-                              }
-                            },
-                          ),
+                          if (widget.isTeacher)
+                            CustomTextField(
+                              controller: _subjectController,
+                              hintText: "Enter your Subject",
+                              prefixIcon: Icons.school,
+                              validator: (String? value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your Subject';
+                                }
+                                return null;
+                              },
+                            ),
                           SizedBox(height: screenHeight * 0.04),
                           if (state.status == RegisterStatus.loading)
                             const Center(child: CircularProgressIndicator())

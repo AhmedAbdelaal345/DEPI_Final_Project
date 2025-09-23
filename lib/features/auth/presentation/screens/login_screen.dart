@@ -1,13 +1,10 @@
-import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/forgotPasswordPage.dart';
-import 'package:depi_final_project/features/auth/presentation/screens/register_details_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
@@ -16,7 +13,6 @@ import '../widgets/divider_with_text.dart';
 import '../widgets/social_login_buttons.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
-import '../widgets/social_icon_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -252,14 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                          const RegisterDetailsScreen(),
-                                ),
-                              );
+                              Navigator.pop(context);
                             },
                             child: RichText(
                               text:  TextSpan(
