@@ -1,6 +1,5 @@
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:flutter/material.dart';
-
 class PageComponent extends StatelessWidget {
   const PageComponent({
     super.key,
@@ -48,7 +47,7 @@ class PageComponent extends StatelessWidget {
                 SizedBox(width: width / 84.5),
                 Expanded(
                   child: Text(
-                    "${question} ?",
+                    "${question} ",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.card,
                       fontWeight: FontWeight.w700,
@@ -60,7 +59,6 @@ class PageComponent extends StatelessWidget {
           ),
         ),
         SizedBox(height: height / 23),
-        // Display all answers
         ...selectedAnswers.asMap().entries.map((entry) {
           int index = entry.key;
           String answer = entry.value;
@@ -87,7 +85,6 @@ class PageComponent extends StatelessWidget {
     
     if (showResult && selectedAnswerIndex != null) {
       if (index == correctAnswerIndex) {
-        // Correct answer - green
         backgroundColor = Colors.green.withOpacity(0.3);
         textColor = Colors.green[800];
       } else if (index == selectedAnswerIndex && index != correctAnswerIndex) {

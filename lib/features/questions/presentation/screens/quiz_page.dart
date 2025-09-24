@@ -30,8 +30,8 @@ class _QuizPageState extends State<QuizPage> {
   // Fixed the Map structure - each question should have its own key
   Map<int, List<String>> answers = {
     0: [
-      "A UI toolkit",
       "A programming language",
+      "A UI toolkit",
       "A database",
       "An operating system",
     ],
@@ -42,9 +42,9 @@ class _QuizPageState extends State<QuizPage> {
       "An operating system",
     ],
     2: [
-      "A way to manage state",
       "A programming language",
       "A database",
+      "A way to manage state",
       "An operating system",
     ],
     3: ["I'm fine, thank you!", "I'm sad", "I'm angry", "I'm happy"],
@@ -53,19 +53,12 @@ class _QuizPageState extends State<QuizPage> {
       "My name is FlutterBot",
       "My name is DartBot",
       "My name is StateBot",
-      "My name is QuizBot",
+      "My name is Ahmed",
     ],
   };
 
   // Correct answers index for each question
-  Map<int, int> correctAnswers = {
-    0: 0, // "A UI toolkit" is correct for "What is Flutter?"
-    1: 0, // "A programming language" is correct for "What is Dart?"
-    2: 0, // "A way to manage state" is correct for "What is State Management?"
-    3: 0, // "I'm fine, thank you!" is correct for "How are you?"
-    4: 0, // "In Asia" is correct for "Where is India?"
-    5: 0, // "My name is FlutterBot" is correct for "What is your name?"
-  };
+  Map<int, int> correctAnswers = {0: 1, 2: 2, 3: 0, 4: 0, 5: 3};
 
   // Timer variables
   Timer? _timer;
@@ -106,7 +99,7 @@ class _QuizPageState extends State<QuizPage> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SizedBox(height: height/24,),
+            SizedBox(height: height / 24),
             LinearProgressIndicator(
               backgroundColor: ColorApp.textFieldBackgroundColor.withOpacity(
                 0.5,
@@ -164,9 +157,9 @@ class _QuizPageState extends State<QuizPage> {
                               ? ColorApp.primaryButtonColor.withOpacity(0.5)
                               : ColorApp.primaryButtonColor,
                     ),
-                   padding: MaterialStatePropertyAll(
+                    padding: MaterialStatePropertyAll(
                       EdgeInsets.symmetric(
-                         horizontal: width / 11.8,
+                        horizontal: width / 11.8,
                         vertical: height / 25.1,
                       ),
                     ),
