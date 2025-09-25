@@ -1,49 +1,73 @@
-import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'quiz_history_screen.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
+class WrapperPage extends StatefulWidget {
+  const WrapperPage({super.key});
+static const String id = '/wrapper-page';
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<WrapperPage> createState() => _WrapperPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _page = 2; 
+class _WrapperPageState extends State<WrapperPage> {
+  int _currentIndex = 0;
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
-  final List<Widget> _screens = const [
-    HomeScreen(), 
-    Center(
-        child: Text("Profile",
-            style: TextStyle(color: Colors.white, fontSize: 22))),
-    QuizHistoryScreen(), // study
-    Center(
-        child: Text("Settings",
-            style: TextStyle(color: Colors.white, fontSize: 22))),
+  List<Widget> get _screens => [
+    const HomeScreen(),
+    ProfileScreen(),
+    const QuizHistoryScreen(),
+    SettingScreen(),
+  ];
+
+  final List<IconData> _icons = const [
+    Icons.home,
+    Icons.person,
+    Icons.history,
+    Icons.settings,
+  ];
+
+  final List<String> _titles = const [
+    'Home',
+    'Profile',
+    'Quiz History',
+    'Settings',
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
-      body: _screens[_page],
+      // Add SafeArea to prevent overflow issues
+      body: SafeArea(child: _screens[_currentIndex]),
       bottomNavigationBar: CurvedNavigationBar(
+        key: _bottomNavigationKey,
         backgroundColor: const Color(0xFF1A1C2B),
         color: const Color(0xFF2C2F48),
         buttonBackgroundColor: const Color(0xFF5AC7C7),
-        height: 60,
-        index: 2,
-        items: const <Widget>[
-          Icon(Icons.home, size: 30, color: Colors.white),
-          Icon(Icons.person, size: 30, color: Colors.white),
-          Icon(Icons.check_circle, size: 30, color: Colors.white),
-          Icon(Icons.settings, size: 30, color: Colors.white),
-        ],
+        height: 65,
+        index: _currentIndex,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+        items:
+            _icons.asMap().entries.map((entry) {
+              int index = entry.key;
+              IconData icon = entry.value;
+              bool isSelected = index == _currentIndex;
+
+              return Icon(
+                icon,
+                size: isSelected ? 35 : 28,
+                color:
+                    isSelected ? Colors.white : Colors.white.withOpacity(0.7),
+              );
+            }).toList(),
         onTap: (index) {
           setState(() {
-            _page = index;
+            _currentIndex = index;
           });
         },
       ),

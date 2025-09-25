@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_constants.dart';
 
 class InputField extends StatelessWidget {
-  const InputField({super.key, required this.hint});
-
+  const InputField({super.key, required this.hint,required this.controller});
+final TextEditingController controller ;
   final String hint;
 
   @override
@@ -16,12 +16,14 @@ class InputField extends StatelessWidget {
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.symmetric(horizontal: sx(context, 16)),
       child: TextField(
+        controller:controller ,
         cursorColor: AppColors.bgDarkText,
         style: GoogleFonts.poppins(
           color: AppColors.bgDarkText,
           fontSize: sx(context, 14),
         ),
         decoration: InputDecoration(
+          
           isCollapsed: true,
           hintText: hint,
           hintStyle: GoogleFonts.poppins(

@@ -1,6 +1,9 @@
 import 'package:depi_final_project/features/Quiz/presentation/Screens/quiz_details_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/quiz_page.dart';
+import 'package:depi_final_project/features/questions/presentation/screens/result_page.dart';
 import 'package:depi_final_project/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +12,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'features/splash/presentation/screens/splash_screen.dart';
 
-void main() async{
-   WidgetsFlutterBinding.ensureInitialized();
-   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-     statusBarColor: Colors.transparent,
-     statusBarIconBrightness: Brightness.light,
-     statusBarBrightness: Brightness.dark,
-   ));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ),
+  );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
@@ -54,8 +59,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        '/details': (_) => const QuizDetailsScreen(),
-        QuizPage.id: (_) => const QuizPage(),
+        BeforeQuizScreen.id: (_) =>  BeforeQuizScreen(),
+        WrapperPage.id: (_) => const WrapperPage(),
+        ResultPage.id: (_) => const ResultPage(quizResult: null),
       },
       home: SplashScreen(),
     );

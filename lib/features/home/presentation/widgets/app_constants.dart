@@ -9,8 +9,11 @@ class AppColors {
   static const card = Color(0xFFD9D9D9); // Light grey cards/fields
   static const hint = Color(0xFF000920); // Placeholder/hint
   static const bgDarkText = Color(0xFF0B1B2A); // Dark text on light
+  static const white = Color(0xFFffffff); // Dark text on light
 }
 
 // Utility scaling for 390 x 844 design (iPhone 13/14)
-double sx(BuildContext context, double x) => x * MediaQuery.of(context).size.width / 390;
-double sy(BuildContext context, double y) => y * MediaQuery.of(context).size.height / 844;
+double sx(BuildContext context, double x) =>
+    x * MediaQuery.of(context).size.width / 390;
+double sy(BuildContext context, double y) =>
+    y * MediaQuery.of(context).size.height / 844;
