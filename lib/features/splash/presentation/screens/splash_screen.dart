@@ -1,5 +1,6 @@
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
+import 'package:depi_final_project/features/Onboarding/screens/onboarding_screen.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,9 +18,13 @@ class SplashScreen extends StatelessWidget {
       child: BlocListener<SplashCubit, SplashState>(
         listener: (context, state) {
           if (state is SplashNavigateToLogin) {
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => LoginScreen()),
+            // );
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (context) => const OnboardingScreen()),
             );
           }
         },
