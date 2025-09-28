@@ -10,6 +10,7 @@ class AppColors {
   static const hint = Color(0xFF000920); // Placeholder/hint
   static const bgDarkText = Color(0xFF0B1B2A); // Dark text on light
   static const white = Color(0xFFffffff); // Dark text on light
+  static const red = Colors.red; // Dark text on light
 }
 
 // Utility scaling for 390 x 844 design (iPhone 13/14)

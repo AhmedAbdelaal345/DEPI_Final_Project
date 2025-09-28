@@ -138,8 +138,7 @@ class ResultPage extends StatelessWidget {
                   child: PrimaryButton(
                     label: "Review Answers", 
                     onTap: () {
-                      // Navigate to review answers page
-                      // You can implement this functionality
+                      
                     },
                   ),
                 ),

@@ -2,12 +2,14 @@ import 'package:depi_final_project/features/Quiz/presentation/Screens/quiz_detai
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/quiz_page.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/result_page.dart';
 import 'package:depi_final_project/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'features/splash/presentation/screens/splash_screen.dart';
@@ -59,6 +61,13 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
+        QuizPage.id: (context) {
+    final args = ModalRoute.of(context)!.settings.arguments as String;
+    return BlocProvider(
+      create: (_) => QuizCubit(),
+      child: QuizPage(quizId: args),
+    );
+  },
         BeforeQuizScreen.id: (_) =>  BeforeQuizScreen(),
         WrapperPage.id: (_) => const WrapperPage(),
         ResultPage.id: (_) => const ResultPage(quizResult: null),

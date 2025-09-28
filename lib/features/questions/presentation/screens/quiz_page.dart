@@ -87,10 +87,18 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   int _mapAnswerToIndex(String correctKey, Map<String, String> options) {
+    // Convert correct key to uppercase since Firestore has "A", "B", "C", "D"
+    final upperCorrectKey = correctKey.toUpperCase();
     final keys = options.keys.toList();
-    final index = keys.indexOf(correctKey);
-    developer.log('Mapping answer: $correctKey -> index: $index');
-    return index;
+    
+    // Sort keys to ensure consistent order (A, B, C, D)
+    keys.sort();
+    
+    final index = keys.indexOf(upperCorrectKey);
+    developer.log('Mapping answer: $correctKey ($upperCorrectKey) -> index: $index');
+    developer.log('Available keys: $keys');
+    
+    return index >= 0 ? index : 0; // Return 0 if not found instead of -1
   }
 
   void _submitQuiz(QuizState state) {
@@ -173,7 +181,7 @@ class _QuizPageState extends State<QuizPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('ERROR: ${state.error}'),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.red,
                 duration: const Duration(seconds: 5),
               ),
             );
@@ -311,7 +319,6 @@ class _QuizPageState extends State<QuizPage> {
             );
           }
 
-          // عرض الكويز العادي
           return SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

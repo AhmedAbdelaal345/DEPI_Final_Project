@@ -15,7 +15,7 @@ class BeforeQuizScreen extends StatelessWidget {
   static final String id = "/details";
 
   Future<DocumentSnapshot<Map<String, dynamic>>> _getQuizData() {
-    return FirebaseFirestore.instance.collection("quizzes").doc(quizId).get();
+    return FirebaseFirestore.instance.collection("Quizzes").doc(quizId).get();
   }
 
   @override
@@ -42,8 +42,8 @@ class BeforeQuizScreen extends StatelessWidget {
             final quizData = snapshot.data!.data()!;
             final title = quizData["title"] ?? "Quiz";
             final questions = quizData["questions_count"]?.toString() ?? "N/A";
-            final timeLimit = quizData["time_limit"]?.toString() ?? "N/A";
-            final creator = quizData["creator_name"] ?? "Unknown";
+            final timeLimit = quizData["duration"]?.toString() ?? "N/A";
+            final creator = quizData["teacherId"] ?? "Unknown";
 
             return SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: sx(context, 16)),
