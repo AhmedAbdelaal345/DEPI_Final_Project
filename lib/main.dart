@@ -1,10 +1,12 @@
-import 'package:depi_final_project/features/Quiz/presentation/Screens/quiz_details_screen.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
+
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/quiz_page.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/result_page.dart';
+import 'package:depi_final_project/features/review_answers/presentation/cubit/review_answers_cubit.dart';
+import 'package:depi_final_project/features/review_answers/presentation/screens/review_details_screen.dart'
+    show ReviewDetailsScreen;
 import 'package:depi_final_project/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'features/splash/presentation/screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,9 +33,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+    return   MultiBlocProvider(
+      providers: [
+        BlocProvider<QuizCubit>(
+          create: (context) => QuizCubit(),
+        ),
+        BlocProvider<ReviewAnswersCubit>(
+          create: (context) => ReviewAnswersCubit(),
+        ),
+        // Add other cubits/providers as needed
+      ],
+      child: MaterialApp(
+        home: WrapperPage(),
+        theme: ThemeData(
         useMaterial3: false,
         scaffoldBackgroundColor: AppColors.bg,
         colorScheme: const ColorScheme.dark(
@@ -60,19 +71,14 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      routes: {
-        QuizPage.id: (context) {
-    final args = ModalRoute.of(context)!.settings.arguments as String;
-    return BlocProvider(
-      create: (_) => QuizCubit(),
-      child: QuizPage(quizId: args),
-    );
-  },
-        BeforeQuizScreen.id: (_) =>  BeforeQuizScreen(),
-        WrapperPage.id: (_) => const WrapperPage(),
-        ResultPage.id: (_) => const ResultPage(quizResult: null),
-      },
-      home: SplashScreen(),
+
+        routes: {
+          WrapperPage.id: (context) => WrapperPage(),
+          QuizPage.id: (context) => QuizPage(),
+          ResultPage.id: (context) => ResultPage(),
+          ReviewDetailsScreen.id: (context) => ReviewDetailsScreen(fetchWrongAnswers: true,),
+        },
+      ),
     );
   }
 }

@@ -1,7 +1,8 @@
-import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/primary_button.dart';
+import 'package:depi_final_project/features/review_answers/presentation/screens/review_details_screen.dart'
+    show ReviewDetailsScreen;
 import 'package:flutter/material.dart';
 
 class QuizResult {
@@ -9,7 +10,8 @@ class QuizResult {
   final int correctAnswers;
   final int wrongAnswers;
   final double accuracy;
-  final List<Map<String, dynamic>>? detailedResults; // Optional: for review answers
+  final List<Map<String, dynamic>>?
+  detailedResults; // Optional: for review answers
 
   QuizResult({
     required this.totalQuestions,
@@ -21,20 +23,17 @@ class QuizResult {
 }
 
 class ResultPage extends StatelessWidget {
-  final QuizResult ?quizResult;
-  
-  const ResultPage({
-    super.key,
-     this.quizResult,
-  });
-  
+  final QuizResult? quizResult;
+
+  const ResultPage({super.key, this.quizResult});
+
   static const id = "/resultpage";
 
   @override
   Widget build(BuildContext context) {
     // Calculate accuracy percentage for display
     final accuracyPercentage = (quizResult!.accuracy * 100).toInt();
-    
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -45,7 +44,7 @@ class ResultPage extends StatelessWidget {
               Text(
                 "Quiz Completed!",
                 style: TextStyle(
-                  color: AppColors.white, 
+                  color: AppColors.white,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
@@ -54,12 +53,12 @@ class ResultPage extends StatelessWidget {
               Text(
                 "Your Performance Summary",
                 style: TextStyle(
-                  color: AppColors.white.withOpacity(0.8), 
+                  color: AppColors.white.withOpacity(0.8),
                   fontSize: 24,
                 ),
               ),
               SizedBox(height: sy(context, 60)),
-              
+
               // Circular Progress Indicator with dynamic value
               Stack(
                 alignment: Alignment.center,
@@ -99,9 +98,9 @@ class ResultPage extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               SizedBox(height: sy(context, 60)),
-              
+
               // Statistics Row with dynamic values
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -123,28 +122,26 @@ class ResultPage extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               SizedBox(height: sy(context, 60)),
-              
+
               // Performance message
               _buildPerformanceMessage(quizResult!.accuracy),
-              
+
               Spacer(),
-              
+
               // Action buttons (removed Expanded to fix layout issues)
-              if (quizResult!.detailedResults != null) ...[
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    label: "Review Answers", 
-                    onTap: () {
-                      
-                    },
-                  ),
+              SizedBox(
+                width: double.infinity,
+                child: PrimaryButton(
+                  label: "Review Answers",
+                  onTap: () {
+                    Navigator.pushNamed(context, ReviewDetailsScreen.id);
+                  },
                 ),
-                SizedBox(height: sy(context, 16)),
-              ],
-              
+              ),
+              SizedBox(height: sy(context, 16)),
+
               SizedBox(
                 width: double.infinity,
                 child: PrimaryButton(
@@ -158,7 +155,7 @@ class ResultPage extends StatelessWidget {
                   },
                 ),
               ),
-              
+
               SizedBox(height: sy(context, 23)),
             ],
           ),
@@ -193,7 +190,7 @@ class ResultPage extends StatelessWidget {
   Widget _buildPerformanceMessage(double accuracy) {
     String message;
     Color messageColor;
-    
+
     if (accuracy >= 0.9) {
       message = "Excellent work! 🎉";
       messageColor = Colors.green;
@@ -207,7 +204,7 @@ class ResultPage extends StatelessWidget {
       message = "Keep studying and try again! 💪";
       messageColor = Colors.red;
     }
-    
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(

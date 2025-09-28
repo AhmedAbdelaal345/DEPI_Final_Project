@@ -1,17 +1,16 @@
-import 'package:depi_final_project/features/Quiz/presentation/Screens/quiz_details_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/quiz_details_screen.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/quiz_page.dart';
 import 'package:depi_final_project/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'features/review_answers/data/repositories/mock_review_repository_impl.dart';
-import 'features/review_answers/presentation/cubit/review_answers_cubit.dart';
+
+
 import 'features/review_answers/presentation/screens/review_selection_screen.dart';
-import 'features/splash/presentation/screens/splash_screen.dart';
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +57,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        '/details': (_) => const QuizDetailsScreen(),
+        '/details': (_) => const QuizDetailsScreen(subject: '', quizData: {},),
         QuizPage.id: (_) => const QuizPage(),
       },
       home: const ReviewSelectionScreen(),

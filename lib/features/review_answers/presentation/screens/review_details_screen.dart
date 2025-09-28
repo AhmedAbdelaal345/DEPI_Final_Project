@@ -12,7 +12,7 @@ import '../widgets/question_container.dart';
 class ReviewDetailsScreen extends StatefulWidget {
   final bool fetchWrongAnswers;
   const ReviewDetailsScreen({super.key, required this.fetchWrongAnswers});
-
+static const id = "/reviewdetailsscreen";
   @override
   State<ReviewDetailsScreen> createState() => _ReviewDetailsScreenState();
 }
