@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>  TeacherScreen(), // Replace with TeacherWrapperPage if needed
+            builder: (context) =>  WrapperPage(), // Replace with TeacherWrapperPage if needed
           ),
         );
         return;

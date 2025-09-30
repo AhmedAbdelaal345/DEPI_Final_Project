@@ -29,20 +29,17 @@ class QuizCubit extends Cubit<QuizState> {
     
     // Check if cubit is already disposed or closed
     if (_disposed || isClosed) {
-      developer.log('QuizCubit: Already disposed or closed, ignoring request');
       return;
     }
 
     // Validate quizId
     if (quizId.isEmpty) {
-      developer.log('QuizCubit: Empty quiz ID provided');
       if (!_disposed && !isClosed) {
         emit(ErrorState('Invalid quiz ID'));
       }
       return;
     }
     
-    // Only emit loading if not already in loading state
     if (state is! LoadingState) {
       emit(LoadingState());
     }
@@ -86,10 +83,8 @@ class QuizCubit extends Cubit<QuizState> {
             },
           );
       
-      developer.log('QuizCubit: Got ${snapshot.docs.length} question documents');
       
       if (snapshot.docs.isEmpty) {
-        developer.log('QuizCubit: No questions found in quiz');
         if (!_disposed && !isClosed) {
           emit(ErrorState('No questions found in this quiz'));
         }
