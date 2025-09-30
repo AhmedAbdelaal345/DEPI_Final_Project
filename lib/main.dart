@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      
         routes: {
           WrapperPage.id: (context) => WrapperPage(),
           QuizPage.id: (context) => QuizPage(),

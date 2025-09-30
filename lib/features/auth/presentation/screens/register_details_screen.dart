@@ -18,7 +18,7 @@ import '../widgets/custom_text_field.dart';
 import '../widgets/social_icon_button.dart';
 
 class RegisterDetailsScreen extends StatefulWidget {
-  RegisterDetailsScreen({super.key, this.isTeacher = false});
+  RegisterDetailsScreen({super.key, required this.isTeacher});
 
   bool isTeacher;
 
@@ -37,6 +37,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
   String get collectionName => widget.isTeacher ? 'teacher' : 'Student';
 
   CollectionReference get users => FirebaseFirestore.instance.collection(collectionName);
+
 
   @override
   void dispose() {

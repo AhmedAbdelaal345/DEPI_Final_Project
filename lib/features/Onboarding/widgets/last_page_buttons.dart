@@ -18,7 +18,7 @@ class LastPageButtons extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RegisterDetailsScreen(),
+                  builder: (context) => RegisterDetailsScreen(isTeacher: false,),
                 ),
               );
             },

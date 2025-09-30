@@ -62,7 +62,7 @@ class OnboardCard extends StatelessWidget {
                           // Navigate to the login screen
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => RegisterDetailsScreen()),
+                            MaterialPageRoute(builder: (context) => RegisterDetailsScreen(isTeacher: false,)),
                           );
                         },
                         style: ElevatedButton.styleFrom(
