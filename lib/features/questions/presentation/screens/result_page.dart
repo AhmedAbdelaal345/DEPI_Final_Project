@@ -36,7 +36,7 @@ class ResultPage extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: EdgeInsets.all(16.0),
           child: Column(
             children: [
@@ -128,9 +128,9 @@ class ResultPage extends StatelessWidget {
               // Performance message
               _buildPerformanceMessage(quizResult!.accuracy),
 
-              Spacer(),
+              SizedBox(height: sy(context, 60)),
 
-              // Action buttons (removed Expanded to fix layout issues)
+              // Action buttons
               SizedBox(
                 width: double.infinity,
                 child: PrimaryButton(

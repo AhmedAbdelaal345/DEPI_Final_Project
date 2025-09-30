@@ -34,9 +34,9 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
   final _confirmPasswordController = TextEditingController();
   final _subjectController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final CollectionReference users = FirebaseFirestore.instance.collection(
-    'teacher',
-  );
+  String get collectionName => widget.isTeacher ? 'teacher' : 'Student';
+
+  CollectionReference get users => FirebaseFirestore.instance.collection(collectionName);
 
   @override
   void dispose() {
@@ -214,7 +214,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                     'email': _emailController.text,
                                     'password': _passwordController.text,
                                     'phone': _phoneController.text,
-                                    "subject": _subjectController.text,
+                                    if (widget.isTeacher) 'subject': _subjectController.text,
                                     'uid': credential.user?.uid,
                                   });
                                 } on FirebaseAuthException catch (e) {

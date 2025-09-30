@@ -25,52 +25,54 @@ class PageComponent extends StatelessWidget {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.tealHighlight, width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text(
-                  "${numOfQuestion} : ",
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: AppColors.card,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(width: width / 84.5),
-                Expanded(
-                  child: Text(
-                    "${question} ",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.tealHighlight, width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Text(
+                    "${numOfQuestion} : ",
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: AppColors.card,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(width: width / 84.5),
+                  Expanded(
+                    child: Text(
+                      "${question} ",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.card,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        SizedBox(height: height / 23),
-        ...selectedAnswers.asMap().entries.map((entry) {
-          int index = entry.key;
-          String answer = entry.value;
-          return _answerContainer(
-            context,
-            width, 
-            answer, 
-            index,
-          );
-        }).toList(),
-        SizedBox(height: height / 23),
-      ],
+          SizedBox(height: height / 23),
+          ...selectedAnswers.asMap().entries.map((entry) {
+            int index = entry.key;
+            String answer = entry.value;
+            return _answerContainer(
+              context,
+              width, 
+              answer, 
+              index,
+            );
+          }).toList(),
+          SizedBox(height: height / 23),
+        ],
+      ),
     );
   }
 

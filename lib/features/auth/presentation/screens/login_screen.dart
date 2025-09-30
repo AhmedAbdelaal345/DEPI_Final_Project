@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/forgotPasswordPage.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/teacher_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +36,70 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  Future<void> _checkUserTypeAndNavigate(String? uid) async {
+    if (uid == null) return;
+
+    try {
+      // Check if user exists in Student collection
+      DocumentSnapshot studentDoc = await FirebaseFirestore.instance
+          .collection('Student')
+          .doc(uid)
+          .get();
+
+      if (studentDoc.exists) {
+        print('User is a Student');
+        // Navigate to student home page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const WrapperPage(),
+          ),
+        );
+        return;
+      }
+
+      // Check if user exists in teacher collection
+      DocumentSnapshot teacherDoc = await FirebaseFirestore.instance
+          .collection('teacher')
+          .doc(uid)
+          .get();
+
+      if (teacherDoc.exists) {
+        print('User is a Teacher');
+        // Navigate to teacher home page (you can create a different screen for teachers)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>  TeacherScreen(), // Replace with TeacherWrapperPage if needed
+          ),
+        );
+        return;
+      }
+
+      // If user not found in either collection
+      Fluttertoast.showToast(
+        msg: "User data not found. Please contact support.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      print('Error checking user type: $e');
+      Fluttertoast.showToast(
+        msg: "Error retrieving user data. Please try again.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -49,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Login Successful!')),
                 );
-                Navigator.push(context, MaterialPageRoute(builder: (context) => WrapperPage(),));
+                // Remove this navigation as it will be handled by _checkUserTypeAndNavigate
               } else if (state.status == LoginStatus.failure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -181,6 +247,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   print(
                                     'User logged in: ${credential.user?.email}',
                                   );
+
+                                  // Check if user is Student or Teacher
+                                  await _checkUserTypeAndNavigate(credential.user?.uid);
                                 } on FirebaseAuthException catch (e) {
                                   String errorMessage;
 

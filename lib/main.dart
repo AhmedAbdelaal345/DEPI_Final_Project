@@ -14,6 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'features/splash/presentation/screens/splash_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +46,8 @@ class MyApp extends StatelessWidget {
         // Add other cubits/providers as needed
       ],
       child: MaterialApp(
-        home: WrapperPage(),
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
         theme: ThemeData(
         useMaterial3: false,
         scaffoldBackgroundColor: AppColors.bg,
@@ -71,7 +74,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-
         routes: {
           WrapperPage.id: (context) => WrapperPage(),
           QuizPage.id: (context) => QuizPage(),
