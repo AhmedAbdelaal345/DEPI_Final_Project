@@ -34,16 +34,16 @@ class CustomReviewButton extends StatelessWidget {
               : Colors.white.withOpacity(0.5),
           elevation: isEnabled ? 2 : 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
           ),
         ),
         child: Text(
           text,
           style: GoogleFonts.judson(
-            fontSize: screenWidth * 0.045,
+            fontSize: screenWidth * 0.055,
             fontWeight: FontWeight.w600,
             color: isEnabled 
-                ? Colors.white 
+                ? ColorApp.backgroundColor
                 : Colors.white.withOpacity(0.5),
           ),
         ),

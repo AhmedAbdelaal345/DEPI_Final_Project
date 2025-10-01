@@ -3,8 +3,9 @@ import 'package:depi_final_project/features/review_answers/presentation/cubit/re
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../home/presentation/Screens/wrapper_page.dart';
 import '../cubit/review_answers_cubit.dart';
-import '../widgets/app_drawer.dart';
+import '../widgets/app_drawer_1.dart';
 import '../widgets/custom_review_button.dart';
 import 'review_details_screen.dart';
 
@@ -17,9 +18,7 @@ class ReviewSelectionScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: ColorApp.backgroundColor,
       appBar: AppBar(
-        backgroundColor: ColorApp.backgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -36,7 +35,16 @@ class ReviewSelectionScreen extends StatelessWidget {
           ),
         ],
       ),
-      endDrawer: const AppDrawer(),
+      endDrawer: AppDrawer1(
+        onItemTapped: (index) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => WrapperPage(initialIndex: index),
+            ),
+                (Route<dynamic> route) => false,
+          );
+        },
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.065),
         child: Column(

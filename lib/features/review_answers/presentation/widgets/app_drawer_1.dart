@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../core/constants/color_app.dart';
-import '../../../home/presentation/Screens/home_screen.dart';
 
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+
+class AppDrawer1 extends StatelessWidget {
+  final Function(int) onItemTapped;
+  const AppDrawer1({super.key, required this.onItemTapped});
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +52,8 @@ class AppDrawer extends StatelessWidget {
             icon: Icons.home_outlined,
             text: 'Home',
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
+              Navigator.pop(context); // أغلق القائمة أولاً
+              onItemTapped(0); // استدعي الدالة بالـ index الصحيح
             },
           ),
           const Divider(color: Color(0xff4FB3B7)),
@@ -63,8 +61,8 @@ class AppDrawer extends StatelessWidget {
             icon: Icons.person_outline,
             text: 'Profile',
             onTap: () {
-              // TODO: Navigate to Profile Screen
               Navigator.pop(context);
+              onItemTapped(1);
             },
           ),
           const Divider(color: Color(0xff4FB3B7)),
@@ -72,8 +70,8 @@ class AppDrawer extends StatelessWidget {
             icon: Icons.history_edu_outlined,
             text: 'History',
             onTap: () {
-              // TODO: Navigate to History Screen
               Navigator.pop(context);
+              onItemTapped(2);
             },
           ),
           const Divider(color: Color(0xff4FB3B7)),
@@ -81,8 +79,8 @@ class AppDrawer extends StatelessWidget {
             icon: Icons.settings_outlined,
             text: 'Setting',
             onTap: () {
-              // TODO: Navigate to Settings Screen
               Navigator.pop(context);
+              onItemTapped(3);
             },
           ),
         ],
