@@ -1,9 +1,9 @@
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/primary_button.dart';
-import 'package:depi_final_project/features/review_answers/presentation/screens/review_details_screen.dart'
-    show ReviewDetailsScreen;
 import 'package:flutter/material.dart';
+
+import '../../../review_answers/presentation/screens/review_selection_screen.dart';
 
 class QuizResult {
   final int totalQuestions;
@@ -136,7 +136,10 @@ class ResultPage extends StatelessWidget {
                 child: PrimaryButton(
                   label: "Review Answers",
                   onTap: () {
-                    Navigator.pushNamed(context, ReviewDetailsScreen.id);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ReviewSelectionScreen()),
+                    );
                   },
                 ),
               ),

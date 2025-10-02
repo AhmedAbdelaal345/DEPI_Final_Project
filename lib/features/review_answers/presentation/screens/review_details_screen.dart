@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/color_app.dart';
+import '../../../home/presentation/Screens/wrapper_page.dart';
 import '../../domain/entities/review_question.dart';
 import '../cubit/review_answers_cubit.dart';
 import '../cubit/review_answers_state.dart';
 import '../widgets/answer_option.dart';
-import '../widgets/app_drawer.dart';
+import '../widgets/app_drawer_1.dart';
 import '../widgets/navigation_buttons.dart';
 import '../widgets/question_container.dart';
 
@@ -35,9 +36,7 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: ColorApp.backgroundColor,
       appBar: AppBar(
-        backgroundColor: ColorApp.backgroundColor,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -55,7 +54,16 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
         ],
       ),
       // ADDED THE DRAWER HERE
-      endDrawer: const AppDrawer(),
+      endDrawer: AppDrawer1(
+        onItemTapped: (index) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => WrapperPage(initialIndex: index),
+            ),
+                (Route<dynamic> route) => false,
+          );
+        },
+      ),
       body: BlocBuilder<ReviewAnswersCubit, ReviewAnswersState>(
         builder: (context, state) {
           if (state is ReviewAnswersLoading) {
