@@ -10,6 +10,7 @@ class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
     required String email,
     required String password,
     required String confirmPassword,
+    required bool isTeacher,
   }) {
     emit(
       state.copyWith(
@@ -17,6 +18,7 @@ class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
         emailError: null,
         passwordError: null,
         confirmPasswordError: null,
+        
         generalError: null,
       ),
     );

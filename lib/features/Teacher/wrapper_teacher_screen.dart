@@ -3,24 +3,22 @@ import 'package:depi_final_project/features/home/presentation/Screens/profile_sc
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 
-
-class Wrabberteacherpage extends StatefulWidget {
-  const Wrabberteacherpage({super.key});
-static const String id = '/wrapper-page';
+class WrapperTeacherPage extends StatefulWidget {
+  const WrapperTeacherPage({super.key});
+  static const String id = '/wrapper-page';
   @override
-  State<Wrabberteacherpage> createState() => _WrapperPageState();
+  State<WrapperTeacherPage> createState() => _WrapperPageState();
 }
 
-class _WrapperPageState extends State<Wrabberteacherpage> {
+class _WrapperPageState extends State<WrapperTeacherPage> {
   int _currentIndex = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   List<Widget> get _screens => [
     Hometeacher(),
     ProfileScreen(),
-  //const QuizHistoryScreen(),
+    //const QuizHistoryScreen(),
     SettingScreen(),
   ];
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
+import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/forgotPasswordPage.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
@@ -41,36 +42,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       // Check if user exists in Student collection
-      DocumentSnapshot studentDoc = await FirebaseFirestore.instance
-          .collection('Student')
-          .doc(uid)
-          .get();
+      DocumentSnapshot studentDoc =
+          await FirebaseFirestore.instance.collection('Student').doc(uid).get();
 
       if (studentDoc.exists) {
         print('User is a Student');
         // Navigate to student home page
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => const WrapperPage(),
-          ),
+          MaterialPageRoute(builder: (context) => const WrapperPage()),
         );
         return;
       }
 
-      // Check if user exists in teacher collection
-      DocumentSnapshot teacherDoc = await FirebaseFirestore.instance
-          .collection('teacher')
-          .doc(uid)
-          .get();
+      DocumentSnapshot teacherDoc =
+          await FirebaseFirestore.instance.collection('teacher').doc(uid).get();
 
       if (teacherDoc.exists) {
         print('User is a Teacher');
-        // Navigate to teacher home page (you can create a different screen for teachers)
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>  WrapperPage(), // Replace with TeacherWrapperPage if needed
+            builder:
+                (context) =>
+                    const WrapperPage(initialIndex: 0, isTeacher: true),
           ),
         );
         return;
@@ -129,7 +124,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 return Form(
                   key: _formKey,
                   child: Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: screenWidth * 0.065),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.065,
+                    ),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             subtitle: 'Welcome  ! please enter your details',
                           ),
 
-                           SizedBox(height: screenHeight * 0.05),
+                          SizedBox(height: screenHeight * 0.05),
                           CustomTextField(
                             controller: _emailController,
                             hintText: 'Enter your email',
@@ -193,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: ColorApp.splashTextColor,
                                 ),
                               ),
-                               Text(
+                              Text(
                                 'Remember this device',
                                 style: TextStyle(
                                   color: ColorApp.whiteColor,
@@ -212,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   );
                                 },
-                                child:  Text(
+                                child: Text(
                                   'Forget password',
                                   style: TextStyle(
                                     color: ColorApp.splashTextColor,
@@ -249,7 +246,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
 
                                   // Check if user is Student or Teacher
-                                  await _checkUserTypeAndNavigate(credential.user?.uid);
+                                  await _checkUserTypeAndNavigate(
+                                    credential.user?.uid,
+                                  );
                                 } on FirebaseAuthException catch (e) {
                                   String errorMessage;
 
@@ -308,8 +307,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                             ),
-                           SizedBox(height: screenHeight * 0.05),
-                          DividerWithText(text:' OR Login with '),
+                          SizedBox(height: screenHeight * 0.05),
+                          DividerWithText(text: ' OR Login with '),
                           SizedBox(height: screenHeight * 0.05),
 
                           SocialLoginButtons(),
@@ -321,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.pop(context);
                             },
                             child: RichText(
-                              text:  TextSpan(
+                              text: TextSpan(
                                 style: TextStyle(
                                   fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w400,

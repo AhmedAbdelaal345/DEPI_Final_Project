@@ -1,4 +1,6 @@
 
+import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
+import 'package:depi_final_project/features/auth/presentation/cubit/register_details_cubit.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cubit.dart';
@@ -37,6 +39,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return   MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => LoginCubit()),
+        BlocProvider(create: (context) => RegisterDetailsCubit()),
         BlocProvider<QuizCubit>(
           create: (context) => QuizCubit(),
         ),

@@ -1,6 +1,6 @@
+import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/color_app.dart';
 import '../../../home/presentation/Screens/wrapper_page.dart';
 import '../../domain/entities/review_question.dart';
 import '../cubit/review_answers_cubit.dart';
@@ -13,7 +13,7 @@ import '../widgets/question_container.dart';
 class ReviewDetailsScreen extends StatefulWidget {
   final bool fetchWrongAnswers;
   const ReviewDetailsScreen({super.key, required this.fetchWrongAnswers});
-static const id = "/reviewdetailsscreen";
+  static const id = "/reviewdetailsscreen";
   @override
   State<ReviewDetailsScreen> createState() => _ReviewDetailsScreenState();
 }
@@ -55,12 +55,16 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
       ),
       // ADDED THE DRAWER HERE
       endDrawer: AppDrawer1(
-        onItemTapped: (index) {
+        onItemTapped: (index) async {
+          final isTeacher =
+              await BlocProvider.of<LoginCubit>(context).isTeacher();
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => WrapperPage(initialIndex: index),
+              builder:
+                  (context) =>
+                      WrapperPage(initialIndex: index, isTeacher: isTeacher),
             ),
-                (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
           );
         },
       ),

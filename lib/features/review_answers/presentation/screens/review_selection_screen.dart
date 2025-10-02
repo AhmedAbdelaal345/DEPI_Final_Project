@@ -1,4 +1,4 @@
-import 'package:depi_final_project/core/constants/color_app.dart';
+import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/review_answers/presentation/cubit/review_answers_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,12 +36,17 @@ class ReviewSelectionScreen extends StatelessWidget {
         ],
       ),
       endDrawer: AppDrawer1(
-        onItemTapped: (index) {
+        onItemTapped: (index) async {
+          final isTeacher =
+              await BlocProvider.of<LoginCubit>(context).isTeacher();
+
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => WrapperPage(initialIndex: index),
+              builder:
+                  (context) =>
+                      WrapperPage(initialIndex: index, isTeacher: isTeacher),
             ),
-                (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
           );
         },
       ),
@@ -74,55 +79,61 @@ class ReviewSelectionScreen extends StatelessWidget {
               height: screenHeight * 0.22,
             ),
             SizedBox(height: screenHeight * 0.1),
-            
+
             // Check if ReviewAnswersCubit is available and has data
             BlocBuilder<ReviewAnswersCubit, ReviewAnswersState>(
               builder: (context, state) {
                 final cubit = context.read<ReviewAnswersCubit>();
                 final hasWrongAnswers = cubit.wrongCount > 0;
                 final hasCorrectAnswers = cubit.correctCount > 0;
-                
+
                 return Column(
                   children: [
                     // Wrong Answers Button
                     CustomReviewButton(
-                      text: hasWrongAnswers 
-                          ? 'Wrong Answers (${cubit.wrongCount})'
-                          : 'Wrong Answers (0)',
-                      onPressed: hasWrongAnswers 
-                          ? () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const ReviewDetailsScreen(
-                                    fetchWrongAnswers: true,
+                      text:
+                          hasWrongAnswers
+                              ? 'Wrong Answers (${cubit.wrongCount})'
+                              : 'Wrong Answers (0)',
+                      onPressed:
+                          hasWrongAnswers
+                              ? () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => const ReviewDetailsScreen(
+                                          fetchWrongAnswers: true,
+                                        ),
                                   ),
-                                ),
-                              );
-                            }
-                          : null, // Disable if no wrong answers
+                                );
+                              }
+                              : null, // Disable if no wrong answers
                       isEnabled: hasWrongAnswers,
                     ),
                     SizedBox(height: screenHeight * 0.03),
-                    
+
                     // Correct Answers Button
                     CustomReviewButton(
-                      text: hasCorrectAnswers 
-                          ? 'Correct Answers (${cubit.correctCount})'
-                          : 'Correct Answers (0)',
-                      onPressed: hasCorrectAnswers 
-                          ? () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const ReviewDetailsScreen(
-                                    fetchWrongAnswers: false,
+                      text:
+                          hasCorrectAnswers
+                              ? 'Correct Answers (${cubit.correctCount})'
+                              : 'Correct Answers (0)',
+                      onPressed:
+                          hasCorrectAnswers
+                              ? () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => const ReviewDetailsScreen(
+                                          fetchWrongAnswers: false,
+                                        ),
                                   ),
-                                ),
-                              );
-                            }
-                          : null, // Disable if no correct answers
+                                );
+                              }
+                              : null, // Disable if no correct answers
                       isEnabled: hasCorrectAnswers,
                     ),
-                    
+
                     // Show message if no data available
                     if (!hasWrongAnswers && !hasCorrectAnswers) ...[
                       SizedBox(height: screenHeight * 0.05),
@@ -131,7 +142,9 @@ class ReviewSelectionScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.orange.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                          border: Border.all(
+                            color: Colors.orange.withOpacity(0.3),
+                          ),
                         ),
                         child: Column(
                           children: [

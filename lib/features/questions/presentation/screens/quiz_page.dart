@@ -9,7 +9,6 @@ import 'package:depi_final_project/features/questions/presentation/cubit/quiz_st
 import 'package:depi_final_project/features/questions/presentation/screens/result_page.dart';
 import 'package:depi_final_project/features/questions/presentation/widget/page_component.dart';
 import 'package:depi_final_project/features/review_answers/domain/entities/review_question.dart';
-import 'package:depi_final_project/features/review_answers/domain/repositories/review_repositories_implimentation.dart';
 import 'package:depi_final_project/features/review_answers/presentation/cubit/review_answers_cubit.dart';
 import 'package:depi_final_project/features/review_answers/presentation/widgets/navigation_buttons.dart';
 import 'package:flutter/material.dart';
@@ -139,20 +138,18 @@ class _QuizPageState extends State<QuizPage> {
     });
   }
 
-  int _mapAnswerToIndex(String correctKey, Map<String, String> options) {
-    if (correctKey.isEmpty || options.isEmpty) {
-      developer.log('Warning: Empty correctKey or options');
-      return 0;
-    }
-    final upperCorrectKey = correctKey.toUpperCase();
-    final keys =
-        options.keys
-            .toList(); // Sort keys to ensure consistent order (A, B, C, D)
-    keys.sort();
-    final index = keys.indexOf(upperCorrectKey);
-    return index >= 0 ? index : 0;
+int _mapAnswerToIndex(String correctAnswer, List<String> options) {
+  if (correctAnswer.isEmpty || options.isEmpty) {
+    developer.log('Warning: Empty correctAnswer or options');
+    return 0;
   }
-
+  
+  final index = options.indexWhere(
+    (option) => option.trim().toLowerCase() == correctAnswer.trim().toLowerCase()
+  );
+  
+  return index >= 0 ? index : 0;
+}
   void _submitQuiz(QuizState state) {
     if (state is! LoadedState || !mounted) {
       return;
@@ -173,11 +170,11 @@ class _QuizPageState extends State<QuizPage> {
         final reviewQuestion = ReviewQuestion(
           userAnswer:
               userAnswers.containsKey(i)
-                  ? question.options.values.toList()[userAnswers[i]!]
+                  ? question.options.toList()[userAnswers[i]!]
                   : 'Unanswered',
           id: i.toString(),
           questionText: question.text,
-          options: question.options.values.toList(),
+          options: question.options.toList(),
           correctAnswerIndex: correctAnswerIndex,
           userAnswerIndex: userAnswers[i] ?? -1, // -1 for unanswered
           explanation: '',
@@ -335,8 +332,7 @@ class _QuizPageState extends State<QuizPage> {
                           state.questions[currentQuestionIndex].text.toString(),
                       numOfQuestion: "${currentQuestionIndex + 1}",
                       selectedAnswers:
-                          state.questions[currentQuestionIndex].options.values
-                              .toList(),
+                          state.questions[currentQuestionIndex].options                              .toList(),
                       correctAnswerIndex: _mapAnswerToIndex(
                         state.questions[currentQuestionIndex].correctAnswer,
                         state.questions[currentQuestionIndex].options,

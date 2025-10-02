@@ -6,11 +6,11 @@ import 'package:depi_final_project/features/home/presentation/Screens/home_scree
 import '../../../review_answers/presentation/widgets/app_drawer_1.dart';
 import 'quiz_history_screen.dart';
 
-
 class WrapperPage extends StatefulWidget {
   final int initialIndex;
-  const WrapperPage({super.key, this.initialIndex = 0});
-static const String id = '/wrapper-page';
+  const WrapperPage({super.key, this.initialIndex = 0, this.isTeacher});
+  final bool? isTeacher;
+  static const String id = '/wrapper-page';
   @override
   State<WrapperPage> createState() => _WrapperPageState();
 }
@@ -18,7 +18,6 @@ static const String id = '/wrapper-page';
 class _WrapperPageState extends State<WrapperPage> {
   int _currentIndex = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
-
 
   @override
   void initState() {

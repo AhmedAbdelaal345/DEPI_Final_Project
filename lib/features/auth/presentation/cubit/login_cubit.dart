@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'login_state.dart';
 
@@ -7,7 +9,22 @@ class LoginCubit extends Cubit<LoginState> {
   void rememberMeChanged(bool? newValue) {
     emit(state.copyWith(rememberMe: newValue ?? false));
   }
-
+Future<bool> isTeacher() async {
+  try {
+    User? credentials = FirebaseAuth.instance.currentUser;
+    if (credentials == null) return false;
+    
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('teacher')
+        .doc(credentials.uid)
+        .get();
+    
+    return doc.exists;
+  } catch (e) {
+    print('Error checking if user is teacher: $e');
+    return false;
+  }
+}
   void login({
     required String email,
     required String password,

@@ -1,6 +1,8 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 class QuestionModel {
   final String text;
-  final Map<String, String> options;
+  final List<String> options;
   final String correctAnswer;
   final int? points;
   final DateTime? createdAt;
@@ -16,35 +18,35 @@ class QuestionModel {
   factory QuestionModel.fromFirestore(Map<String, dynamic> json) {
     try {
       // Get text field (it's already 'text' in Firebase)
-      final String questionText = json['text'] ?? '';
+      final String questionText = json[AppConstants.text] ?? '';
       
       // Handle options - convert to Map<String, String>
-      Map<String, String> questionOptions = {};
-      if (json['options'] != null) {
-        final optionsData = json['options'];
-        if (optionsData is Map) {
-          questionOptions = Map<String, String>.from(optionsData);
+      List<String> questionOptions = [];
+      if (json[AppConstants.options] != null) {
+        final optionsData = json[AppConstants.options];
+        if (optionsData is List) {
+          questionOptions = optionsData.map((e) => e.toString()).toList();
         }
       }
       
       // Handle correct answer - it's 'Correct_Answer' in Firebase
-      final String correctAns = json['Correct_Answer'] ?? '';
+      final String correctAns = json[AppConstants.correctAnswer] ?? '';
 
       // Handle points
-      int? questionPoints;
-      if (json['points'] != null) {
-        if (json['points'] is String) {
-          questionPoints = int.tryParse(json['points']);
-        } else {
-          questionPoints = json['points'] as int?;
-        }
-      }
+      // int? questionPoints;
+      // if (json['points'] != null) {
+      //   if (json['points'] is String) {
+      //     questionPoints = int.tryParse(json['points']);
+      //   } else {
+      //     questionPoints = json['points'] as int?;
+      //   }
+      // }
 
       // Handle createdAt
       DateTime? createdAtDate;
-      if (json['createdAt'] != null) {
-        if (json['createdAt'] is String) {
-          createdAtDate = DateTime.tryParse(json['createdAt']);
+      if (json[AppConstants.createdAt] != null) {
+        if (json[AppConstants.createdAt] is String) {
+          createdAtDate = DateTime.tryParse(json[AppConstants.createdAt]);
         }
       }
 
@@ -52,7 +54,7 @@ class QuestionModel {
       print('  Text: $questionText');
       print('  Options: $questionOptions');
       print('  Correct Answer: $correctAns');
-      print('  Points: $questionPoints');
+      // print('  Points: $questionPoints');
 
       if (questionText.isEmpty) {
         throw Exception('Question text is empty');
@@ -70,7 +72,7 @@ class QuestionModel {
         text: questionText,
         options: questionOptions,
         correctAnswer: correctAns,
-        points: questionPoints,
+        // points: questionPoints,
         createdAt: createdAtDate,
       );
     } catch (e) {
@@ -86,7 +88,7 @@ class QuestionModel {
       'text': text,
       'options': options,
       'Correct_Answer': correctAnswer, // Use the same field name as in Firestore
-      'points': points?.toString(),
+      // 'points': points?.toString(),
       'createdAt': createdAt?.toIso8601String(),
       
     };
@@ -94,6 +96,6 @@ class QuestionModel {
 
   @override
   String toString() {
-    return 'QuestionModel(text: $text, options: $options, correctAnswer: $correctAnswer, points: $points)';
+    return 'QuestionModel(text: $text, options: $options, correctAnswer: $correctAnswer, /* points: $points*/)';
   }
 }

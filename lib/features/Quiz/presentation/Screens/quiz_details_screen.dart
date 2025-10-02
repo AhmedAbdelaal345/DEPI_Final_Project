@@ -41,7 +41,7 @@ class BeforeQuizScreen extends StatelessWidget {
 
             final quizData = snapshot.data!.data()!;
             final title = quizData["title"] ?? "Quiz";
-            final questions = quizData["questions_count"]?.toString() ?? "N/A";
+            final questions = quizData["question_count"]?.toString() ?? "N/A";
             final timeLimit = quizData["duration"]?.toString() ?? "N/A";
             final creator = quizData["teacherId"] ?? "Unknown";
 

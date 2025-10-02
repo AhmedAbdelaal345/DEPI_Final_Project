@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
+import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
   String get collectionName => widget.isTeacher ? 'teacher' : 'Student';
 
-  CollectionReference get users => FirebaseFirestore.instance.collection(collectionName);
-
+  CollectionReference get users =>
+      FirebaseFirestore.instance.collection(collectionName);
 
   @override
   void dispose() {
@@ -209,13 +210,18 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                     password: _passwordController.text,
                                     confirmPassword:
                                         _confirmPasswordController.text,
+                                    isTeacher:await
+                                        BlocProvider.of<LoginCubit>(
+                                          context,
+                                        ).isTeacher(),
                                   );
                                   await users.doc(credential.user?.uid).set({
                                     'fullName': _fullNameController.text,
                                     'email': _emailController.text,
                                     'password': _passwordController.text,
                                     'phone': _phoneController.text,
-                                    if (widget.isTeacher) 'subject': _subjectController.text,
+                                    if (widget.isTeacher)
+                                      'subject': _subjectController.text,
                                     'uid': credential.user?.uid,
                                   });
                                 } on FirebaseAuthException catch (e) {
