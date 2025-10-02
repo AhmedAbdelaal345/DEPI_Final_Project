@@ -359,11 +359,15 @@ class _QuizPageState extends State<QuizPage> {
                     onPrevious: () {
                       setState(() {
                         currentQuestionIndex--;
+                        //here we return the selected answer index to default when we go back
+                         selectedAnswerIndex = userAnswers[currentQuestionIndex];
                       });
                     },
                     onNext: () {
                       setState(() {
                         currentQuestionIndex++;
+                        //here we return the selected answer index to default when we go forward
+                        selectedAnswerIndex = userAnswers[currentQuestionIndex];
                       });
                     },
                   ), // Submit button

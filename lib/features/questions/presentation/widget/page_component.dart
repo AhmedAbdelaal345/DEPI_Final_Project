@@ -39,7 +39,7 @@ class PageComponent extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "${numOfQuestion} : ",
+                    "Q${numOfQuestion} : ",
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: AppColors.card,
                       fontWeight: FontWeight.w700,
