@@ -60,12 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (teacherDoc.exists) {
         print('User is a Teacher');
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder:
                 (context) =>
-                    const WrapperPage(initialIndex: 0, isTeacher: true),
+                    const WrapperTeacherPage(),
           ),
         );
         return;

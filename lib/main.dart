@@ -1,4 +1,5 @@
 
+import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/register_details_cubit.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
@@ -46,6 +47,8 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ReviewAnswersCubit>(
           create: (context) => ReviewAnswersCubit(),
+        ),BlocProvider<CreateQuizCubit>(
+          create: (context) => CreateQuizCubit(),
         ),
         // Add other cubits/providers as needed
       ],

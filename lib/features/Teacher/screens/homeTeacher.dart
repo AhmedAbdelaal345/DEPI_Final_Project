@@ -95,6 +95,7 @@ class Hometeacher extends StatelessWidget {
       height: screenHeight * heightFactor,
       width: screenWidth * widthFactor,
       decoration: BoxDecoration(
+        color: Color(0xff1877F2).withOpacity(0.11),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: const Color(0xff4FB3B7),

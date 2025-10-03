@@ -72,8 +72,8 @@ class _WrapperPageState extends State<WrapperPage> {
       body: SafeArea(child: _screens[_currentIndex]),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
-        backgroundColor: const Color(0xFF1A1C2B),
-        color: const Color(0xFF2C2F48),
+        backgroundColor: const Color(0xFF000920),
+        color: const Color(0xFF47969E),
         buttonBackgroundColor: const Color(0xFF5AC7C7),
         height: 65,
         index: _currentIndex,
