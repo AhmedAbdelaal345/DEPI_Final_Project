@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_state.dart';
-import 'package:depi_final_project/features/questions/presentation/model/quiz_model.dart' show QuestionModel;
+import 'package:depi_final_project/features/questions/presentation/model/question_model.dart' show QuestionModel;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:developer' as developer;
 
@@ -25,8 +25,7 @@ class QuizCubit extends Cubit<QuizState> {
   }
 
   Future<void> getQuestions(String quizId) async {
-    developer.log('QuizCubit: getQuestions called with ID: $quizId');
-    
+   
     // Check if cubit is already disposed or closed
     if (_disposed || isClosed) {
       return;
@@ -45,10 +44,8 @@ class QuizCubit extends Cubit<QuizState> {
     }
     
     try {
-      developer.log('QuizCubit: Starting Firestore query...');
-      developer.log('QuizCubit: Collection path: ${AppConstants.quizzesCollection}/$quizId/${AppConstants.questionsCollection}');
+     
       
-      // Add timeout to prevent hanging
       final quizDoc = await FirebaseFirestore.instance
           .collection(AppConstants.quizzesCollection)
           .doc(quizId)
@@ -61,16 +58,13 @@ class QuizCubit extends Cubit<QuizState> {
           );
           
       if (!quizDoc.exists) {
-        developer.log('QuizCubit: Quiz document does not exist');
         if (!_disposed && !isClosed) {
           emit(ErrorState('Quiz with ID "$quizId" not found'));
         }
         return;
       }
       
-      developer.log('QuizCubit: Quiz document exists, fetching questions...');
       
-      // Get questions with timeout
       final snapshot = await FirebaseFirestore.instance
           .collection(AppConstants.quizzesCollection)
           .doc(quizId)
@@ -96,7 +90,6 @@ class QuizCubit extends Cubit<QuizState> {
       
       for (var doc in snapshot.docs) {
         try {
-          developer.log('QuizCubit: Processing document ${doc.id}');
           final docData = doc.data();
           
           // Check if document has required fields
@@ -105,14 +98,10 @@ class QuizCubit extends Cubit<QuizState> {
             continue;
           }
           
-          developer.log('QuizCubit: Document data: $docData');
           
           final question = QuestionModel.fromFirestore(docData);
           questions.add(question);
-          developer.log('QuizCubit: Successfully parsed question: ${question.text}');
         } catch (e, stackTrace) {
-          developer.log('QuizCubit: Error parsing question ${doc.id}: $e');
-          developer.log('Stack trace: $stackTrace');
           parseErrors.add('Question ${doc.id}: ${e.toString()}');
           // Continue with other questions even if one fails
         }

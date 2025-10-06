@@ -3,6 +3,7 @@ import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
+import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,35 +60,36 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
       create: (context) => RegisterDetailsCubit(),
       child: Scaffold(
         backgroundColor: ColorApp.backgroundColor,
-        body: SafeArea(
-          child: BlocListener<RegisterDetailsCubit, RegisterDetailsState>(
-            listener: (context, state) {
-              if (state.status == RegisterStatus.success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Registration Successful!'),
-                    duration: Duration(seconds: 1),
-                    backgroundColor: ColorApp.successSnakBar,
-                  ),
-                );
-                // After successful registration, navigate to the login screen
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
-              } else if (state.status == RegisterStatus.failure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.generalError ?? 'An error occurred'),
-                    duration: Duration(seconds: 2),
-                    backgroundColor: ColorApp.errorColor,
-                  ),
-                );
-              }
-            },
-            child: BlocBuilder<RegisterDetailsCubit, RegisterDetailsState>(
-              builder: (context, state) {
-                return Form(
+
+        body: BlocListener<RegisterDetailsCubit, RegisterDetailsState>(
+          listener: (context, state) {
+            if (state.status == RegisterStatus.success) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Registration Successful!'),
+                  duration: Duration(seconds: 1),
+                  backgroundColor: ColorApp.successSnakBar,
+                ),
+              );
+              // After successful registration, navigate to the login screen
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
+            } else if (state.status == RegisterStatus.failure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.generalError ?? 'An error occurred'),
+                  duration: Duration(seconds: 2),
+                  backgroundColor: ColorApp.errorColor,
+                ),
+              );
+            }
+          },
+          child: BlocBuilder<RegisterDetailsCubit, RegisterDetailsState>(
+            builder: (context, state) {
+              return SafeArea(
+                child: Form(
                   key: _formKey,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -160,7 +162,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               return null;
                             },
                           ),
-
+                
                           CustomTextField(
                             controller: _phoneController,
                             hintText: "Enter your Phone Number",
@@ -193,7 +195,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                           else
                             CustomAuthButton(
                               text: 'Register',
-
+                
                               onPressed: () async {
                                 if (_formKey.currentState?.validate() != true) {
                                   return;
@@ -210,8 +212,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                     password: _passwordController.text,
                                     confirmPassword:
                                         _confirmPasswordController.text,
-                                    isTeacher:await
-                                        BlocProvider.of<LoginCubit>(
+                                    isTeacher:
+                                        await BlocProvider.of<LoginCubit>(
                                           context,
                                         ).isTeacher(),
                                   );
@@ -238,7 +240,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                       backgroundColor: ColorApp.errorColor,
                                       gravity: ToastGravity.BOTTOM,
                                     );
-
+                
                                     print(
                                       'The account already exists for that email.',
                                     );
@@ -261,13 +263,13 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                             ),
                           SizedBox(height: screenHeight * 0.05),
                           DividerWithText(text: ' OR Register with '),
-
+                
                           SizedBox(height: screenHeight * 0.05),
-
+                
                           SocialLoginButtons(),
-
+                
                           SizedBox(height: screenHeight * 0.035),
-
+                
                           AuthNavigationLink(
                             baseText: 'Already have an account? ',
                             clickableText: 'Login',
@@ -280,13 +282,39 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               );
                             },
                           ),
+                          SizedBox(height: screenHeight*0.01,),
+                          InkWell(
+                            onTap: () {
+                              widget.isTeacher = !widget.isTeacher;
+                              setState(() {
+                                
+                              });
+                            },
+                            child:
+                                widget.isTeacher == true
+                                    ? Text(
+                                      "To Register as Student",
+                                      style: TextStyle(
+                                        color: AppColors.teal,
+                                        fontSize: screenWidth * 0.035,
+                                      ),
+                                    )
+                                    : Text(
+                                      "To Register as Teacher",
+                                      style: TextStyle(
+                                        color: AppColors.teal,
+                                        fontSize: screenWidth * 0.035,
+                                      ),
+                                    ),
+                          ),
+                          SizedBox(height: 50),
                         ],
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

@@ -138,18 +138,20 @@ class _QuizPageState extends State<QuizPage> {
     });
   }
 
-int _mapAnswerToIndex(String correctAnswer, List<String> options) {
-  if (correctAnswer.isEmpty || options.isEmpty) {
-    developer.log('Warning: Empty correctAnswer or options');
-    return 0;
+  int _mapAnswerToIndex(String correctAnswer, List<String> options) {
+    if (correctAnswer.isEmpty || options.isEmpty) {
+      developer.log('Warning: Empty correctAnswer or options');
+      return 0;
+    }
+
+    final index = options.indexWhere(
+      (option) =>
+          option.trim().toLowerCase() == correctAnswer.trim().toLowerCase(),
+    );
+
+    return index >= 0 ? index : 0;
   }
-  
-  final index = options.indexWhere(
-    (option) => option.trim().toLowerCase() == correctAnswer.trim().toLowerCase()
-  );
-  
-  return index >= 0 ? index : 0;
-}
+
   void _submitQuiz(QuizState state) {
     if (state is! LoadedState || !mounted) {
       return;
@@ -208,10 +210,12 @@ int _mapAnswerToIndex(String correctAnswer, List<String> options) {
         correctAnswers: correctCount,
         wrongAnswers: wrongCount,
         accuracy: accuracy,
+        quizId: ModalRoute.of(context)!.settings.arguments.toString(),
         detailedResults: [
           {'correct': correctAnswers.length},
           {'wrong': wrongAnswers.length},
         ],
+        questions:questions
       );
       Navigator.pushAndRemoveUntil(
         context,
@@ -231,8 +235,6 @@ int _mapAnswerToIndex(String correctAnswer, List<String> options) {
     final secondsStr = remainingSeconds.toString().padLeft(2, '0');
     return "$minutesStr:$secondsStr";
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +334,8 @@ int _mapAnswerToIndex(String correctAnswer, List<String> options) {
                           state.questions[currentQuestionIndex].text.toString(),
                       numOfQuestion: "${currentQuestionIndex + 1}",
                       selectedAnswers:
-                          state.questions[currentQuestionIndex].options                              .toList(),
+                          state.questions[currentQuestionIndex].options
+                              .toList(),
                       correctAnswerIndex: _mapAnswerToIndex(
                         state.questions[currentQuestionIndex].correctAnswer,
                         state.questions[currentQuestionIndex].options,
@@ -356,7 +359,7 @@ int _mapAnswerToIndex(String correctAnswer, List<String> options) {
                       setState(() {
                         currentQuestionIndex--;
                         //here we return the selected answer index to default when we go back
-                         selectedAnswerIndex = userAnswers[currentQuestionIndex];
+                        selectedAnswerIndex = userAnswers[currentQuestionIndex];
                       });
                     },
                     onNext: () {
@@ -403,8 +406,9 @@ int _mapAnswerToIndex(String correctAnswer, List<String> options) {
       ),
     );
   }
+
   void dispose() {
     _timer?.cancel();
     super.dispose();
   }
-} 
+}

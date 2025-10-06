@@ -1,7 +1,12 @@
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/primary_button.dart';
+import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
+import 'package:depi_final_project/features/questions/presentation/model/question_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../review_answers/presentation/screens/review_selection_screen.dart';
 
@@ -10,14 +15,16 @@ class QuizResult {
   final int correctAnswers;
   final int wrongAnswers;
   final double accuracy;
-  final List<Map<String, dynamic>>?
-  detailedResults; // Optional: for review answers
-
+  final List<Map<String, dynamic>>? detailedResults;
+  final String quizId;
+  final List<QuestionModel> questions;
   QuizResult({
     required this.totalQuestions,
     required this.correctAnswers,
     required this.wrongAnswers,
     required this.accuracy,
+    required this.quizId,
+    required this.questions,
     this.detailedResults,
   });
 }
@@ -31,136 +38,153 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate accuracy percentage for display
     final accuracyPercentage = (quizResult!.accuracy * 100).toInt();
 
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              SizedBox(height: sy(context, 40)),
-              Text(
-                "Quiz Completed!",
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(height: sy(context, 40)),
+                Text(
+                  "Quiz Completed!",
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: sy(context, 21)),
-              Text(
-                "Your Performance Summary",
-                style: TextStyle(
-                  color: AppColors.white.withOpacity(0.8),
-                  fontSize: 24,
+                SizedBox(height: sy(context, 21)),
+                Text(
+                  "Your Performance Summary",
+                  style: TextStyle(
+                    color: AppColors.white.withOpacity(0.8),
+                    fontSize: 24,
+                  ),
                 ),
-              ),
-              SizedBox(height: sy(context, 60)),
+                SizedBox(height: sy(context, 60)),
 
-              // Circular Progress Indicator with dynamic value
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: CircularProgressIndicator(
-                      value: quizResult!.accuracy,
-                      strokeWidth: 12,
-                      backgroundColor: AppColors.bg.withOpacity(0.3),
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        _getAccuracyColor(quizResult!.accuracy),
+                // Circular Progress Indicator with dynamic value
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: CircularProgressIndicator(
+                        value: quizResult!.accuracy,
+                        strokeWidth: 12,
+                        backgroundColor: AppColors.bg.withOpacity(0.3),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          _getAccuracyColor(quizResult!.accuracy),
+                        ),
+                        strokeCap: StrokeCap.round,
                       ),
-                      strokeCap: StrokeCap.round,
                     ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "$accuracyPercentage%",
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "$accuracyPercentage%",
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "Score",
-                        style: TextStyle(
-                          color: AppColors.white.withOpacity(0.7),
-                          fontSize: 16,
+                        Text(
+                          "Score",
+                          style: TextStyle(
+                            color: AppColors.white.withOpacity(0.7),
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              SizedBox(height: sy(context, 60)),
-
-              // Statistics Row with dynamic values
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildStatColumn(
-                    "$accuracyPercentage%",
-                    "Accuracy",
-                    AppColors.tealHighlight,
-                  ),
-                  _buildStatColumn(
-                    "${quizResult!.correctAnswers}",
-                    "Correct",
-                    Colors.green,
-                  ),
-                  _buildStatColumn(
-                    "${quizResult!.wrongAnswers}",
-                    "Wrong",
-                    Colors.red,
-                  ),
-                ],
-              ),
-
-              SizedBox(height: sy(context, 60)),
-
-              // Performance message
-              _buildPerformanceMessage(quizResult!.accuracy),
-
-              SizedBox(height: sy(context, 60)),
-
-              // Action buttons
-              SizedBox(
-                width: double.infinity,
-                child: PrimaryButton(
-                  label: "Review Answers",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ReviewSelectionScreen()),
-                    );
-                  },
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: sy(context, 16)),
 
-              SizedBox(
-                width: double.infinity,
-                child: PrimaryButton(
-                  label: "Back to Home",
-                  onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      WrapperPage.id,
-                      (route) => false,
-                    );
-                  },
+                SizedBox(height: sy(context, 60)),
+
+                // Statistics Row with dynamic values
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildStatColumn(
+                      "$accuracyPercentage%",
+                      "Accuracy",
+                      AppColors.tealHighlight,
+                    ),
+                    _buildStatColumn(
+                      "${quizResult!.correctAnswers}",
+                      "Correct",
+                      Colors.green,
+                    ),
+                    _buildStatColumn(
+                      "${quizResult!.wrongAnswers}",
+                      "Wrong",
+                      Colors.red,
+                    ),
+                  ],
                 ),
-              ),
 
-              SizedBox(height: sy(context, 23)),
-            ],
+                SizedBox(height: sy(context, 60)),
+
+                // Performance message
+                _buildPerformanceMessage(quizResult!.accuracy),
+
+                SizedBox(height: sy(context, 60)),
+
+                // Action buttons
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    label: "Review Answers",
+                    onTap: () async {
+                      await BlocProvider.of<ResultCubit>(
+                        context,
+                      ).saveStudentQuizResult(
+                        studentId: FirebaseAuth.instance.currentUser!.uid,
+                        quizId: quizResult!.quizId,
+                        questionsWithAnswers: quizResult!.detailedResults!,
+                        questions: quizResult!.questions,
+                        status:
+                            quizResult!.correctAnswers /
+                                        quizResult!.totalQuestions >
+                                    0.5
+                                ? "Pass"
+                                : "Fail",
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ReviewSelectionScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: sy(context, 16)),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    label: "Back to Home",
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        WrapperPage.id,
+                        (route) => false,
+                      );
+                    },
+                  ),
+                ),
+
+                SizedBox(height: sy(context, 23)),
+              ],
+            ),
           ),
         ),
       ),

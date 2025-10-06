@@ -8,8 +8,16 @@ abstract class AppConstants {
   static final String options = 'option';
   static final String correctAnswer = 'answer';
   static final String questionsCollection = 'questions';
+  static final String question = 'question';
   static final String quizzesCollection = 'Quizzes';
   static final String teacherCollection = 'teacher';
+  static final String studentCollection = 'Student';
   static final String createdAt = 'createdAt';
+  static final String score = 'score';
+  static final String total = 'total';
+  static final String status = 'status';
+  static final String submittedAt = 'submittedAt';
+  static final String details = 'details';
+  static final String title = 'title';
   static final RegExp phoneRegExp = RegExp(r'^\+[1-9]\d{1,14}$');
 }
