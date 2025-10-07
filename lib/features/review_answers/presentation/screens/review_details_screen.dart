@@ -9,6 +9,7 @@ import '../widgets/answer_option.dart';
 import '../widgets/app_drawer_1.dart';
 import '../widgets/navigation_buttons.dart';
 import '../widgets/question_container.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class ReviewDetailsScreen extends StatefulWidget {
   final bool fetchWrongAnswers;
@@ -33,6 +34,7 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -85,9 +87,9 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
 
           if (state is ReviewAnswersLoaded) {
             if (state.questions.isEmpty) {
-              return const Center(
+              return  Center(
                 child: Text(
-                  'No questions to show.',
+                  l10n.noQuestionsToShow,
                   style: TextStyle(color: Colors.white),
                 ),
               );

@@ -7,12 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../auth/presentation/screens/register_details_screen.dart';
 import '../cubit/splash_cubit.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return BlocProvider(
       create: (context) => SplashCubit()..startTimer(),
       child: BlocListener<SplashCubit, SplashState>(
@@ -41,7 +43,7 @@ class SplashScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 22),
                 Text(
-                  'QUIZLY',
+                  l10n.appName,
                   style: GoogleFonts.irishGrover(
                     fontWeight: FontWeight.w400,
                     fontSize: 64,

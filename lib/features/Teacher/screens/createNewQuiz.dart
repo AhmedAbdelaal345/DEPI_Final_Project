@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
+
 
 class Createnewquiz extends StatefulWidget {
   final String teacherId;
@@ -42,7 +44,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
     final screenWidth  = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final cubit        = context.read<CreateQuizCubit>();
-
+    final l10n = AppLocalizations.of(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (cubit.state.questions.isEmpty) {
         cubit.addqeustion();
@@ -57,7 +59,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
         backgroundColor: const Color(0xff000920),
         centerTitle: true,
         title: Text(
-          "Create New Quiz",
+          l10n.createNewQuiz,
           style: TextStyle(
             fontSize: screenWidth * 0.05,
             fontWeight: FontWeight.w700,
@@ -78,7 +80,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
                 child: containerField(
                   context,
                   quizTitle,
-                  "Enter Quiz title",
+                  l10n.enterQuizTitle,
                 ),
               ),
               Expanded(
@@ -106,15 +108,15 @@ class _CreatenewquizState extends State<Createnewquiz> {
                             children: [
                               Expanded(
                                 child: ListTile(
-                                  title: const Text(
-                                    "Duration (Min)",
+                                  title:  Text(
+                                    l10n.durationInMinutes,
                                     style: TextStyle(fontSize: 20, color: Colors.white),
                                   ),
                                   subtitle: TextFormField(
                                     controller: durationController,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return "This Field required";
+                                        return l10n.thisFieldRequired;
                                       }
                                       return null;
                                     },
@@ -152,8 +154,8 @@ class _CreatenewquizState extends State<Createnewquiz> {
                               const SizedBox(width: 20),
                               Expanded(
                                 child: ListTile(
-                                  title: const Text(
-                                    "Quiz Code",
+                                  title:  Text(
+                                    l10n.quizCode,
                                     style: TextStyle(fontSize: 20, color: Colors.white),
                                   ),
                                   subtitle: Container(
@@ -224,7 +226,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                 child: state is CreateQuizLoading
                                     ? const CircularProgressIndicator(color: Color(0xff4FB3B7))
                                     : Text(
-                                        "Create",
+                                        l10n.create,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: screenWidth * 0.06,
@@ -251,7 +253,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
   Widget containerField(BuildContext context, TextEditingController controller, String hint) {
     final screenWidth  = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final l10n = AppLocalizations.of(context);
     return Container(
       height: screenHeight * 0.08,
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
@@ -264,7 +266,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
         controller: controller,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return "This Field required";
+            return l10n.thisFieldRequired;
           }
           return null;
         },
@@ -297,7 +299,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
     final screenWidth  = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     int selectedIndex  = -1;
-
+    final l10n = AppLocalizations.of(context);
     return StatefulBuilder(
       builder: (context, setState) {
         return Container(
@@ -316,7 +318,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Question ${index + 1}",
+                    l10n.questionNumber(index + 1),
                     style: TextStyle(
                       fontSize: screenWidth * 0.04,
                       fontWeight: FontWeight.w500,
@@ -326,17 +328,17 @@ class _CreatenewquizState extends State<Createnewquiz> {
                   TextButton(
                     onPressed: () => cubit.addqeustion(),
                     child: Text(
-                      "Add Question",
+                      l10n.addQuestion,
                       style: TextStyle(fontSize: screenWidth * 0.035),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: screenHeight * 0.01),
-              containerField(context, questionController, "Enter Question"),
+              containerField(context, questionController, l10n.enterQuestion),
               SizedBox(height: screenHeight * 0.015),
               Text(
-                "Enter options and select correct answer",
+                l10n.enterOptionsAndSelectCorrect,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: screenWidth * 0.035,
@@ -387,7 +389,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
                             controller: optionControllers[i],
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "This Field required";
+                                return l10n.thisFieldRequired;
                               }
                               return null;
                             },
@@ -418,7 +420,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
 
   Widget drawer(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
+    final l10n = AppLocalizations.of(context);
     return Drawer(
       backgroundColor: const Color(0xff061438),
       child: ListView(
@@ -432,7 +434,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
               children: [
                 Image.asset("assets/images/brain_logo.png"),
                 Text(
-                  "QUIZLY",
+                  l10n.appName,
                   style: TextStyle(
                     color: const Color(0xff62DDE1),
                     fontSize: screenWidth * 0.085,
@@ -449,7 +451,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
             ),
             context,
             const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
-            "Home",
+            l10n.home,
           ),
           listtitle(
             () => Navigator.push(
@@ -458,18 +460,18 @@ class _CreatenewquizState extends State<Createnewquiz> {
             ),
             context,
             const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
-            "Profile",
+            l10n.profile,
           ),
           listtitle(
             () {},
             context,
             const Icon(Icons.list, color: Color(0xff62DDE1)),
-            "My Quizzes",
+            l10n.myQuizzes,
           ),
           ListTile(
             leading: const Icon(Icons.settings, color: Color(0xff62DDE1)),
             title: Text(
-              "Setting",
+              l10n.settings,
               style: TextStyle(
                 color: const Color(0xff62DDE1),
                 fontSize: screenWidth * 0.06,

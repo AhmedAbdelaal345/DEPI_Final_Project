@@ -17,7 +17,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _current = 0;
 
-  List<OnboardPageModel> get pages => OnboardingConstants.pages;
 
   @override
   void dispose() {
@@ -25,44 +24,39 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  int get _indicatorIndex =>
-      (_current <= pages.length - 2) ? _current : (pages.length - 2);
-
-  int get _indicatorsCount => (pages.length - 1).clamp(0, pages.length);
-
   @override
   Widget build(BuildContext context) {
+    final List<OnboardPageModel> pages = OnboardingConstants.getPages(context);
+
+    final int indicatorIndex =
+    (_current <= pages.length - 2) ? _current : (pages.length - 2);
+    final int indicatorsCount = (pages.length - 1).clamp(0, pages.length);
+
     return Scaffold(
       backgroundColor: const Color(0xFF0B1426),
       body: SafeArea(
         child: Stack(
           children: [
-            // Background PageView to drive controller and gestures
             OnboardingPageController(
               pageController: _pageController,
               itemCount: pages.length,
               onPageChanged: (index) => setState(() => _current = index),
             ),
-
-            // Foreground fixed layout
             Column(
               children: [
-                // Top illustration area
                 OnboardingIllustrationSection(
                   currentIndex: _current,
                   pages: pages,
                 ),
-
-                // Bottom content area
                 Expanded(
                   flex: 4,
                   child: OnboardingBackground(
                     child: OnboardingContentSection(
                       currentIndex: _current,
                       pages: pages,
-                      indicatorIndex: _indicatorIndex,
-                      indicatorsCount: _indicatorsCount,
-                      onNext: _nextPage,
+                      indicatorIndex: indicatorIndex,
+                      indicatorsCount: indicatorsCount,
+                      onNext: () => _nextPage(pages.length),
                       onPrev: _previousPage,
                     ),
                   ),
@@ -75,8 +69,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  void _nextPage() {
-    if (_current < pages.length - 1) {
+
+  void _nextPage(int pageLength) {
+    if (_current < pageLength - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,

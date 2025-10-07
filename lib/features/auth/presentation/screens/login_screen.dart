@@ -18,6 +18,9 @@ import '../widgets/social_login_buttons.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
 
+import 'package:depi_final_project/l10n/app_localizations.dart';
+
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -97,6 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
@@ -108,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
             listener: (context, state) {
               if (state.status == LoginStatus.success) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Login Successful!')),
+                   SnackBar(content: Text(l10n.loginSuccessful)),
                 );
                 // Remove this navigation as it will be handled by _checkUserTypeAndNavigate
               } else if (state.status == LoginStatus.failure) {
@@ -132,39 +136,39 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           AuthHeader(
-                            title: 'Login',
-                            subtitle: 'Welcome  ! please enter your details',
+                            title: l10n.login,
+                            subtitle: l10n.welcomeMessage,
                           ),
 
                           SizedBox(height: screenHeight * 0.05),
                           CustomTextField(
                             controller: _emailController,
-                            hintText: 'Enter your email',
+                            hintText: l10n.enterYourEmail,
                             prefixIcon: Icons.email_outlined,
                             errorText: state.emailError,
                             validator: (String? value) {
                               if (value!.isEmpty) {
-                                return 'Please enter your email';
+                                return l10n.pleaseEnterYourEmail;
                               }
                               final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                               if (!emailRegex.hasMatch(value)) {
-                                return 'Please enter a valid email';
+                                return l10n.enterValidEmail;
                               }
                               return null;
                             },
                           ),
                           CustomTextField(
                             controller: _passwordController,
-                            hintText: 'Enter your password',
+                            hintText: l10n.enterYourPassword,
                             prefixIcon: Icons.lock_outline,
                             isPassword: true,
                             errorText: state.passwordError,
                             validator: (String? value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
+                                return l10n.pleaseEnterPassword;
                               }
                               if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
+                                return l10n.passwordTooShort;
                               }
                               return null;
                             },
@@ -191,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               Text(
-                                'Remember this device',
+                                l10n.rememberThisDevice,
                                 style: TextStyle(
                                   color: ColorApp.whiteColor,
                                   fontSize: screenWidth * 0.028,
@@ -210,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
                                 },
                                 child: Text(
-                                  'Forget password',
+                                  l10n.forgotPassword,
                                   style: TextStyle(
                                     color: ColorApp.splashTextColor,
                                     fontSize: screenWidth * 0.028,
@@ -226,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             const Center(child: CircularProgressIndicator())
                           else
                             CustomAuthButton(
-                              text: 'Login',
+                              text: l10n.login,
                               onPressed: () async {
                                 if (!_formKey.currentState!.validate()) {
                                   return;
@@ -255,28 +259,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                   switch (e.code) {
                                     case 'invalid-credential':
                                       errorMessage =
-                                          "Invalid email or password. Please try again.";
+                                          l10n.errorInvalidCredential;
                                       break;
                                     case 'user-not-found':
                                       errorMessage =
-                                          "No user found for that email.";
+                                          l10n.errorUserNotFound;
                                       break;
                                     case 'wrong-password':
-                                      errorMessage = "Wrong password provided.";
+                                      errorMessage = l10n.errorWrongPassword;
                                       break;
                                     case 'invalid-email':
-                                      errorMessage = "Invalid email format.";
+                                      errorMessage = l10n.errorInvalidEmail;
                                       break;
                                     case 'user-disabled':
                                       errorMessage =
-                                          "This user account has been disabled.";
+                                          l10n.errorUserDisabled;
                                       break;
                                     case "network-request-failed":
                                       errorMessage =
-                                          "Network error. Please check your internet connection and try again.";
+                                          l10n.errorNetworkRequestFailed;
                                     default:
                                       errorMessage =
-                                          "Login failed: ${e.message}";
+                                          l10n.errorLoginFailed(e.message ?? 'Unknown error');
                                   }
 
                                   Fluttertoast.showToast(
@@ -308,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                           SizedBox(height: screenHeight * 0.05),
-                          DividerWithText(text: ' OR Login with '),
+                          DividerWithText(text: l10n.orLoginWith),
                           SizedBox(height: screenHeight * 0.05),
 
                           SocialLoginButtons(),
@@ -327,13 +331,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: 'Don’t have an account? ',
+                                    text: l10n.dontHaveAnAccount,
                                     style: TextStyle(
                                       color: ColorApp.whiteColor,
                                     ),
                                   ),
                                   TextSpan(
-                                    text: 'Create a new account',
+                                    text: l10n.createNewAccount,
                                     style: TextStyle(
                                       color: ColorApp.splashTextColor,
                                       fontWeight: FontWeight.bold,

@@ -17,6 +17,8 @@ import '../widgets/social_login_buttons.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/social_icon_button.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
+
 
 class RegisterDetailsScreen extends StatefulWidget {
   RegisterDetailsScreen({super.key, required this.isTeacher});
@@ -53,6 +55,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
@@ -64,8 +67,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
             listener: (context, state) {
               if (state.status == RegisterStatus.success) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Registration Successful!'),
+                   SnackBar(
+                    content: Text(l10n.registrationSuccessful),
                     duration: Duration(seconds: 1),
                     backgroundColor: ColorApp.successSnakBar,
                   ),
@@ -98,64 +101,64 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           AuthHeader(
-                            title: 'Register',
-                            subtitle: 'Welcome  ! please enter your details',
+                            title: l10n.register,
+                            subtitle: l10n.welcomeMessage,
                           ),
                           SizedBox(height: screenHeight * 0.05),
                           CustomTextField(
                             controller: _fullNameController,
-                            hintText: 'Full Name',
+                            hintText: l10n.fullName,
                             prefixIcon: Icons.person_outline,
                             errorText: state.fullNameError,
                             validator: (String? value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your full name';
+                                return l10n.enterYourFullName;
                               }
                             },
                           ),
                           CustomTextField(
                             controller: _emailController,
-                            hintText: 'Enter your email',
+                            hintText: l10n.enterYourEmail,
                             prefixIcon: Icons.email_outlined,
                             errorText: state.emailError,
                             validator: (String? value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
+                                return l10n.pleaseEnterYourEmail;
                               }
                               if (!RegExp(
                                 r'^[^@]+@[^@]+\.[^@]+',
                               ).hasMatch(value)) {
-                                return 'Please enter a valid email';
+                                return l10n.enterValidEmail;
                               }
                             },
                           ),
                           CustomTextField(
                             controller: _passwordController,
-                            hintText: 'Enter your password',
+                            hintText: l10n.enterYourPassword,
                             prefixIcon: Icons.lock_outline,
                             isPassword: true,
                             errorText: state.passwordError,
                             validator: (String? value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
+                                return l10n.pleaseConfirmPassword;
                               }
                               if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
+                                return l10n.passwordTooShort;
                               }
                             },
                           ),
                           CustomTextField(
                             controller: _confirmPasswordController,
-                            hintText: 'Confirm your password',
+                            hintText: l10n.confirmYourPassword,
                             prefixIcon: Icons.lock_outline,
                             isPassword: true,
                             errorText: state.confirmPasswordError,
                             validator: (String? value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
+                                return l10n.pleaseConfirmPassword;
                               }
                               if (value != _passwordController.text) {
-                                return 'Passwords do not match';
+                                return l10n.passwordsDoNotMatch;
                               }
                               return null;
                             },
@@ -163,26 +166,26 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
 
                           CustomTextField(
                             controller: _phoneController,
-                            hintText: "Enter your Phone Number",
+                            hintText: l10n.enterYourPhoneNumber,
                             prefixIcon: Icons.phone,
                             errorText: state.phoneError,
                             validator: (String? value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your phone number';
+                                return l10n.pleaseEnterPhoneNumber;
                               }
                               if (!AppConstants.phoneRegExp.hasMatch(value)) {
-                                return 'Please enter a valid phone number';
+                                return l10n.enterValidPhoneNumber;
                               }
                             },
                           ),
                           if (widget.isTeacher)
                             CustomTextField(
                               controller: _subjectController,
-                              hintText: "Enter your Subject",
+                              hintText: l10n.enterYourSubject,
                               prefixIcon: Icons.school,
                               validator: (String? value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter your Subject';
+                                  return l10n.pleaseEnterYourSubject;
                                 }
                                 return null;
                               },
@@ -192,7 +195,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                             const Center(child: CircularProgressIndicator())
                           else
                             CustomAuthButton(
-                              text: 'Register',
+                              text: l10n.register,
 
                               onPressed: () async {
                                 if (_formKey.currentState?.validate() != true) {
@@ -228,13 +231,13 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                   if (e.code == 'weak-password') {
                                     print('The password provided is too weak.');
                                     Fluttertoast.showToast(
-                                      msg: "The password provided is too weak.",
+                                      msg: l10n.errorWeakPassword,
                                       backgroundColor: ColorApp.errorColor,
                                       gravity: ToastGravity.BOTTOM,
                                     );
                                   } else if (e.code == 'email-already-in-use') {
                                     Fluttertoast.showToast(
-                                      msg: "email-already-in-use",
+                                      msg: l10n.errorEmailInUse,
                                       backgroundColor: ColorApp.errorColor,
                                       gravity: ToastGravity.BOTTOM,
                                     );
@@ -260,7 +263,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               },
                             ),
                           SizedBox(height: screenHeight * 0.05),
-                          DividerWithText(text: ' OR Register with '),
+                          DividerWithText(text: l10n.orRegisterWith),
 
                           SizedBox(height: screenHeight * 0.05),
 
@@ -269,8 +272,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                           SizedBox(height: screenHeight * 0.035),
 
                           AuthNavigationLink(
-                            baseText: 'Already have an account? ',
-                            clickableText: 'Login',
+                            baseText: l10n.alreadyHaveAnAccount,
+                            clickableText: l10n.login,
                             onPressed: () {
                               Navigator.push(
                                 context,

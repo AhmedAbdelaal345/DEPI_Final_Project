@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/register_details_screen.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class LastPageButtons extends StatelessWidget {
   const LastPageButtons({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -31,7 +33,7 @@ class LastPageButtons extends StatelessWidget {
               ),
             ),
             child: Text(
-              "I'm a Student",
+              l10n.imAStudent,
               style: GoogleFonts.judson(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -60,7 +62,7 @@ class LastPageButtons extends StatelessWidget {
               ),
             ),
             child: Text(
-              "I'm a Teacher",
+              l10n.imATeacher,
               style: GoogleFonts.judson(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,

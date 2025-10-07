@@ -13,6 +13,7 @@ import 'package:depi_final_project/features/review_answers/presentation/cubit/re
 import 'package:depi_final_project/features/review_answers/presentation/widgets/navigation_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key, this.quizId});
@@ -238,12 +239,12 @@ int _mapAnswerToIndex(String correctAnswer, List<String> options) {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: ColorApp.backgroundColor,
       appBar: AppBar(
         title: Text(
-          'Quiz ID: ${_currentQuizId ?? "Unknown"}',
+          l10n.quizId(_currentQuizId ?? "Unknown"),
           style: const TextStyle(fontSize: 14),
         ),
         backgroundColor: ColorApp.backgroundColor,
@@ -283,7 +284,7 @@ int _mapAnswerToIndex(String correctAnswer, List<String> options) {
           }
 
           if (state is! LoadedState || state.questions.isEmpty) {
-            return const Center(child: Text("No Questions Available"));
+            return  Center(child: Text(l10n.noQuestionsAvailable));
           }
 
           return SafeArea(
@@ -385,7 +386,7 @@ int _mapAnswerToIndex(String correctAnswer, List<String> options) {
                           ),
                         ),
                         child: Text(
-                          "Submit Quiz",
+                          l10n.submitQuiz,
                           style: TextStyle(
                             color: AppColors.hint,
                             fontSize: 24,

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../cubit/locale_cubit.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
       appBar: AppBar(
-        title: const Text('Settings', style: TextStyle(color: Colors.white)),
+        title:  Text(l10n.settings, style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF2C2F48),
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -18,46 +23,78 @@ class SettingScreen extends StatelessWidget {
         children: [
           _buildSettingsTile(
             icon: Icons.notifications,
-            title: 'Notifications',
-            subtitle: 'Manage your notifications',
+            title: l10n.notifications,
+            subtitle: l10n.manageNotifications,
             onTap: () {
               // Handle notifications settings
             },
           ),
           _buildSettingsTile(
             icon: Icons.dark_mode,
-            title: 'Dark Mode',
-            subtitle: 'Toggle dark/light theme',
+            title: l10n.darkMode,
+            subtitle: l10n.toggleTheme,
             onTap: () {
               // Handle theme settings
             },
           ),
           _buildSettingsTile(
             icon: Icons.language,
-            title: 'Language',
-            subtitle: 'Change app language',
+            title: l10n.language,
+            subtitle: l10n.changeLanguage,
             onTap: () {
-              // Handle language settings
+              _showLanguageDialog(context);
             },
           ),
+
           _buildSettingsTile(
             icon: Icons.help,
-            title: 'Help & Support',
-            subtitle: 'Get help and support',
+            title: l10n.helpAndSupport,
+            subtitle: l10n.getHelpAndSupport,
             onTap: () {
               // Handle help
             },
           ),
           _buildSettingsTile(
             icon: Icons.info,
-            title: 'About',
-            subtitle: 'App version and info',
+            title: l10n.about,
+            subtitle: l10n.appVersionInfo,
             onTap: () {
               // Handle about
             },
           ),
         ],
       ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF2C2F48),
+          title: const Text('Choose Language', style: TextStyle(color: Colors.white)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('English', style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  context.read<LocaleCubit>().changeLanguage(const Locale('en'));
+                  Navigator.of(dialogContext).pop();
+                },
+              ),
+              ListTile(
+                title: const Text('العربية', style: TextStyle(color: Colors.white)),
+                onTap: () {
+                  context.read<LocaleCubit>().changeLanguage(const Locale('ar'));
+                  Navigator.of(dialogContext).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

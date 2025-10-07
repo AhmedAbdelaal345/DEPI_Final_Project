@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/color_app.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 
 class AppDrawer1 extends StatelessWidget {
@@ -9,6 +10,7 @@ class AppDrawer1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Drawer(
@@ -33,7 +35,7 @@ class AppDrawer1 extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'QUIZLY',
+                  l10n.appName,
                   style: GoogleFonts.irishGrover(
                     fontWeight: FontWeight.w400,
                     fontSize: screenWidth*0.06,
@@ -50,7 +52,7 @@ class AppDrawer1 extends StatelessWidget {
           const Divider(color: Color(0xff4FB3B7)),
           _buildDrawerItem(
             icon: Icons.home_outlined,
-            text: 'Home',
+            text: l10n.home,
             onTap: () {
               Navigator.pop(context); // أغلق القائمة أولاً
               onItemTapped(0); // استدعي الدالة بالـ index الصحيح
@@ -59,7 +61,7 @@ class AppDrawer1 extends StatelessWidget {
           const Divider(color: Color(0xff4FB3B7)),
           _buildDrawerItem(
             icon: Icons.person_outline,
-            text: 'Profile',
+            text: l10n.profile,
             onTap: () {
               Navigator.pop(context);
               onItemTapped(1);
@@ -68,7 +70,7 @@ class AppDrawer1 extends StatelessWidget {
           const Divider(color: Color(0xff4FB3B7)),
           _buildDrawerItem(
             icon: Icons.history_edu_outlined,
-            text: 'History',
+            text: l10n.profile,
             onTap: () {
               Navigator.pop(context);
               onItemTapped(2);
@@ -77,7 +79,7 @@ class AppDrawer1 extends StatelessWidget {
           const Divider(color: Color(0xff4FB3B7)),
           _buildDrawerItem(
             icon: Icons.settings_outlined,
-            text: 'Setting',
+            text: l10n.settings,
             onTap: () {
               Navigator.pop(context);
               onItemTapped(3);

@@ -4,6 +4,7 @@ import '../widgets/title_bar.dart';
 import '../widgets/input_field.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/app_constants.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,6 +12,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final TextEditingController quiz = TextEditingController();
 
     return Scaffold(
@@ -21,7 +23,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const TitleBar(title: 'Home'),
+               TitleBar(title: l10n.home),
               SizedBox(height: sy(context, 48)),
 
               // input field
@@ -29,7 +31,7 @@ class HomeScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: InputField(
-                    hint: 'Enter quiz code',
+                    hint: l10n.enterQuizCode,
                     controller: quiz,
                   ),
                 ),
@@ -40,7 +42,7 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: PrimaryButton(
-                  label: 'Join',
+                  label: l10n.join,
                   onTap: () {
                     if (quiz.text.isNotEmpty) {
                       Navigator.push(
@@ -53,8 +55,8 @@ class HomeScreen extends StatelessWidget {
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please enter a quiz code'),
+                         SnackBar(
+                          content: Text(l10n.pleaseEnterQuizCode),
                           backgroundColor: Colors.red,
                         ),
                       );

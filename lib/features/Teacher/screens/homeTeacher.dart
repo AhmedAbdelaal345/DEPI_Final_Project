@@ -5,12 +5,14 @@ import 'package:depi_final_project/features/home/presentation/widgets/title_bar.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class Hometeacher extends StatelessWidget {
   const Hometeacher({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final credintial = FirebaseAuth.instance.currentUser;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -24,7 +26,7 @@ class Hometeacher extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const TitleBar(title: 'Home'),
+                 TitleBar(title: l10n.home),
                 SizedBox(height: screenHeight * 0.06),
                 FutureBuilder<String?>(
                   future: context.read<CreateQuizCubit>().getname(credintial!.uid),
@@ -37,7 +39,7 @@ class Hometeacher extends StatelessWidget {
                     }
                     final name = snapshot.data ?? "Unknown";
                     return Text(
-                      "Welcome back! Mr. $name",
+                      l10n.welcomeBack(name),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
@@ -69,14 +71,14 @@ class Hometeacher extends StatelessWidget {
                       ),
                     );
                   },
-                  child: container(context, 0.15, 0.9, "Create a new Quiz"),
+                  child: container(context, 0.15, 0.9, l10n.createNewQuiz),
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    container(context, .2, .4, "Recent\n Quizzes"),
-                    container(context, .2, .4, "Performance Report"),
+                    container(context, .2, .4, l10n.recentQuizzes),
+                    container(context, .2, .4, l10n.performanceReport),
                   ],
                 ),
               ],

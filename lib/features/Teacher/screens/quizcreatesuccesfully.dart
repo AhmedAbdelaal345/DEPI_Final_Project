@@ -3,6 +3,7 @@ import 'package:depi_final_project/features/home/presentation/Screens/profile_sc
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class QuizCreateSuccessful extends StatelessWidget {
   final String quizId;
@@ -11,6 +12,7 @@ class QuizCreateSuccessful extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       endDrawer: drawer(context),
       backgroundColor: const Color(0xff000921),
@@ -49,7 +51,7 @@ class QuizCreateSuccessful extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * 0.04),
                   Text(
-                    "Quiz Created",
+                    l10n.quizCreated,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: screenWidth * 0.06,
@@ -58,7 +60,7 @@ class QuizCreateSuccessful extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * 0.015),
                   Text(
-                    "Anyone who has this code can join and take the quiz.",
+                    l10n.quizCreatedMessage,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -96,7 +98,7 @@ class QuizCreateSuccessful extends StatelessWidget {
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: quizId));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Quiz code copied')),
+                         SnackBar(content: Text(l10n.quizCodeCopied)),
                       );
                     },
                     icon: const Icon(Icons.copy),
@@ -123,7 +125,7 @@ class QuizCreateSuccessful extends StatelessWidget {
                 ),
               ),
               child: Text(
-                "OK",
+                l10n.ok,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: screenWidth * 0.06,

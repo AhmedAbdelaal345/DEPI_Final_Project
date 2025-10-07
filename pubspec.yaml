@@ -41,6 +41,9 @@ dependencies:
   cloud_firestore: ^6.0.1
   introduction_screen:
   flutter_svg: ^2.0.10+1
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
 
 dev_dependencies:
 
@@ -57,6 +60,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

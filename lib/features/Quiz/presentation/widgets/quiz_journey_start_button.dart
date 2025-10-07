@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class QuizJourneyStartButton extends StatelessWidget {
   const QuizJourneyStartButton({super.key, required this.onTap});
@@ -9,6 +10,7 @@ class QuizJourneyStartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       height: sy(context, 70),
       margin: EdgeInsets.symmetric(horizontal: sx(context, 8)),
@@ -50,7 +52,7 @@ class QuizJourneyStartButton extends StatelessWidget {
                 SizedBox(width: sx(context, 12)),
                 Expanded(
                   child: Text(
-                    'Click To Start Your Journey',
+                    l10n.startYourJourney,
                     style: GoogleFonts.judson(
                       color: AppColors.bgDarkText,
                       fontWeight: FontWeight.w700,

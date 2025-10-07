@@ -3,9 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../home/presentation/widgets/app_constants.dart';
 
 class QuizInstructionsCard extends StatelessWidget {
-  const QuizInstructionsCard({super.key, required this.instructions});
+  const QuizInstructionsCard({super.key, required this.instructions, required this.title});
 
   final List<String> instructions;
+  final title;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class QuizInstructionsCard extends StatelessWidget {
                 color: AppColors.bgDarkText,
               ),
               SizedBox(width: sx(context, 8)),
-              Text('Instructions', style: titleStyle),
+              Text(title, style: titleStyle),
             ],
           ),
           SizedBox(height: sy(context, 8)),

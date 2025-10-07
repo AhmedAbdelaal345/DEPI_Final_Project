@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/icon_park_outline.dart';
 import 'package:iconify_flutter/icons/tabler.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 // import 'package:iconify_flutter/icons/arcticons.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -17,12 +18,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFF000920),
       appBar: AppBar(
         backgroundColor: const Color(0xFF000920),
         elevation: 0,
-        title: const Text("Quiz History", style: TextStyle(color: Colors.white)),
+        title:  Text(l10n.profile, style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -47,19 +49,19 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 StatCard(
                   icon: IconParkOutline.list,
-                  label: "All Quizzes taken",
+                  label: l10n.allQuizzesTaken,
                   value: "$quizzesTaken",
                 ),
                 const SizedBox(height: 16),
                 StatCard(
                   icon: Tabler.books,
-                  label: "Subjects",
+                  label: l10n.subjects,
                   value: "$subjects",
                 ),
                 const SizedBox(height: 16),
                 StatCard(
                   icon: Tabler.star, // Use a Tabler icon string
-                  label: "Average Score",
+                  label: l10n.averageScore,
                   value: "$averageScore%",
                 ),
               ],

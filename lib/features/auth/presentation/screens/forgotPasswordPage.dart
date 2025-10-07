@@ -2,6 +2,8 @@ import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
+
 
 class ForgotPasswordPage extends StatelessWidget {
   //const ForgotPasswordPage({super.key});
@@ -10,6 +12,7 @@ class ForgotPasswordPage extends StatelessWidget {
   TextEditingController _emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Color(0xff000921),
       appBar: AppBar(backgroundColor: Color(0xff000921), elevation: 0),
@@ -22,7 +25,7 @@ class ForgotPasswordPage extends StatelessWidget {
             children: [
               SizedBox(height: 30),
               Text(
-                "Forgot password",
+                l10n.forgotPassword,
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 34,
@@ -31,7 +34,7 @@ class ForgotPasswordPage extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Text(
-                "Don’t worry! Enter your email address and\nwe’ll send you a verification code.",
+                l10n.forgotPasswordMessage,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -49,15 +52,15 @@ class ForgotPasswordPage extends StatelessWidget {
                   controller: _emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Field is required";
+                      return l10n.pleaseEnterYourEmail;
                     }
                     if (!emailRegex.hasMatch(value)) {
-                      return "Enter valid Email";
+                      return l10n.enterValidEmail;
                     }
                     return null;
                   },
                   decoration: InputDecoration(
-                    hintText: "Enter your email",
+                    hintText: l10n.enterYourEmail,
                     border: InputBorder.none,
                     prefixIcon: Icon(Icons.email_outlined),
                     contentPadding: EdgeInsets.symmetric(vertical: 14),
@@ -98,7 +101,7 @@ class ForgotPasswordPage extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    "Send Code",
+                    l10n.sendCode,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 24,
@@ -113,7 +116,7 @@ class ForgotPasswordPage extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () {},
                   child: Text(
-                    "Back to login",
+                    l10n.backToLogin,
                     style: TextStyle(
                       color: ColorApp.splashTextColor,
                       fontSize: 16,
@@ -130,14 +133,15 @@ class ForgotPasswordPage extends StatelessWidget {
   }
 
    Future<void> resetPassword(BuildContext context) async {
-    try {
+     final l10n = AppLocalizations.of(context);
+     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: _emailController.text.trim(),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Reset link sent to your email"),
+          content: Text(l10n.resetLinkSent),
           duration: Duration(seconds: 3),
           backgroundColor: Colors.green,
         ),

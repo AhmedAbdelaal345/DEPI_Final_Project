@@ -17,7 +17,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'features/home/presentation/cubit/locale_cubit.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 
 void main() async {
@@ -40,6 +42,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return   MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => LocaleCubit()),
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create: (context) => RegisterDetailsCubit()),
         BlocProvider<QuizCubit>(
@@ -52,8 +55,13 @@ class MyApp extends StatelessWidget {
         ),
         // Add other cubits/providers as needed
       ],
-      child: MaterialApp(
+        child: BlocBuilder<LocaleCubit, Locale>(
+            builder: (context, locale) {
+              return MaterialApp(
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: locale,
         home: SplashScreen(),
         theme: ThemeData(
         useMaterial3: false,
@@ -88,7 +96,9 @@ class MyApp extends StatelessWidget {
           ResultPage.id: (context) => ResultPage(),
           ReviewDetailsScreen.id: (context) => ReviewDetailsScreen(fetchWrongAnswers: true,),
         },
-      ),
+              );
+            },
+        ),
     );
   }
 }

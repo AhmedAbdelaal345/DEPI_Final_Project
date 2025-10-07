@@ -8,6 +8,7 @@ import '../cubit/review_answers_cubit.dart';
 import '../widgets/app_drawer_1.dart';
 import '../widgets/custom_review_button.dart';
 import 'review_details_screen.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class ReviewSelectionScreen extends StatelessWidget {
   const ReviewSelectionScreen({super.key});
@@ -16,7 +17,7 @@ class ReviewSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -55,7 +56,7 @@ class ReviewSelectionScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Review your Answers',
+              l10n.reviewYourAnswers,
               textAlign: TextAlign.center,
               style: GoogleFonts.judson(
                 fontSize: screenWidth * 0.08,
@@ -65,7 +66,7 @@ class ReviewSelectionScreen extends StatelessWidget {
             ),
             SizedBox(height: screenHeight * 0.004),
             Text(
-              'Which Answers you would review first',
+              l10n.whichAnswersToReview,
               textAlign: TextAlign.center,
               style: GoogleFonts.judson(
                 fontSize: screenWidth * 0.052,
@@ -93,8 +94,8 @@ class ReviewSelectionScreen extends StatelessWidget {
                     CustomReviewButton(
                       text:
                           hasWrongAnswers
-                              ? 'Wrong Answers (${cubit.wrongCount})'
-                              : 'Wrong Answers (0)',
+                              ? l10n.wrongAnswers(cubit.wrongCount)
+                              : l10n.wrongAnswers(cubit.wrongCount),
                       onPressed:
                           hasWrongAnswers
                               ? () {
@@ -116,8 +117,8 @@ class ReviewSelectionScreen extends StatelessWidget {
                     CustomReviewButton(
                       text:
                           hasCorrectAnswers
-                              ? 'Correct Answers (${cubit.correctCount})'
-                              : 'Correct Answers (0)',
+                              ? l10n.correctAnswers(cubit.correctCount)
+                              : l10n.correctAnswers(cubit.correctCount),
                       onPressed:
                           hasCorrectAnswers
                               ? () {
@@ -155,7 +156,7 @@ class ReviewSelectionScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'No quiz results available',
+                              l10n.noQuizResultsAvailable,
                               style: TextStyle(
                                 color: Colors.orange,
                                 fontSize: 16,
@@ -164,7 +165,7 @@ class ReviewSelectionScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Complete a quiz first to review your answers',
+                              l10n.completeAQuizFirst,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.orange.withOpacity(0.8),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/quiz_card.dart';
 import 'quiz_list_screen.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
+
 
 class QuizHistoryScreen extends StatelessWidget {
   const QuizHistoryScreen({super.key});
@@ -24,6 +26,7 @@ class QuizHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
       endDrawer: const AppDrawer(),
@@ -35,7 +38,7 @@ class QuizHistoryScreen extends StatelessWidget {
           onPressed: () {},
         ),
         title:
-            const Text("Quiz History", style: TextStyle(color: Colors.white)),
+             Text(l10n.quizHistory, style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: Padding(

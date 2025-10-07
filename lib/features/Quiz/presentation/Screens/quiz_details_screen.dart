@@ -7,6 +7,7 @@ import '../widgets/quiz_instructions_card.dart';
 import '../widgets/quiz_journey_start_button.dart';
 import '../widgets/quiz_title_bar.dart';
 import '../../../home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class BeforeQuizScreen extends StatelessWidget {
   BeforeQuizScreen({super.key, this.quizId});
@@ -20,6 +21,7 @@ class BeforeQuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.bg,
       body: SafeArea(
@@ -31,9 +33,9 @@ class BeforeQuizScreen extends StatelessWidget {
             }
 
             if (!snapshot.hasData || !snapshot.data!.exists) {
-              return const Center(
+              return Center(
                 child: Text(
-                  "Quiz not found",
+                  l10n.quizNotFound,
                   style: TextStyle(color: Colors.white),
                 ),
               );
@@ -59,7 +61,7 @@ class BeforeQuizScreen extends StatelessWidget {
                       Expanded(
                         child: QuizInfoCard(
                           icon: Icons.list_alt_rounded,
-                          title: 'Questions',
+                          title: l10n.questions,
                           value: questions,
                           isIconTop: true,
                         ),
@@ -68,8 +70,8 @@ class BeforeQuizScreen extends StatelessWidget {
                       Expanded(
                         child: QuizInfoCard(
                           icon: Icons.schedule_rounded,
-                          title: 'Time limit',
-                          value: "$timeLimit Mins",
+                          title: l10n.timeLimit,
+                          value: l10n.minutesUnit(timeLimit),
                           isIconTop: true,
                         ),
                       ),
@@ -80,18 +82,19 @@ class BeforeQuizScreen extends StatelessWidget {
                   // Creator full-width card
                   QuizInfoCard(
                     icon: Icons.person_rounded,
-                    title: 'Creator',
+                    title: l10n.creator,
                     value: creator,
                     isIconTop: false,
                   ),
                   SizedBox(height: sy(context, 14)),
 
                   // Instructions block
-                  const QuizInstructionsCard(
+                   QuizInstructionsCard(
+                     title: l10n.instructions,
                     instructions: [
-                      'Ensure you have a stable internet connection.',
-                      'The quiz will automatically submit when the time runs out.',
-                      'You cannot pause the quiz once started.',
+                      l10n.instruction1,
+                      l10n.instruction2,
+                      l10n.instruction3,
                     ],
                   ),
                   SizedBox(height: sy(context, 24)),

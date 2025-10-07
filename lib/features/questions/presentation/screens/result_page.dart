@@ -4,6 +4,7 @@ import 'package:depi_final_project/features/home/presentation/widgets/primary_bu
 import 'package:flutter/material.dart';
 
 import '../../../review_answers/presentation/screens/review_selection_screen.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class QuizResult {
   final int totalQuestions;
@@ -33,7 +34,7 @@ class ResultPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Calculate accuracy percentage for display
     final accuracyPercentage = (quizResult!.accuracy * 100).toInt();
-
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -42,7 +43,7 @@ class ResultPage extends StatelessWidget {
             children: [
               SizedBox(height: sy(context, 40)),
               Text(
-                "Quiz Completed!",
+                l10n.quizCompleted,
                 style: TextStyle(
                   color: AppColors.white,
                   fontSize: 32,
@@ -51,7 +52,7 @@ class ResultPage extends StatelessWidget {
               ),
               SizedBox(height: sy(context, 21)),
               Text(
-                "Your Performance Summary",
+                l10n.yourPerformanceSummary,
                 style: TextStyle(
                   color: AppColors.white.withOpacity(0.8),
                   fontSize: 24,
@@ -88,7 +89,7 @@ class ResultPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Score",
+                        l10n.score,
                         style: TextStyle(
                           color: AppColors.white.withOpacity(0.7),
                           fontSize: 16,
@@ -107,17 +108,17 @@ class ResultPage extends StatelessWidget {
                 children: [
                   _buildStatColumn(
                     "$accuracyPercentage%",
-                    "Accuracy",
+                    l10n.accuracy,
                     AppColors.tealHighlight,
                   ),
                   _buildStatColumn(
                     "${quizResult!.correctAnswers}",
-                    "Correct",
+                    l10n.correct,
                     Colors.green,
                   ),
                   _buildStatColumn(
                     "${quizResult!.wrongAnswers}",
-                    "Wrong",
+                    l10n.wrong,
                     Colors.red,
                   ),
                 ],
@@ -126,7 +127,7 @@ class ResultPage extends StatelessWidget {
               SizedBox(height: sy(context, 60)),
 
               // Performance message
-              _buildPerformanceMessage(quizResult!.accuracy),
+              _buildPerformanceMessage(context,quizResult!.accuracy),
 
               SizedBox(height: sy(context, 60)),
 
@@ -134,7 +135,7 @@ class ResultPage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: PrimaryButton(
-                  label: "Review Answers",
+                  label: l10n.reviewAnswers,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -148,7 +149,7 @@ class ResultPage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: PrimaryButton(
-                  label: "Back to Home",
+                  label: l10n.backToHome,
                   onTap: () {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
@@ -190,21 +191,22 @@ class ResultPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPerformanceMessage(double accuracy) {
+  Widget _buildPerformanceMessage(BuildContext context,double accuracy) {
+    final l10n = AppLocalizations.of(context);
     String message;
     Color messageColor;
 
     if (accuracy >= 0.9) {
-      message = "Excellent work! 🎉";
+      message = l10n.excellentWork;
       messageColor = Colors.green;
     } else if (accuracy >= 0.7) {
-      message = "Good job! 👍";
+      message = l10n.goodJob;
       messageColor = AppColors.tealHighlight;
     } else if (accuracy >= 0.5) {
-      message = "Not bad, keep practicing! 📚";
+      message = l10n.notBadKeepPracticing;
       messageColor = Colors.orange;
     } else {
-      message = "Keep studying and try again! 💪";
+      message = l10n.keepStudying;
       messageColor = Colors.red;
     }
 
