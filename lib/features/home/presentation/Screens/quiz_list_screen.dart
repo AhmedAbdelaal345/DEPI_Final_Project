@@ -1,53 +1,54 @@
 import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/quiz_card.dart';
+import '../widgets/custom_app_bar.dart';
 import 'quiz_details_screen.dart';
 
 class QuizListScreen extends StatelessWidget {
   final String subject;
   final List<Map<String, String>> quizzes;
 
-  const QuizListScreen(
-      {super.key, required this.subject, required this.quizzes});
+  const QuizListScreen({
+    super.key,
+    required this.subject,
+    required this.quizzes,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
       endDrawer: const AppDrawer(),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1C2B),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(subject, style: const TextStyle(color: Colors.white)),
-        centerTitle: true,
+      appBar: CustomAppBar(
+        title: subject,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: quizzes.map((quiz) {
+        child: ListView.builder(
+          itemCount: quizzes.length,
+          itemBuilder: (context, index) {
+            final quiz = quizzes[index];
             return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => QuizDetailsScreen(
-                      subject: subject,
-                      quizData: quiz,
-                    ),
-                  ),
-                );
-              },
+              onTap: () => _navigateToQuizDetails(context, quiz),
               child: QuizCard(
                 title: quiz["title"]!,
                 subtitle: "Completed on ${quiz["date"]}",
                 score: quiz["score"]!,
               ),
             );
-          }).toList(),
+          },
+        ),
+      ),
+    );
+  }
+
+  void _navigateToQuizDetails(BuildContext context, Map<String, String> quiz) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => QuizDetailsScreen(
+          subject: subject,
+          quizData: quiz,
         ),
       ),
     );

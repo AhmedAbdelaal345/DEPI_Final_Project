@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/quiz_card.dart';
+import '../widgets/custom_app_bar.dart';
 import 'quiz_list_screen.dart';
 
 class QuizHistoryScreen extends StatelessWidget {
@@ -27,49 +28,59 @@ class QuizHistoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
       endDrawer: const AppDrawer(),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1C2B),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left, color: Colors.white),
-          onPressed: () {},
-        ),
-        title:
-            const Text("Quiz History", style: TextStyle(color: Colors.white)),
-        centerTitle: true,
+      appBar: const CustomAppBar(
+        title: "Quiz History",
+        showBackButton: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: subjects.entries.map((entry) {
-            String subjectName = entry.key;
-            List<Map<String, String>> quizzes = entry.value;
+        child: ListView.builder(
+          itemCount: subjects.entries.length,
+          itemBuilder: (context, index) {
+            final entry = subjects.entries.elementAt(index);
+            return _buildSubjectCard(context, entry.key, entry.value);
+          },
+        ),
+      ),
+    );
+  }
 
-            double avg = quizzes
-                    .map((q) => int.parse(q["score"]!.replaceAll("%", "")))
-                    .reduce((a, b) => a + b) /
-                quizzes.length;
+  Widget _buildSubjectCard(
+    BuildContext context,
+    String subjectName,
+    List<Map<String, String>> quizzes,
+  ) {
+    final averageScore = _calculateAverageScore(quizzes);
 
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => QuizListScreen(
-                      subject: subjectName,
-                      quizzes: quizzes,
-                    ),
-                  ),
-                );
-              },
-              child: QuizCard(
-                title: subjectName,
-                subtitle: "${quizzes.length} quizzes",
-                score: "${avg.toStringAsFixed(0)}%",
-                showAverage: true,
-              ),
-            );
-          }).toList(),
+    return GestureDetector(
+      onTap: () => _navigateToQuizList(context, subjectName, quizzes),
+      child: QuizCard(
+        title: subjectName,
+        subtitle: "${quizzes.length} quizzes",
+        score: "${averageScore.toStringAsFixed(0)}%",
+        showAverage: true,
+      ),
+    );
+  }
+
+  double _calculateAverageScore(List<Map<String, String>> quizzes) {
+    final scores = quizzes.map(
+      (q) => int.parse(q["score"]!.replaceAll("%", "")),
+    );
+    return scores.reduce((a, b) => a + b) / quizzes.length;
+  }
+
+  void _navigateToQuizList(
+    BuildContext context,
+    String subjectName,
+    List<Map<String, String>> quizzes,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => QuizListScreen(
+          subject: subjectName,
+          quizzes: quizzes,
         ),
       ),
     );

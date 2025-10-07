@@ -1,9 +1,11 @@
+import 'package:depi_final_project/core/widgets/custom_app_bar.dart';
 import 'package:depi_final_project/features/Quiz/presentation/Screens/quiz_details_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/title_bar.dart';
 import '../widgets/input_field.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/app_constants.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,15 +17,18 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.bg,
+      appBar: CustomAppBar(
+        title: 'Home',
+        showBackButton: false,
+      ),
       body: SafeArea(
+
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: sx(context, 16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const TitleBar(title: 'Home'),
-              SizedBox(height: sy(context, 48)),
-
               // input field
               Center(
                 child: Padding(

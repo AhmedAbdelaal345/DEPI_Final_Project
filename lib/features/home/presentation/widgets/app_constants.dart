@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_theme.dart';
 
-// App Colors
+// App Colors - Using the new AppTheme constants
 class AppColors {
-  // Tuned to match the screenshots
-  static const bg = Color(0xFF000921); // Deep navy background
-  static const teal = Color(0xFF4FB3B7); // Primary teal (buttons/nav)
-  static const tealHighlight = Color(0xFF84D9D7); // Active icon circle
-  static const card = Color(0xFFD9D9D9); // Light grey cards/fields
-  static const hint = Color(0xFF000920); // Placeholder/hint
-  static const bgDarkText = Color(0xFF0B1B2A); // Dark text on light
-  static const white = Color(0xFFffffff); // Dark text on light
-  static const red = Colors.red; // Dark text on light
+  // Background colors
+  static const bg = AppTheme.backgroundDark;
+  static const bgLight = AppTheme.backgroundLight;
+
+  // Primary colors
+  static const teal = AppTheme.primaryTeal;
+  static const tealHighlight = AppTheme.tealHighlight;
+
+  // Card colors
+  static const card = AppTheme.cardGrey;
+
+  // Text colors
+  static const hint = AppTheme.hintText;
+  static const bgDarkText = AppTheme.textDark;
+  static const white = AppTheme.textWhite;
+  static const red = AppTheme.errorRed;
 }
 
 // Utility scaling for 390 x 844 design (iPhone 13/14)
-double sx(BuildContext context, double x) =>
-    x * MediaQuery.of(context).size.width / 390;
-double sy(BuildContext context, double y) =>
-    y * MediaQuery.of(context).size.height / 844;
+double sx(BuildContext context, double x) => AppResponsive.scaleWidth(context, x);
+double sy(BuildContext context, double y) => AppResponsive.scaleHeight(context, y);

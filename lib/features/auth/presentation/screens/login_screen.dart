@@ -4,7 +4,6 @@ import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart'
 import 'package:depi_final_project/features/auth/presentation/screens/forgotPasswordPage.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/teacher_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

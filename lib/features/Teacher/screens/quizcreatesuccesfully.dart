@@ -1,5 +1,5 @@
 import 'package:depi_final_project/features/Teacher/screens/homeTeacher.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
+import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,10 +14,7 @@ class QuizCreateSuccessful extends StatelessWidget {
     return Scaffold(
       endDrawer: drawer(context),
       backgroundColor: const Color(0xff000921),
-      appBar: AppBar(
-        backgroundColor: const Color(0xff000921),
-        elevation: 0,
-      ),
+      appBar: AppBar(backgroundColor: const Color(0xff000921), elevation: 0),
       body: Column(
         children: [
           Padding(
@@ -136,7 +133,8 @@ class QuizCreateSuccessful extends StatelessWidget {
       ),
     );
   }
-    Widget drawer(context){
+
+  Widget drawer(context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Drawer(
@@ -146,53 +144,105 @@ class QuizCreateSuccessful extends StatelessWidget {
           DrawerHeader(
             decoration: BoxDecoration(
               color: Color(0xff061438),
-              border: Border(bottom: BorderSide(color: Color(0xff4FB3B7)))
+              border: Border(bottom: BorderSide(color: Color(0xff4FB3B7))),
             ),
             child: Row(
               children: [
                 Image.asset("assets/images/brain_logo.png"),
-                Text("QUIZLY",style: TextStyle(
-                  color: Color(0xff62DDE1),
-                  fontSize:screenWidth*.085 ,
-                  fontFamily: "DMSerifDisplay"
-                ),),
+                Text(
+                  "QUIZLY",
+                  style: TextStyle(
+                    color: Color(0xff62DDE1),
+                    fontSize: screenWidth * .085,
+                    fontFamily: "DMSerifDisplay",
+                  ),
+                ),
               ],
-            ),),
-             listtitle((){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> Hometeacher()));
-             },context,Icon(Icons.home_outlined,size: screenWidth*.1,color: Color(0xff62DDE1),),"Home"),
-             listtitle((){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileScreen(),));
-             },context,Icon(Icons.person_outlined,size: screenWidth*.1,color: Color(0xff62DDE1),),"Profile"),
-             listtitle((){},context,Icon(Icons.list,size: screenWidth*.1,color: Color(0xff62DDE1),),"My Quizzes"),
-              ListTile( leading: Icon(Icons.settings,size: screenWidth*.1,color: Color(0xff62DDE1)),title: Text("Setting",style: TextStyle(color: Color(0xff62DDE1),fontSize: screenWidth*.06
-              ),),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> SettingScreen(),));
-              },
+            ),
+          ),
+          listtitle(
+            () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Hometeacher()),
+              );
+            },
+            context,
+            Icon(
+              Icons.home_outlined,
+              size: screenWidth * .1,
+              color: Color(0xff62DDE1),
+            ),
+            "Home",
+          ),
+          listtitle(
+            () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreenWithFirebase(),
+                ),
+              );
+            },
+            context,
+            Icon(
+              Icons.person_outlined,
+              size: screenWidth * .1,
+              color: Color(0xff62DDE1),
+            ),
+            "Profile",
+          ),
+          listtitle(
+            () {},
+            context,
+            Icon(Icons.list, size: screenWidth * .1, color: Color(0xff62DDE1)),
+            "My Quizzes",
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.settings,
+              size: screenWidth * .1,
+              color: Color(0xff62DDE1),
+            ),
+            title: Text(
+              "Setting",
+              style: TextStyle(
+                color: Color(0xff62DDE1),
+                fontSize: screenWidth * .06,
               ),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingScreen()),
+              );
+            },
+          ),
         ],
       ),
     );
   }
-  Widget listtitle(Function callback,context,Icon icon,String txt){
-      final screenWidth = MediaQuery.of(context).size.width;
-      final screenHeight = MediaQuery.of(context).size.height;
-      return Container(
+
+  Widget listtitle(Function callback, context, Icon icon, String txt) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Container(
       decoration: BoxDecoration(
-      border: Border(bottom: BorderSide(color: Color(0xff4FB3B7)))
+        border: Border(bottom: BorderSide(color: Color(0xff4FB3B7))),
       ),
-      child: ListTile( 
-      leading: icon,
-      title: Text(txt,style: TextStyle(
-      color: Color(0xff62DDE1),
-      fontSize: screenWidth*.06
-      ),),
-      onTap: () {
-        callback();
-      },
+      child: ListTile(
+        leading: icon,
+        title: Text(
+          txt,
+          style: TextStyle(
+            color: Color(0xff62DDE1),
+            fontSize: screenWidth * .06,
+          ),
+        ),
+        onTap: () {
+          callback();
+        },
       ),
-        
     );
   }
 }

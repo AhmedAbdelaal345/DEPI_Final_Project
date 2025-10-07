@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../widgets/settings_tile.dart';
+import '../widgets/custom_app_bar.dart';
+import '../../../Onboarding/screens/onboarding_screen.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -7,92 +11,174 @@ class SettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
-      appBar: AppBar(
-        title: const Text('Settings', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF2C2F48),
-        elevation: 0,
-        automaticallyImplyLeading: false,
+      appBar: const CustomAppBar(
+        title: 'Settings',
+        showBackButton: false,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildSettingsTile(
+          SettingsTile(
             icon: Icons.notifications,
             title: 'Notifications',
             subtitle: 'Manage your notifications',
-            onTap: () {
-              // Handle notifications settings
-            },
+            onTap: () => _handleNotifications(context),
           ),
-          _buildSettingsTile(
+          SettingsTile(
             icon: Icons.dark_mode,
             title: 'Dark Mode',
             subtitle: 'Toggle dark/light theme',
-            onTap: () {
-              // Handle theme settings
-            },
+            onTap: () => _handleTheme(context),
           ),
-          _buildSettingsTile(
+          SettingsTile(
             icon: Icons.language,
             title: 'Language',
             subtitle: 'Change app language',
-            onTap: () {
-              // Handle language settings
-            },
+            onTap: () => _handleLanguage(context),
           ),
-          _buildSettingsTile(
+          SettingsTile(
             icon: Icons.help,
             title: 'Help & Support',
             subtitle: 'Get help and support',
-            onTap: () {
-              // Handle help
-            },
+            onTap: () => _handleHelp(context),
           ),
-          _buildSettingsTile(
+          SettingsTile(
             icon: Icons.info,
             title: 'About',
             subtitle: 'App version and info',
-            onTap: () {
-              // Handle about
-            },
+            onTap: () => _handleAbout(context),
+          ),
+          const SizedBox(height: 20),
+          // Logout Button
+          SettingsTile(
+            icon: Icons.logout,
+            title: 'Logout',
+            subtitle: 'Sign out from your account',
+            onTap: () => _handleLogout(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSettingsTile({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2C2F48),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: const Color(0xFF5AC7C7), size: 28),
-        title: Text(
-          title,
-          style: const TextStyle(
+  void _handleNotifications(BuildContext context) {
+    // TODO: Implement notifications settings
+  }
+
+  void _handleTheme(BuildContext context) {
+    // TODO: Implement theme settings
+  }
+
+  void _handleLanguage(BuildContext context) {
+    // TODO: Implement language settings
+  }
+
+  void _handleHelp(BuildContext context) {
+    // TODO: Implement help functionality
+  }
+
+  void _handleAbout(BuildContext context) {
+    // TODO: Implement about page
+  }
+
+  void _handleLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1C2B),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Logout',
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+        content: const Text(
+          'Are you sure you want to logout?',
+          style: TextStyle(color: Colors.white70),
         ),
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.grey,
-          size: 16,
-        ),
-        onTap: onTap,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white70),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4FB3B7),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onPressed: () async {
+              // Close dialog
+              Navigator.pop(context);
+
+              // Show loading
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF5AC7C7),
+                  ),
+                ),
+              );
+
+              try {
+                // Sign out from Firebase
+                await FirebaseAuth.instance.signOut();
+
+                // Close loading dialog
+                if (context.mounted) Navigator.pop(context);
+
+                // Navigate to onboarding and clear all routes
+                if (context.mounted) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OnboardingScreen(),
+                    ),
+                    (route) => false,
+                  );
+                }
+
+                // Show success message
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Logged out successfully'),
+                      backgroundColor: Colors.green,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              } catch (e) {
+                // Close loading dialog
+                if (context.mounted) Navigator.pop(context);
+
+                // Show error message
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error: ${e.toString()}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text(
+              'Logout',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
     );
   }

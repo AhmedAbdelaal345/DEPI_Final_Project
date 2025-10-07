@@ -1,6 +1,6 @@
 import 'package:depi_final_project/features/Teacher/screens/homeTeacher.dart';
 import 'package:depi_final_project/features/Teacher/screens/quizcreatesuccesfully.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
+import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -454,7 +454,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
           listtitle(
             () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              MaterialPageRoute(builder: (_) => const ProfileScreenWithFirebase()),
             ),
             context,
             const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
