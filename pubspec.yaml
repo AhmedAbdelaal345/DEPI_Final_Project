@@ -90,6 +90,9 @@ flutter:
     - family: Lexend
       fonts:
         - asset: assets/fonts/Lexend-Regular.ttf
+    - family: Judson
+      fonts:
+        - asset: assets/fonts/Judson-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

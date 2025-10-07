@@ -1,7 +1,12 @@
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/primary_button.dart';
+import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
+import 'package:depi_final_project/features/questions/presentation/model/question_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../review_answers/presentation/screens/review_selection_screen.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
@@ -11,14 +16,16 @@ class QuizResult {
   final int correctAnswers;
   final int wrongAnswers;
   final double accuracy;
-  final List<Map<String, dynamic>>?
-  detailedResults; // Optional: for review answers
-
+  final List<Map<String, dynamic>>? detailedResults;
+  final String quizId;
+  final List<QuestionModel> questions;
   QuizResult({
     required this.totalQuestions,
     required this.correctAnswers,
     required this.wrongAnswers,
     required this.accuracy,
+    required this.quizId,
+    required this.questions,
     this.detailedResults,
   });
 }
@@ -32,7 +39,6 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate accuracy percentage for display
     final accuracyPercentage = (quizResult!.accuracy * 100).toInt();
     final l10n = AppLocalizations.of(context);
     return Scaffold(
@@ -100,7 +106,7 @@ class ResultPage extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: sy(context, 60)),
+                SizedBox(height: sy(context, 60)),
 
               // Statistics Row with dynamic values
               Row(
@@ -124,27 +130,43 @@ class ResultPage extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: sy(context, 60)),
+                SizedBox(height: sy(context, 60)),
 
               // Performance message
               _buildPerformanceMessage(context,quizResult!.accuracy),
 
-              SizedBox(height: sy(context, 60)),
+                SizedBox(height: sy(context, 60)),
 
-              // Action buttons
-              SizedBox(
-                width: double.infinity,
-                child: PrimaryButton(
-                  label: l10n.reviewAnswers,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ReviewSelectionScreen()),
-                    );
-                  },
+                // Action buttons
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    label: l10n.reviewAnswers,
+                    onTap: () async {
+                      await BlocProvider.of<ResultCubit>(
+                        context,
+                      ).saveStudentQuizResult(
+                        studentId: FirebaseAuth.instance.currentUser!.uid,
+                        quizId: quizResult!.quizId,
+                        questionsWithAnswers: quizResult!.detailedResults!,
+                        questions: quizResult!.questions,
+                        status:
+                            quizResult!.correctAnswers /
+                                        quizResult!.totalQuestions >
+                                    0.5
+                                ? "Pass"
+                                : "Fail",
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ReviewSelectionScreen(),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(height: sy(context, 16)),
+                SizedBox(height: sy(context, 16)),
 
               SizedBox(
                 width: double.infinity,
@@ -160,12 +182,13 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: sy(context, 23)),
-            ],
+                SizedBox(height: sy(context, 23)),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    
   }
 
   Widget _buildStatColumn(String value, String label, Color valueColor) {

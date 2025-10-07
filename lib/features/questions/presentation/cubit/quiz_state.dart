@@ -1,4 +1,4 @@
-import 'package:depi_final_project/features/questions/presentation/model/quiz_model.dart';
+import 'package:depi_final_project/features/questions/presentation/model/question_model.dart';
 
 abstract class QuizState {}
 

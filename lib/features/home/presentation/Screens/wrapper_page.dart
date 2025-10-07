@@ -10,7 +10,7 @@ class WrapperPage extends StatefulWidget {
   final int initialIndex;
   const WrapperPage({super.key, this.initialIndex = 0, this.isTeacher});
   final bool? isTeacher;
-  static const String id = '/wrapper-page';
+  static const String id = '/wrapper-page';   
   @override
   State<WrapperPage> createState() => _WrapperPageState();
 }

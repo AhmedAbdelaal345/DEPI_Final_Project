@@ -3,6 +3,7 @@ import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
+import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,7 +164,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               return null;
                             },
                           ),
-
+                
                           CustomTextField(
                             controller: _phoneController,
                             hintText: l10n.enterYourPhoneNumber,
@@ -213,8 +214,8 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                     password: _passwordController.text,
                                     confirmPassword:
                                         _confirmPasswordController.text,
-                                    isTeacher:await
-                                        BlocProvider.of<LoginCubit>(
+                                    isTeacher:
+                                        await BlocProvider.of<LoginCubit>(
                                           context,
                                         ).isTeacher(),
                                   );
@@ -241,7 +242,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                                       backgroundColor: ColorApp.errorColor,
                                       gravity: ToastGravity.BOTTOM,
                                     );
-
+                
                                     print(
                                       'The account already exists for that email.',
                                     );
@@ -266,11 +267,11 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                           DividerWithText(text: l10n.orRegisterWith),
 
                           SizedBox(height: screenHeight * 0.05),
-
+                
                           SocialLoginButtons(),
-
+                
                           SizedBox(height: screenHeight * 0.035),
-
+                
                           AuthNavigationLink(
                             baseText: l10n.alreadyHaveAnAccount,
                             clickableText: l10n.login,
@@ -283,16 +284,42 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               );
                             },
                           ),
+                          SizedBox(height: screenHeight*0.01,),
+                          InkWell(
+                            onTap: () {
+                              widget.isTeacher = !widget.isTeacher;
+                              setState(() {
+                                
+                              });
+                            },
+                            child:
+                                widget.isTeacher == true
+                                    ? Text(
+                                      "To Register as Student",
+                                      style: TextStyle(
+                                        color: AppColors.teal,
+                                        fontSize: screenWidth * 0.035,
+                                      ),
+                                    )
+                                    : Text(
+                                      "To Register as Teacher",
+                                      style: TextStyle(
+                                        color: AppColors.teal,
+                                        fontSize: screenWidth * 0.035,
+                                      ),
+                                    ),
+                          ),
+                          SizedBox(height: 50),
                         ],
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                
+              );
+            },
           ),
         ),
       ),
-    );
+    ));
   }
 }

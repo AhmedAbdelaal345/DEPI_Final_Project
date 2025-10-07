@@ -1,3 +1,4 @@
+import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/quiz_card.dart';
@@ -6,17 +7,21 @@ import 'quiz_details_screen.dart';
 class QuizListScreen extends StatelessWidget {
   final String subject;
   final List<Map<String, String>> quizzes;
-
-  const QuizListScreen(
-      {super.key, required this.subject, required this.quizzes});
+  final String score;
+  const QuizListScreen({
+    super.key,
+    required this.subject,
+    required this.quizzes,
+    required this.score,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1C2B),
+      backgroundColor: AppColors.bg,
       endDrawer: const AppDrawer(),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1C2B),
+        backgroundColor: AppColors.bg,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.chevron_left, color: Colors.white),
@@ -28,26 +33,28 @@ class QuizListScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          children: quizzes.map((quiz) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => QuizDetailsScreen(
-                      subject: subject,
-                      quizData: quiz,
-                    ),
+          children:
+              quizzes.map((quiz) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => QuizDetailsScreen(
+                              subject: subject,
+                              quizData: quiz,
+                            ),
+                      ),
+                    );
+                  },
+                  child: QuizCard(
+                    title: quiz["title"]!,
+                    subtitle: "Completed on ${quiz["date"]}",
+                    score: score,
                   ),
                 );
-              },
-              child: QuizCard(
-                title: quiz["title"]!,
-                subtitle: "Completed on ${quiz["date"]}",
-                score: quiz["score"]!,
-              ),
-            );
-          }).toList(),
+              }).toList(),
         ),
       ),
     );
