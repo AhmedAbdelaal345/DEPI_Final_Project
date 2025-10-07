@@ -1,4 +1,4 @@
-import 'package:depi_final_project/features/Quiz/presentation/Screens/quiz_details_screen.dart';
+import 'package:depi_final_project/features/Quiz/presentation/Screens/before_quiz_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/title_bar.dart';
 import '../widgets/input_field.dart';

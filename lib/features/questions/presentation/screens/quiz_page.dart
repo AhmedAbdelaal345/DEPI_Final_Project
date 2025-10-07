@@ -171,7 +171,7 @@ class _QuizPageState extends State<QuizPage> {
           question.options,
         );
         final reviewQuestion = ReviewQuestion(
-          userAnswer:
+          studentAnswer:
               userAnswers.containsKey(i)
                   ? question.options.toList()[userAnswers[i]!]
                   : 'Unanswered',
@@ -179,9 +179,13 @@ class _QuizPageState extends State<QuizPage> {
           questionText: question.text,
           options: question.options.toList(),
           correctAnswerIndex: correctAnswerIndex,
-          userAnswerIndex: userAnswers[i] ?? -1, // -1 for unanswered
+          userAnswerIndex: userAnswers[i] ?? -1,
           explanation: '',
-          correctAnswer: '', // Add explanation if available
+          correctAnswer: '',
+          isCorrect:
+              selectedAnswerIndex == correctAnswerIndex
+                  ? true
+                  : false, 
         );
         if (userAnswers.containsKey(i)) {
           if (userAnswers[i] == correctAnswerIndex) {
@@ -216,7 +220,7 @@ class _QuizPageState extends State<QuizPage> {
           {'correct': correctAnswers.length},
           {'wrong': wrongAnswers.length},
         ],
-        questions:questions
+        questions: questions,
       );
       Navigator.pushAndRemoveUntil(
         context,
@@ -286,7 +290,7 @@ class _QuizPageState extends State<QuizPage> {
           }
 
           if (state is! LoadedState || state.questions.isEmpty) {
-            return  Center(child: Text(l10n.noQuestionsAvailable));
+            return Center(child: Text(l10n.noQuestionsAvailable));
           }
 
           return SafeArea(

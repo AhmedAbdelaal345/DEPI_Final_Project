@@ -2,9 +2,6 @@
 // 
 // screens/profile_screen.dart
 import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/icon_park_outline.dart';
-import 'package:iconify_flutter/icons/tabler.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 // import 'package:iconify_flutter/icons/arcticons.dart';
 

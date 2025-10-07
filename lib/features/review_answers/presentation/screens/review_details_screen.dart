@@ -13,7 +13,13 @@ import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class ReviewDetailsScreen extends StatefulWidget {
   final bool fetchWrongAnswers;
-  const ReviewDetailsScreen({super.key, required this.fetchWrongAnswers});
+  final bool? showAll;
+
+  const ReviewDetailsScreen({
+    super.key,
+    required this.fetchWrongAnswers,
+    this.showAll = false,
+  });
   static const id = "/reviewdetailsscreen";
   @override
   State<ReviewDetailsScreen> createState() => _ReviewDetailsScreenState();
@@ -25,7 +31,9 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.fetchWrongAnswers) {
+    if (widget.showAll!) {
+      context.read<ReviewAnswersCubit>().fetchAllAnswers();
+    } else if (widget.fetchWrongAnswers) {
       context.read<ReviewAnswersCubit>().fetchWrongAnswers();
     } else {
       context.read<ReviewAnswersCubit>().fetchCorrectAnswers();
@@ -87,7 +95,7 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
 
           if (state is ReviewAnswersLoaded) {
             if (state.questions.isEmpty) {
-              return  Center(
+              return Center(
                 child: Text(
                   l10n.noQuestionsToShow,
                   style: TextStyle(color: Colors.white),

@@ -1,4 +1,3 @@
-import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/presentation/manager/history_cubit/history_state.dart';
 import 'package:depi_final_project/features/home/presentation/model/history_model.dart';

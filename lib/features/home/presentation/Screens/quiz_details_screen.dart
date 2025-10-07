@@ -1,7 +1,10 @@
 // myproject/lib/screens/quiz_details_screen.dart
+import 'package:depi_final_project/core/constants/app_constants.dart';
+import 'package:depi_final_project/features/Quiz/presentation/Screens/before_quiz_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/student_review_selection.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/icon_park_outline.dart';
 import 'package:iconify_flutter/icons/lucide.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
@@ -82,7 +85,17 @@ class QuizDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => BeforeQuizScreen(
+                              quizId: quizData[AppConstants.title],
+                            ),
+                      ),
+                    );
+                  },
                   child: const Text(
                     "Resolve Quiz",
                     style: TextStyle(
@@ -101,7 +114,20 @@ class QuizDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    String studentUid = FirebaseAuth.instance.currentUser!.uid;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => StudentReviewSelectionScreen(
+                              quizId: quizData[AppConstants.title]!,
+                              studentId: studentUid,
+                              quizTitle: subject,
+                            ),
+                      ),
+                    );
+                  },
                   child: const Text(
                     "View Answers",
                     style: TextStyle(
