@@ -38,7 +38,6 @@ class HomeScreen extends StatelessWidget {
               ),
               SizedBox(height: sy(context, 18)),
 
-              // join button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: PrimaryButton(
