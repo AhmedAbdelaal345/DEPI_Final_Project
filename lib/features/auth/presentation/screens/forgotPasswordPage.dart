@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
-
 class ForgotPasswordPage extends StatelessWidget {
-  //const ForgotPasswordPage({super.key});
-  final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  GlobalKey<FormState> formkey = GlobalKey();
-  TextEditingController _emailController = TextEditingController();
+  ForgotPasswordPage({super.key});
   @override
+  final TextEditingController _emailController = TextEditingController();
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> formkey = GlobalKey();
+    final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Color(0xff000921),
@@ -114,7 +113,9 @@ class ForgotPasswordPage extends StatelessWidget {
                 padding: EdgeInsets.only(right: 20),
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                   child: Text(
                     l10n.backToLogin,
                     style: TextStyle(
@@ -132,9 +133,9 @@ class ForgotPasswordPage extends StatelessWidget {
     );
   }
 
-   Future<void> resetPassword(BuildContext context) async {
-     final l10n = AppLocalizations.of(context);
-     try {
+  Future<void> resetPassword(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: _emailController.text.trim(),
       );
@@ -148,7 +149,7 @@ class ForgotPasswordPage extends StatelessWidget {
       );
     } on FirebaseAuthException catch (e) {
       String errorMessage = "An error occurred";
-      
+
       switch (e.code) {
         case 'user-not-found':
           errorMessage = "No account found with this email address";
@@ -182,5 +183,4 @@ class ForgotPasswordPage extends StatelessWidget {
       );
     }
   }
-
 }

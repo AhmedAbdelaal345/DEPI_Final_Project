@@ -33,14 +33,9 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.bg,
-      endDrawer: const AppDrawer(),
       appBar: AppBar(
         backgroundColor: AppColors.bg,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
         title:
              Text(l10n.quizHistory, style: TextStyle(color: Colors.white)),
         centerTitle: true,

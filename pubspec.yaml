@@ -35,6 +35,9 @@ dependencies:
   flutter_bloc: ^9.1.1
   curved_navigation_bar: ^1.0.6
   iconify_flutter: ^0.0.5
+  google_sign_in: ^6.1.0
+  local_auth: ^2.1.6
+  flutter_secure_storage: ^8.0.0
   flutter:
     sdk: flutter
   fluttertoast: ^8.2.12
