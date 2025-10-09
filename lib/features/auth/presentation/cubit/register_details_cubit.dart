@@ -88,7 +88,6 @@ class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
 
   bool _validatePassword(String password) {
     if (password == "GoogleSignIn") {
-      // Skip validation for Google sign-in
       return true;
     }
     if (password.isEmpty) {

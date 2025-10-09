@@ -829,6 +829,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No questions to show.'**
   String get noQuestionsToShow;
+
+  /// No description provided for @featureWillGetSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature Will Get Soon'**
+  String get featureWillGetSoon;
 }
 
 class _AppLocalizationsDelegate

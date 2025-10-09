@@ -8,7 +8,7 @@ import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cu
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_state.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/result_page.dart';
 import 'package:depi_final_project/features/questions/presentation/widget/page_component.dart';
-import 'package:depi_final_project/features/review_answers/domain/entities/review_question.dart';
+import 'package:depi_final_project/features/review_answers/presentation/model/review_question.dart';
 import 'package:depi_final_project/features/review_answers/presentation/cubit/review_answers_cubit.dart';
 import 'package:depi_final_project/features/review_answers/presentation/widgets/navigation_buttons.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ class _QuizPageState extends State<QuizPage> {
             .doc(widget.quizId)
             .get();
 
-    final minutes = doc.data()?["duration"];
+    final minutes = await doc.data()!["duration"];
     if (minutes != null) {
       setState(() {
         _timeLeft = minutes * 60; // minutes → seconds
@@ -182,10 +182,7 @@ class _QuizPageState extends State<QuizPage> {
           userAnswerIndex: userAnswers[i] ?? -1,
           explanation: '',
           correctAnswer: '',
-          isCorrect:
-              selectedAnswerIndex == correctAnswerIndex
-                  ? true
-                  : false, 
+          isCorrect: selectedAnswerIndex == correctAnswerIndex ? true : false,
         );
         if (userAnswers.containsKey(i)) {
           if (userAnswers[i] == correctAnswerIndex) {

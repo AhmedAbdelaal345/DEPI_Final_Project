@@ -148,5 +148,7 @@
 "correctAnswers": "الإجابات الصحيحة ({count})",
 "noQuizResultsAvailable": "لا توجد نتائج اختبار متاحة",
 "completeAQuizFirst": "أكمل اختباراً أولاً لمراجعة إجاباتك",
-"noQuestionsToShow": "لا توجد أسئلة لعرضها."
+"noQuestionsToShow": "لا توجد أسئلة لعرضها.",
+"featureWillGetSoon":"سيتم توفير الخاصية قريبا"
+
 }

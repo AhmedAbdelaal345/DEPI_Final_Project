@@ -128,6 +128,7 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
                       "title": q.quizId,
                       "date": q.formattedDate,
                       "score": q.accuracyPercentage,
+                      
                     };
                   }).toList();
 

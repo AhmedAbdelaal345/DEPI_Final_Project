@@ -3,7 +3,7 @@ import 'package:depi_final_project/core/constants/app_constants.dart';
 
 class QuizHistoryModel {
   final String quizId;
-  final int score;
+  final double score;
   final int total;
   final String status;
   final DateTime? createdAt;
@@ -42,7 +42,7 @@ class QuizHistoryModel {
     };
   }
 
-  double get accuracy => total > 0 ? score / total : 0.0;
+  double get accuracy => total > 0 ? score.toDouble() : 0.0;
   
   String get accuracyPercentage => '${(accuracy * 100).toStringAsFixed(0)}%';
   

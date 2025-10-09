@@ -395,4 +395,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noQuestionsToShow => 'لا توجد أسئلة لعرضها.';
+
+  @override
+  String get featureWillGetSoon => 'سيتم توفير الخاصية قريبا';
 }

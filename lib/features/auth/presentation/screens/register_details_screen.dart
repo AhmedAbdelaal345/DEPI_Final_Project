@@ -1,30 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
-import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../cubit/register_details_cubit.dart';
-import '../cubit/register_details_state.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/auth_navigation_link.dart';
 import '../widgets/divider_with_text.dart';
 import '../widgets/social_login_buttons.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
-import '../widgets/social_icon_button.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
-
 
 class RegisterDetailsScreen extends StatefulWidget {
   RegisterDetailsScreen({super.key, required this.isTeacher});
 
-  bool isTeacher;
+  bool  isTeacher;
 
   @override
   State<RegisterDetailsScreen> createState() => _RegisterDetailsScreenState();
@@ -38,7 +31,12 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
   final _confirmPasswordController = TextEditingController();
   final _subjectController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String get collectionName => widget.isTeacher ? 'teacher' : 'Student';
+  bool _isRegistering = false;
+
+  String get collectionName =>
+      widget.isTeacher
+          ? AppConstants.teacherCollection
+          : AppConstants.studentCollection;
 
   CollectionReference get users =>
       FirebaseFirestore.instance.collection(collectionName);
@@ -54,274 +52,255 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
     super.dispose();
   }
 
+  Future<void> _handleRegistration() async {
+    if (_formKey.currentState?.validate() != true) {
+      return;
+    }
+
+    setState(() {
+      _isRegistering = true;
+    });
+
+    try {
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
+
+      await users.doc(credential.user?.uid).set({
+        'fullName': _fullNameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'password': _passwordController.text,
+        'phone': _phoneController.text.trim(),
+        if (widget.isTeacher) 'subject': _subjectController.text.trim(),
+        'uid': credential.user?.uid,
+      });
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).registrationSuccessful),
+          duration: const Duration(seconds: 2),
+          backgroundColor: ColorApp.successSnakBar,
+        ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == 'weak-password') {
+        errorMessage = AppLocalizations.of(context).errorWeakPassword;
+      } else if (e.code == 'email-already-in-use') {
+        errorMessage = AppLocalizations.of(context).errorEmailInUse;
+        Future.delayed(const Duration(seconds: 2), () {
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, LoginScreen.id);
+          }
+        });
+      } else {
+        errorMessage = e.message ?? 'An authentication error occurred';
+      }
+
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: errorMessage,
+          backgroundColor: ColorApp.errorColor,
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
+    } on FirebaseException catch (e) {
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: 'Database error: ${e.message ?? e.toString()}',
+          backgroundColor: ColorApp.errorColor,
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: 'Registration failed: ${e.toString()}',
+          backgroundColor: ColorApp.errorColor,
+          gravity: ToastGravity.BOTTOM,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isRegistering = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    return BlocProvider(
-      create: (context) => RegisterDetailsCubit(),
-      child: Scaffold(
-        backgroundColor: ColorApp.backgroundColor,
-        body: SafeArea(
-          child: BlocListener<RegisterDetailsCubit, RegisterDetailsState>(
-            listener: (context, state) {
-              if (state.status == RegisterStatus.success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                   SnackBar(
-                    content: Text(l10n.registrationSuccessful),
-                    duration: Duration(seconds: 1),
-                    backgroundColor: ColorApp.successSnakBar,
+
+    return Scaffold(
+      backgroundColor: ColorApp.backgroundColor,
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.065),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AuthHeader(
+                    title: l10n.register,
+                    subtitle: l10n.welcomeMessage,
                   ),
-                );
-                // After successful registration, navigate to the login screen
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
-              } else if (state.status == RegisterStatus.failure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.generalError ?? 'An error occurred'),
-                    duration: Duration(seconds: 2),
-                    backgroundColor: ColorApp.errorColor,
+                  SizedBox(height: screenHeight * 0.05),
+                  CustomTextField(
+                    controller: _fullNameController,
+                    hintText: l10n.fullName,
+                    prefixIcon: Icons.person_outline,
+                    validator: (String? value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.enterYourFullName;
+                      }
+                      if (value.trim().length < 3) {
+                        return 'Full name must be at least 3 characters';
+                      }
+                      return null;
+                    },
                   ),
-                );
-              }
-            },
-            child: BlocBuilder<RegisterDetailsCubit, RegisterDetailsState>(
-              builder: (context, state) {
-                return Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.065,
+                  CustomTextField(
+                    controller: _emailController,
+                    hintText: l10n.enterYourEmail,
+                    prefixIcon: Icons.email_outlined,
+                    validator: (String? value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.pleaseEnterYourEmail;
+                      }
+                      if (!RegExp(
+                        r'^[^@]+@[^@]+\.[^@]+',
+                      ).hasMatch(value.trim())) {
+                        return l10n.enterValidEmail;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTextField(
+                    controller: _passwordController,
+                    hintText: l10n.enterYourPassword,
+                    prefixIcon: Icons.lock_outline,
+                    isPassword: true,
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return l10n.pleaseConfirmPassword;
+                      }
+                      if (value.length < 6) {
+                        return l10n.passwordTooShort;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTextField(
+                    controller: _confirmPasswordController,
+                    hintText: l10n.confirmYourPassword,
+                    prefixIcon: Icons.lock_outline,
+                    isPassword: true,
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return l10n.pleaseConfirmPassword;
+                      }
+                      if (value != _passwordController.text) {
+                        return l10n.passwordsDoNotMatch;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTextField(
+                    controller: _phoneController,
+                    hintText: l10n.enterYourPhoneNumber,
+                    prefixIcon: Icons.phone,
+                    validator: (String? value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.pleaseEnterPhoneNumber;
+                      }
+                      if (!AppConstants.phoneRegExp.hasMatch(value.trim())) {
+                        return l10n.enterValidPhoneNumber;
+                      }
+                      return null;
+                    },
+                  ),
+                  if (widget.isTeacher)
+                    CustomTextField(
+                      controller: _subjectController,
+                      hintText: l10n.enterYourSubject,
+                      prefixIcon: Icons.school,
+                      validator: (String? value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return l10n.pleaseEnterYourSubject;
+                        }
+                        if (value.trim().length < 2) {
+                          return 'Subject must be at least 2 characters';
+                        }
+                        return null;
+                      },
                     ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          AuthHeader(
-                            title: l10n.register,
-                            subtitle: l10n.welcomeMessage,
-                          ),
-                          SizedBox(height: screenHeight * 0.05),
-                          CustomTextField(
-                            controller: _fullNameController,
-                            hintText: l10n.fullName,
-                            prefixIcon: Icons.person_outline,
-                            errorText: state.fullNameError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.enterYourFullName;
-                              }
-                              return null;
-                            },
-                          ),
-                          CustomTextField(
-                            controller: _emailController,
-                            hintText: l10n.enterYourEmail,
-                            prefixIcon: Icons.email_outlined,
-                            errorText: state.emailError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.pleaseEnterYourEmail;
-                              }
-                              if (!RegExp(
-                                r'^[^@]+@[^@]+\.[^@]+',
-                              ).hasMatch(value)) {
-                                return l10n.enterValidEmail;
-                              }
-                            },
-                          ),
-                          CustomTextField(
-                            controller: _passwordController,
-                            hintText: l10n.enterYourPassword,
-                            prefixIcon: Icons.lock_outline,
-                            isPassword: true,
-                            errorText: state.passwordError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.pleaseConfirmPassword;
-                              }
-                              if (value.length < 6) {
-                                return l10n.passwordTooShort;
-                              }
-                              return null;
-                            },
-                          ),
-                          CustomTextField(
-                            controller: _confirmPasswordController,
-                            hintText: l10n.confirmYourPassword,
-                            prefixIcon: Icons.lock_outline,
-                            isPassword: true,
-                            errorText: state.confirmPasswordError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.pleaseConfirmPassword;
-                              }
-                              if (value != _passwordController.text) {
-                                return l10n.passwordsDoNotMatch;
-                              }
-                              return null;
-                            },
-                          ),
-                
-                          CustomTextField(
-                            controller: _phoneController,
-                            hintText: l10n.enterYourPhoneNumber,
-                            prefixIcon: Icons.phone,
-                            errorText: state.phoneError,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.pleaseEnterPhoneNumber;
-                              }
-                              if (!AppConstants.phoneRegExp.hasMatch(value)) {
-                                return l10n.enterValidPhoneNumber;
-                              }
-                            },
-                          ),
-                          if (widget.isTeacher)
-                            CustomTextField(
-                              controller: _subjectController,
-                              hintText: l10n.enterYourSubject,
-                              prefixIcon: Icons.school,
-                              validator: (String? value) {
-                                if (value == null || value.isEmpty) {
-                                  return l10n.pleaseEnterYourSubject;
-                                }
-                                return null;
-                              },
-                            ),
-                          SizedBox(height: screenHeight * 0.04),
-                          if (state.status == RegisterStatus.loading)
-                            const Center(child: CircularProgressIndicator())
-                          else
-                            CustomAuthButton(
-                              text: l10n.register,
-
-                              onPressed: () async {
-                                if (_formKey.currentState?.validate() != true) {
-                                  return;
-                                }
-                                try {
-                                  final credential = await FirebaseAuth.instance
-                                      .createUserWithEmailAndPassword(
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                      );
-                                  context.read<RegisterDetailsCubit>().register(
-                                    fullName: _fullNameController.text,
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    confirmPassword:
-                                        _confirmPasswordController.text,
-                                    isTeacher:
-                                        await BlocProvider.of<LoginCubit>(
-                                          context,
-                                        ).isTeacher(),
-                                  );
-                                  await users.doc(credential.user?.uid).set({
-                                    'fullName': _fullNameController.text,
-                                    'email': _emailController.text,
-                                    'password': _passwordController.text,
-                                    'phone': _phoneController.text,
-                                    if (widget.isTeacher)
-                                      'subject': _subjectController.text,
-                                    'uid': credential.user?.uid,
-                                  });
-                                } on FirebaseAuthException catch (e) {
-                                  if (e.code == 'weak-password') {
-                                    print('The password provided is too weak.');
-                                    Fluttertoast.showToast(
-                                      msg: l10n.errorWeakPassword,
-                                      backgroundColor: ColorApp.errorColor,
-                                      gravity: ToastGravity.BOTTOM,
-                                    );
-                                  } else if (e.code == 'email-already-in-use') {
-                                    Fluttertoast.showToast(
-                                      msg: l10n.errorEmailInUse,
-                                      backgroundColor: ColorApp.errorColor,
-                                      gravity: ToastGravity.BOTTOM,
-                                    );
-                
-                                    print(
-                                      'The account already exists for that email.',
-                                    );
-                                  }
-                                } on FirebaseException catch (e) {
-                                  Fluttertoast.showToast(
-                                    msg: e.toString(),
-                                    backgroundColor: ColorApp.errorColor,
-                                    gravity: ToastGravity.BOTTOM,
-                                  );
-                                } catch (e) {
-                                  Fluttertoast.showToast(
-                                    msg: e.toString(),
-                                    backgroundColor: ColorApp.errorColor,
-                                    gravity: ToastGravity.BOTTOM,
-                                  );
-                                  print(e);
-                                }
-                              },
-                            ),
-                          SizedBox(height: screenHeight * 0.05),
-                          DividerWithText(text: l10n.orRegisterWith),
-
-                          SizedBox(height: screenHeight * 0.05),
-                
-                          SocialLoginButtons(),
-                
-                          SizedBox(height: screenHeight * 0.035),
-                
-                          AuthNavigationLink(
-                            baseText: l10n.alreadyHaveAnAccount,
-                            clickableText: l10n.login,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: screenHeight*0.01,),
-                          InkWell(
-                            onTap: () {
-                              widget.isTeacher = !widget.isTeacher;
-                              setState(() {
-                                
-                              });
-                            },
-                            child:
-                                widget.isTeacher == true
-                                    ? Text(
-                                      "To Register as Student",
-                                      style: TextStyle(
-                                        color: AppColors.teal,
-                                        fontSize: screenWidth * 0.035,
-                                      ),
-                                    )
-                                    : Text(
-                                      "To Register as Teacher",
-                                      style: TextStyle(
-                                        color: AppColors.teal,
-                                        fontSize: screenWidth * 0.035,
-                                      ),
-                                    ),
-                          ),
-                          SizedBox(height: 50),
-                        ],
+                  SizedBox(height: screenHeight * 0.04),
+                  if (_isRegistering)
+                    const Center(child: CircularProgressIndicator())
+                  else
+                    CustomAuthButton(
+                      text: l10n.register,
+                      onPressed: _handleRegistration,
+                    ),
+                  SizedBox(height: screenHeight * 0.05),
+                  DividerWithText(text: l10n.orRegisterWith),
+                  SizedBox(height: screenHeight * 0.05),
+                  SocialLoginButtons(),
+                  SizedBox(height: screenHeight * 0.035),
+                  AuthNavigationLink(
+                    baseText: l10n.alreadyHaveAnAccount,
+                    clickableText: l10n.login,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: screenHeight * 0.01),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        widget.isTeacher = !widget.isTeacher;
+                      });
+                    },
+                    child: Text(
+                      widget.isTeacher
+                          ? "To Register as Student"
+                          : "To Register as Teacher",
+                      style: TextStyle(
+                        color: AppColors.teal,
+                        fontSize: screenWidth * 0.035,
                       ),
                     ),
                   ),
-                
-              );
-            },
+                  const SizedBox(height: 50),
+                ],
+              ),
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/color_app.dart';
 import '../../../home/presentation/widgets/app_constants.dart';
-import '../../domain/entities/review_question.dart';
+import '../model/review_question.dart';
 
 class AnswerOption extends StatelessWidget {
   final String optionText;

@@ -2,7 +2,7 @@ import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../home/presentation/Screens/wrapper_page.dart';
-import '../../domain/entities/review_question.dart';
+import '../model/review_question.dart';
 import '../cubit/review_answers_cubit.dart';
 import '../cubit/review_answers_state.dart';
 import '../widgets/answer_option.dart';

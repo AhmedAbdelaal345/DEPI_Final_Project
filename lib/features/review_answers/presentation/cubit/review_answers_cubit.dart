@@ -1,7 +1,7 @@
 // lib/features/review_answers/presentation/cubit/review_answers_cubit.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/entities/review_question.dart';
+import '../model/review_question.dart';
 import 'review_answers_state.dart';
 
 class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {

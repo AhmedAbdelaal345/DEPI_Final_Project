@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/quiz_page.dart';
 import 'package:flutter/material.dart';
 import '../widgets/quiz_back_button.dart';
@@ -16,7 +17,7 @@ class BeforeQuizScreen extends StatelessWidget {
   static final String id = "/details";
 
   Future<DocumentSnapshot<Map<String, dynamic>>> _getQuizData() {
-    return FirebaseFirestore.instance.collection("Quizzes").doc(quizId).get();
+    return FirebaseFirestore.instance.collection(AppConstants.quizzesCollection).doc(quizId).get();
   }
 
   @override

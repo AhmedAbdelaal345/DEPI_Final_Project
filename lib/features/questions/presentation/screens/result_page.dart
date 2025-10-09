@@ -4,7 +4,6 @@ import 'package:depi_final_project/features/home/presentation/widgets/primary_bu
 import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/model/question_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -146,13 +145,14 @@ class ResultPage extends StatelessWidget {
                       await BlocProvider.of<ResultCubit>(
                         context,
                       ).saveStudentQuizResult(
+                        
                         studentId: FirebaseAuth.instance.currentUser!.uid,
                         quizId: quizResult!.quizId,
                         questionsWithAnswers: quizResult!.detailedResults!,
                         questions: quizResult!.questions,
                         status:
                             quizResult!.correctAnswers /
-                                        quizResult!.totalQuestions >
+                                        quizResult!.totalQuestions >=
                                     0.5
                                 ? "Pass"
                                 : "Fail",

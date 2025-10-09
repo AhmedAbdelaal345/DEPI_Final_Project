@@ -18,10 +18,9 @@ import '../widgets/custom_text_field.dart';
 
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
+  static const id = "/login_page";
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -63,11 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
         print('User is a Teacher');
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder:
-                (context) =>
-                    const WrapperTeacherPage(),
-          ),
+          MaterialPageRoute(builder: (context) => const WrapperTeacherPage()),
         );
         return;
       }
@@ -109,9 +104,9 @@ class _LoginScreenState extends State<LoginScreen> {
           child: BlocListener<LoginCubit, LoginState>(
             listener: (context, state) {
               if (state.status == LoginStatus.success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                   SnackBar(content: Text(l10n.loginSuccessful)),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(l10n.loginSuccessful)));
                 // Remove this navigation as it will be handled by _checkUserTypeAndNavigate
               } else if (state.status == LoginStatus.failure) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -260,8 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           l10n.errorInvalidCredential;
                                       break;
                                     case 'user-not-found':
-                                      errorMessage =
-                                          l10n.errorUserNotFound;
+                                      errorMessage = l10n.errorUserNotFound;
                                       break;
                                     case 'wrong-password':
                                       errorMessage = l10n.errorWrongPassword;
@@ -270,15 +264,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                       errorMessage = l10n.errorInvalidEmail;
                                       break;
                                     case 'user-disabled':
-                                      errorMessage =
-                                          l10n.errorUserDisabled;
+                                      errorMessage = l10n.errorUserDisabled;
                                       break;
                                     case "network-request-failed":
                                       errorMessage =
                                           l10n.errorNetworkRequestFailed;
                                     default:
-                                      errorMessage =
-                                          l10n.errorLoginFailed(e.message ?? 'Unknown error');
+                                      errorMessage = l10n.errorLoginFailed(
+                                        e.message ?? 'Unknown error',
+                                      );
                                   }
 
                                   Fluttertoast.showToast(

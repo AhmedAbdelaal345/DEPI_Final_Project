@@ -1,6 +1,8 @@
+import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../cubit/locale_cubit.dart';
 
@@ -11,10 +13,10 @@ class SettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1C2B),
+      backgroundColor: AppColors.bg,
       appBar: AppBar(
-        title:  Text(l10n.settings, style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF2C2F48),
+        title: Text(l10n.settings, style: TextStyle(color: Colors.white)),
+        backgroundColor: AppColors.bg,
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
@@ -26,15 +28,24 @@ class SettingScreen extends StatelessWidget {
             title: l10n.notifications,
             subtitle: l10n.manageNotifications,
             onTap: () {
-              // Handle notifications settings
-            },
+Fluttertoast.showToast(
+                msg: l10n.featureWillGetSoon,
+                backgroundColor: AppColors.white,
+                textColor: AppColors.hint,
+                fontSize: 16,
+              );            },
           ),
           _buildSettingsTile(
             icon: Icons.dark_mode,
             title: l10n.darkMode,
             subtitle: l10n.toggleTheme,
             onTap: () {
-              // Handle theme settings
+              Fluttertoast.showToast(
+                msg: l10n.featureWillGetSoon,
+                backgroundColor: AppColors.white,
+                textColor: AppColors.hint,
+                fontSize: 16,
+              );
             },
           ),
           _buildSettingsTile(
@@ -51,16 +62,24 @@ class SettingScreen extends StatelessWidget {
             title: l10n.helpAndSupport,
             subtitle: l10n.getHelpAndSupport,
             onTap: () {
-              // Handle help
-            },
+Fluttertoast.showToast(
+                msg: l10n.featureWillGetSoon,
+                backgroundColor: AppColors.white,
+                textColor: AppColors.hint,
+                fontSize: 16,
+              );            },
           ),
           _buildSettingsTile(
             icon: Icons.info,
             title: l10n.about,
             subtitle: l10n.appVersionInfo,
             onTap: () {
-              // Handle about
-            },
+Fluttertoast.showToast(
+                msg: l10n.featureWillGetSoon,
+                backgroundColor: AppColors.white,
+                textColor: AppColors.hint,
+                fontSize: 16,
+              );            },
           ),
         ],
       ),
@@ -73,21 +92,34 @@ class SettingScreen extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: const Color(0xFF2C2F48),
-          title: const Text('Choose Language', style: TextStyle(color: Colors.white)),
+          title: const Text(
+            'Choose Language',
+            style: TextStyle(color: Colors.white),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('English', style: TextStyle(color: Colors.white)),
+                title: const Text(
+                  'English',
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () {
-                  context.read<LocaleCubit>().changeLanguage(const Locale('en'));
+                  context.read<LocaleCubit>().changeLanguage(
+                    const Locale('en'),
+                  );
                   Navigator.of(dialogContext).pop();
                 },
               ),
               ListTile(
-                title: const Text('العربية', style: TextStyle(color: Colors.white)),
+                title: const Text(
+                  'العربية',
+                  style: TextStyle(color: Colors.white),
+                ),
                 onTap: () {
-                  context.read<LocaleCubit>().changeLanguage(const Locale('ar'));
+                  context.read<LocaleCubit>().changeLanguage(
+                    const Locale('ar'),
+                  );
                   Navigator.of(dialogContext).pop();
                 },
               ),

@@ -397,4 +397,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noQuestionsToShow => 'No questions to show.';
+
+  @override
+  String get featureWillGetSoon => 'Feature Will Get Soon';
 }

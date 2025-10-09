@@ -5,7 +5,6 @@
   "createNewQuiz": "Create a new Quiz",
   "recentQuizzes": "Recent\n Quizzes",
   "performanceReport": "Performance Report",
-
   "quizCreated": "Quiz Created",
   "quizCreatedMessage": "Anyone who has this code can join and take the quiz.",
   "ok": "OK",
@@ -146,5 +145,6 @@
 "correctAnswers": "Correct Answers ({count})",
 "noQuizResultsAvailable": "No quiz results available",
 "completeAQuizFirst": "Complete a quiz first to review your answers",
-"noQuestionsToShow": "No questions to show."
+"noQuestionsToShow": "No questions to show.",
+"featureWillGetSoon":"Feature Will Get Soon"
 }

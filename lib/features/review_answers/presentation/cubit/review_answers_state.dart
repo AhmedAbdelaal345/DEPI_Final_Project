@@ -1,6 +1,6 @@
 // lib/features/review_answers/presentation/cubit/review_answers_state.dart
 
-import '../../domain/entities/review_question.dart';
+import '../model/review_question.dart';
 
 // الكلاس الأساسي، بدون Equatable
 abstract class ReviewAnswersState {

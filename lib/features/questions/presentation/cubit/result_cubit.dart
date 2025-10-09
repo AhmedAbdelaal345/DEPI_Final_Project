@@ -29,10 +29,10 @@ class ResultCubit extends Cubit<ResultState> {
           .collection(AppConstants.questionsCollection)
           .doc(quizId)
           .set({
-            AppConstants.score: correctCount,
+            AppConstants.score: correctCount / questionsWithAnswers.length,
             AppConstants.total: questionsWithAnswers.length,
             AppConstants.details: questionsWithAnswers,
-            AppConstants.status:status,
+            AppConstants.status: status,
             AppConstants.question: questionsForFirestore,
             AppConstants.createdAt: FieldValue.serverTimestamp(),
           });
