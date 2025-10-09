@@ -6,7 +6,6 @@ import 'package:depi_final_project/features/home/presentation/widgets/primary_bu
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/app_drawer.dart';
 import '../widgets/quiz_card.dart';
 import 'quiz_list_screen.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';

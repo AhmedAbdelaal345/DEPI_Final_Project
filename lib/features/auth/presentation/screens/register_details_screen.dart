@@ -115,6 +115,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               if (value == null || value.isEmpty) {
                                 return l10n.enterYourFullName;
                               }
+                              return null;
                             },
                           ),
                           CustomTextField(
@@ -146,6 +147,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                               if (value.length < 6) {
                                 return l10n.passwordTooShort;
                               }
+                              return null;
                             },
                           ),
                           CustomTextField(
