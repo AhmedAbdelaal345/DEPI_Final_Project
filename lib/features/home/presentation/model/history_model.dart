@@ -21,6 +21,7 @@ class QuizHistoryModel {
   factory QuizHistoryModel.fromFirestore(
     String quizId,
     Map<String, dynamic> data,
+    ////
   ) {
     return QuizHistoryModel(
       quizId: quizId,
