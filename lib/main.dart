@@ -52,54 +52,53 @@ class MyApp extends StatelessWidget {
         BlocProvider<CreateQuizCubit>(create: (context) => CreateQuizCubit()),
         BlocProvider(create: (context) => ResultCubit()),
         BlocProvider(create: (context) => HistoryCubit()),
-    
       ],
-        child: BlocBuilder<LocaleCubit, Locale>(
-            builder: (context, locale) {
-              return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: locale,
-        home: SplashScreen(),
-        theme: ThemeData(
-          fontFamily: "Judson",
-          useMaterial3: false,
-          scaffoldBackgroundColor: AppColors.bg,
-          colorScheme: const ColorScheme.dark(
-            primary: AppColors.teal,
-            background: AppColors.bg,
-            surface: AppColors.bg,
-          ),
-          textTheme: TextTheme(
-            titleLarge: GoogleFonts.cinzelDecorative(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w400,
+      child: BlocBuilder<LocaleCubit, Locale>(
+        builder: (context, locale) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: locale,
+            home: SplashScreen(),
+            theme: ThemeData(
+              fontFamily: "Judson",
+              useMaterial3: false,
+              scaffoldBackgroundColor: AppColors.bg,
+              colorScheme: const ColorScheme.dark(
+                primary: AppColors.teal,
+                background: AppColors.bg,
+                surface: AppColors.bg,
+              ),
+              textTheme: TextTheme(
+                titleLarge: GoogleFonts.cinzelDecorative(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w400,
+                ),
+                bodyMedium: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 14,
+                  height: 1.35,
+                ),
+                labelLarge: GoogleFonts.poppins(
+                  color: AppColors.bgDarkText,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-            bodyMedium: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 14,
-              height: 1.35,
-            ),
-            labelLarge: GoogleFonts.poppins(
-              color: AppColors.bgDarkText,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
 
-        routes: {
-          WrapperPage.id: (context) => WrapperPage(),
-          QuizPage.id: (context) => QuizPage(),
-          ResultPage.id: (context) => ResultPage(),
-          ReviewDetailsScreen.id:
-              (context) => ReviewDetailsScreen(fetchWrongAnswers: true),
-        },
-              );
+            routes: {
+              WrapperPage.id: (context) => WrapperPage(),
+              QuizPage.id: (context) => QuizPage(),
+              ResultPage.id: (context) => ResultPage(),
+              ReviewDetailsScreen.id:
+                  (context) => ReviewDetailsScreen(fetchWrongAnswers: true),
             },
-        ),
+          );
+        },
+      ),
     );
   }
 }

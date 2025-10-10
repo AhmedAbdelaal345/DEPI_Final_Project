@@ -1,19 +1,13 @@
 // screens/profile_screen.dart
-//
+// 
 // screens/profile_screen.dart
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 // import 'package:iconify_flutter/icons/arcticons.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   final Map<String, List<Map<String, String>>> subjects = const {
     "Math": [
       {"title": "Math Basics", "date": "23/9/2025", "score": "80%"},
@@ -29,30 +23,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {"title": "Data Structures", "date": "14/9/2025", "score": "90%"},
     ],
   };
-  User? user;
-  @override
-  Future<void> initState() async {
-    user = FirebaseAuth.instance.currentUser!;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-
+   
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    
+    
     const designWidth = 390.0;
     const designHeight = 844.0;
-
+    
+   
     final widthRatio = screenWidth / designWidth;
     final heightRatio = screenHeight / designHeight;
-
+    
     int totalQuizzes = subjects.values
         .map((quizList) => quizList.length)
         .reduce((a, b) => a + b);
 
+    
     int totalSubjects = subjects.length;
 
     List<int> allScores = [];
@@ -61,14 +52,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         allScores.add(int.parse(quiz["score"]!.replaceAll("%", "")));
       });
     });
-    int averageScore =
-        (allScores.reduce((a, b) => a + b) / allScores.length).round();
+    int averageScore = (allScores.reduce((a, b) => a + b) / allScores.length).round();
     return Scaffold(
       backgroundColor: const Color(0xFF000920),
       appBar: AppBar(
         backgroundColor: const Color(0xFF000920),
         elevation: 0,
-        title: Text(l10n.profile, style: TextStyle(color: Colors.white)),
+        title:  Text(l10n.profile, style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -76,8 +66,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             SizedBox(height: 91 * heightRatio),
             Stack(
-              alignment: Alignment.topCenter,
+              alignment: Alignment.center,
               children: [
+               
                 Positioned(
                   top: 0,
                   bottom: 100 * heightRatio,
@@ -89,7 +80,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Container(
                   width: 152 * widthRatio,
                   height: 152 * heightRatio,
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
                   child: ClipOval(
                     child: Image.asset(
                       'assets/profile_image.jpg',
@@ -111,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(height: 5 * heightRatio),
             Text(
-              user!.displayName!,
+              "Yamen magdy",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24 * widthRatio,
@@ -120,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(height: 4 * heightRatio),
             Text(
-              user!.email!,
+              "yamenmagdy222@gmail.com",
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 14 * widthRatio,
@@ -166,8 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-
+  } 
   Widget _buildStatCard({
     required IconData icon,
     required String label,
@@ -193,7 +185,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white, size: 28 * widthRatio),
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 28 * widthRatio,
+          ),
           SizedBox(width: 16 * widthRatio),
           Expanded(
             child: Text(
@@ -219,18 +215,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+
 class DashedLinePainter extends CustomPainter {
   final double widthRatio;
-
+  
   DashedLinePainter({required this.widthRatio});
-
+  
   @override
   void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = Colors.white.withOpacity(0.3)
-          ..strokeWidth = 2 * widthRatio
-          ..style = PaintingStyle.stroke;
+    final paint = Paint()
+      ..color = Colors.white.withOpacity(0.3)
+      ..strokeWidth = 2 * widthRatio
+      ..style = PaintingStyle.stroke;
 
     final dashWidth = 5.0 * widthRatio;
     final dashSpace = 5.0 * widthRatio;
