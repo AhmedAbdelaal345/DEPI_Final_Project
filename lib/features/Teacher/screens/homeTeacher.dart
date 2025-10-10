@@ -1,5 +1,7 @@
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
+import 'package:depi_final_project/features/Teacher/screens/PerformanceReport.dart';
 import 'package:depi_final_project/features/Teacher/screens/createNewQuiz.dart';
+import 'package:depi_final_project/features/Teacher/screens/recentQuizzes.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/title_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,8 +9,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
-class Hometeacher extends StatelessWidget {
+class Hometeacher extends StatefulWidget {
   const Hometeacher({super.key});
+
+  @override
+  State<Hometeacher> createState() => _HometeacherState();
+}
+
+class _HometeacherState extends State<Hometeacher> {
+  @override
+  void initState() {
+    super.initState();
+    final credintial = FirebaseAuth.instance.currentUser;
+    if (credintial != null) {
+      context.read<CreateQuizCubit>().getquizzes(credintial.uid);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +70,12 @@ class Hometeacher extends StatelessWidget {
                     final cubit = context.read<CreateQuizCubit>();
                     final teacherId = await cubit.getname(credintial!.uid) ?? "unknow";
                     final subject = await cubit.getsubject(credintial.uid) ?? "unknow";
-                    final quizid = await cubit.getSixRandomNumbers() ?? "000000";
-
-                    await Navigator.push(
+                    final quizid = await cubit.getSixRandomNumbers();
+                    final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => BlocProvider(
-                          create: (context) => CreateQuizCubit(),
+                        builder: (_) => BlocProvider.value(
+                          value: cubit, 
                           child: Createnewquiz(
                             teacherId: teacherId,
                             subject: subject,
@@ -70,6 +85,9 @@ class Hometeacher extends StatelessWidget {
                         ),
                       ),
                     );
+                    if (result == true && mounted) {
+                      await cubit.getquizzes(credintial.uid);
+                    }
                   },
                   child: container(context, 0.15, 0.9, l10n.createNewQuiz),
                 ),
@@ -77,8 +95,47 @@ class Hometeacher extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    container(context, .2, .4, l10n.recentQuizzes),
-                    container(context, .2, .4, l10n.performanceReport),
+                    GestureDetector(
+                      onTap: () async {
+                        final cubit = context.read<CreateQuizCubit>();
+                        await cubit.getquizzes(credintial!.uid);
+                        
+                        if (mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: cubit,
+                                child: Recentquizzes(),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: container(context, .2, .4, "Recent\n Quizzes"),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        final cubit = context.read<CreateQuizCubit>();
+                        await cubit.getquizzes(credintial!.uid);
+                        final title = await cubit.gettitle(credintial.uid);      
+                        if (mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: cubit,
+                                child: PerformanceReportScreen(
+                                  uid: credintial.uid,
+                                  quizTitles: title,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: container(context, .2, .4, "Performance Report"),
+                    ),
                   ],
                 ),
               ],
@@ -88,7 +145,6 @@ class Hometeacher extends StatelessWidget {
       ),
     );
   }
-
   Widget container(BuildContext context, double heightFactor, double widthFactor, String txt) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;

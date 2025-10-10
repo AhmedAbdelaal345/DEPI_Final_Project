@@ -47,3 +47,12 @@ class CreateQuizError extends CreateQuizState {
     required this.message,
   });
 }
+class GetQuiz  extends CreateQuizState {
+   List <dynamic> quizList;
+   List <dynamic> quizzesId;
+  GetQuiz ({required this.quizzesId,required this.quizList,required super.options, required super.questions, required super.answers});
+}
+class GetQuizError  extends CreateQuizState {
+  String message;
+  GetQuizError ({required super.questions,required super.options,  required super.answers,required this.message});
+}

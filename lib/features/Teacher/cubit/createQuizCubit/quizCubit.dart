@@ -7,7 +7,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateQuizCubit extends Cubit<CreateQuizState> {
 CreateQuizCubit() : super(CreateQuizInitial()){
-}  
+}
+
+  void resetQuiz() {
+    for (var controller in state.questions) {
+      controller.dispose();
+    }
+    for (var optionList in state.options) {
+      for (var controller in optionList) {
+        controller.dispose();
+      }
+    }
+    for (var controller in state.answers) {
+      controller.dispose();
+    }
+    emit(CreateQuizInitial());
+  }
 Future<String> getSixRandomNumbers() async {
   final random = Random();
   final database = FirebaseFirestore.instance.collection("quizzes");
@@ -100,6 +115,7 @@ Future<String?> getsubject(String uid)async{
       "teacherId":teacherId,
       "title":title,
       "uid": uid,
+       "quizid":iddoc
     });
     for (int i = 0; i < question.length; i++) {
   await quizRef.collection("questions").doc("q${i+1}").set({
@@ -119,4 +135,205 @@ Future<String?> getsubject(String uid)async{
       ));
     }
   }
+
+Future<void> getquizzes(String uid) async {
+  List<Map<String, dynamic>> newQuizList = [];
+
+  try {
+    final newQuestion = List<TextEditingController>.from(state.questions);
+    final newOptions = List<List<TextEditingController>>.from(state.options);
+    final newAnswer = List<TextEditingController>.from(state.answers);
+
+    if (state is GetQuiz) {
+      final quizState = state as GetQuiz;
+      newQuizList = List<Map<String, dynamic>>.from(quizState.quizList);
+    }
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("Quizzes")
+        .orderBy("createdAt", descending: true)
+        .get();
+    final userQuizzes = querySnapshot.docs.where((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      return data["uid"] == uid;
+    }).toList();
+  final quizIds = querySnapshot.docs.map((doc) => doc.id).toList();
+    final futures = userQuizzes.map((doc) async {
+      final data = doc.data() as Map<String, dynamic>;
+
+      QuerySnapshot questionSnapshot = await FirebaseFirestore.instance
+          .collection("Quizzes")
+          .doc(doc.id)
+          .collection("questions")
+          .get();
+      List<Map<String, dynamic>> questionList = questionSnapshot.docs.map((q) {
+        final qData = q.data() as Map<String, dynamic>;
+        return {
+          "question": qData["question"] ?? "",
+          "option": List<String>.from(qData["option"] ?? []),
+          "answer": qData["answer"] ?? "",
+        };
+      }).toList();
+
+      data["questions"] = questionList;
+
+      return data;
+    });
+    final quizzesWithQuestions = await Future.wait(futures);
+    newQuizList.addAll(quizzesWithQuestions);
+
+    emit(GetQuiz(
+      quizzesId: quizIds,
+      quizList: newQuizList,
+      options: newOptions,
+      questions: newQuestion,
+      answers: newAnswer,
+    ));
+  } catch (e) {
+    final newQuestion = List<TextEditingController>.from(state.questions);
+    final newOptions = List<List<TextEditingController>>.from(state.options);
+    final newAnswer = List<TextEditingController>.from(state.answers);
+    emit(GetQuizError(
+      options: newOptions,
+      questions: newQuestion,
+      answers: newAnswer,
+      message: e.toString(),
+    ));
+  }
+}
+Future<bool> removeQuiz(String quizId) async {
+  try {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final quizRef = firestore.collection('Quizzes').doc(quizId);
+    final quizDoc = await quizRef.get();
+    if (!quizDoc.exists) {
+      return false;
+    }
+    final questionsSnapshot = await quizRef.collection('questions').get();    
+    for (var questionDoc in questionsSnapshot.docs) {
+      await questionDoc.reference.delete();
+    }
+    await quizRef.delete();
+    final verifyDoc = await quizRef.get();
+
+    
+    if (state is GetQuiz) {
+      final quizState = state as GetQuiz;
+      
+      final newQuestion = List<TextEditingController>.from(state.questions);
+      final newOptions = List<List<TextEditingController>>.from(state.options);
+      final newAnswer = List<TextEditingController>.from(state.answers);
+      
+
+      final newQuizList = List<Map<String, dynamic>>.from(quizState.quizList)
+        ..removeWhere((quiz) => quiz['quizid'] == quizId);
+      final newQuizzesId = List<String>.from(quizState.quizzesId)
+        ..remove(quizId);
+      
+      emit(GetQuiz(
+        options: newOptions,
+        questions: newQuestion,
+        answers: newAnswer,
+        quizzesId: newQuizzesId,
+        quizList: newQuizList,
+      ));
+    }
+    
+    return true;
+    
+  } catch (e) {
+        emit(GetQuizError(
+      options: state.options,
+      questions: state.questions,
+      answers: state.answers,
+      message: 'Failed to delete quiz',
+    ));
+    
+    return false;
+  }
+}
+  Future<List<String>> getQuiz(String uid, String title) async {
+  try {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection("Quizzes")
+        .where("uid", isEqualTo: uid)
+        .where("title", isEqualTo: title)
+        .get();
+    final quizzes = querySnapshot.docs
+        .map((doc) => doc["quizid"] as String)
+        .toList();
+
+    return quizzes;
+  } catch (e) {
+    return [];
+  }
+}
+Future<List<String>> gettitle(String uid) async {
+  final List<String> titles = [];
+  
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("Quizzes")
+        .get();
+    
+    for (var doc in querySnapshot.docs) {
+      final data = doc.data() as Map<String, dynamic>?;
+      
+      if (data != null && 
+          data["uid"] != null && 
+          data["title"] != null &&
+          data["uid"] == uid) {
+        titles.add(data["title"] as String);
+      }
+    }
+    
+    return titles;
+  } catch (e) {
+    print('Error in gettitle: $e');
+    return [];
+  }
+}
+Future<List<Map<String, dynamic>>> getStudentsForQuiz(String quizId) async {
+  final firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> results = [];
+
+  try {
+    final studentsSnapshot = await firestore.collection('Student').get();
+
+    for (var studentDoc in studentsSnapshot.docs) {
+      final studentData = studentDoc.data();
+
+      final questionDoc = await studentDoc.reference
+          .collection('questions')
+          .doc(quizId)
+          .get();
+
+      if (questionDoc.exists) {
+        final quizData = questionDoc.data();
+
+        int score = quizData?['score'] ?? 0;
+        int total = quizData?['total'] ?? 100;
+        String status = quizData?['status'] ?? 'Pending';
+
+        results.add({
+          'studentName': studentData['fullName'] ?? 'Unknown Student',
+          'email': studentData['email'] ?? 'No Email',
+          'score': score,
+          'total': total,
+          'status': status,
+          'averageScore': (score / total) * 100,
+        });
+      }
+    }
+    int passCount = results.where((r) => r['status'] == 'Pass').length;
+    double passRate = results.isEmpty ? 0 : (passCount / results.length) * 100;
+    results = results.map((r) {
+      r['passRate'] = passRate;
+      return r;
+    }).toList();
+    return results;
+  } catch (e) {
+    return [];
+  }
+}
+
 }
