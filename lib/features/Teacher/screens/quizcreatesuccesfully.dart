@@ -1,4 +1,5 @@
 import 'package:depi_final_project/features/Teacher/screens/homeTeacher.dart';
+import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +114,7 @@ class QuizCreateSuccessful extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const Hometeacher()),
+                  MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 0,)),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -136,63 +137,131 @@ class QuizCreateSuccessful extends StatelessWidget {
       ),
     );
   }
-    Widget drawer(context){
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    return Drawer(
-      backgroundColor: Color(0xff061438),
-      child: ListView(
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Color(0xff061438),
-              border: Border(bottom: BorderSide(color: Color(0xff4FB3B7)))
-            ),
-            child: Row(
-              children: [
-                Image.asset("assets/images/brain_logo.png"),
-                Text("QUIZLY",style: TextStyle(
-                  color: Color(0xff62DDE1),
-                  fontSize:screenWidth*.085 ,
-                  fontFamily: "DMSerifDisplay"
-                ),),
-              ],
-            ),),
-             listtitle((){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> Hometeacher()));
-             },context,Icon(Icons.home_outlined,size: screenWidth*.1,color: Color(0xff62DDE1),),"Home"),
-             listtitle((){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileScreen(),));
-             },context,Icon(Icons.person_outlined,size: screenWidth*.1,color: Color(0xff62DDE1),),"Profile"),
-             listtitle((){},context,Icon(Icons.list,size: screenWidth*.1,color: Color(0xff62DDE1),),"My Quizzes"),
-              ListTile( leading: Icon(Icons.settings,size: screenWidth*.1,color: Color(0xff62DDE1)),title: Text("Setting",style: TextStyle(color: Color(0xff62DDE1),fontSize: screenWidth*.06
-              ),),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> SettingScreen(),));
-              },
+ Widget drawer(BuildContext context) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+
+  return Drawer(
+    backgroundColor: const Color(0xff061438),
+    child: ListView(
+      children: [
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: const Color(0xff061438),
+            border: Border(
+              bottom: BorderSide(
+                color: const Color(0xff4FB3B7),
+                width: screenHeight * 0.001,
               ),
-        ],
+            ),
+          ),
+          child: Row(
+            children: [
+              SizedBox(
+                height: screenHeight * 0.08,
+                width: screenHeight * 0.08,
+                child: Image.asset("assets/images/brain_logo.png"),
+              ),
+              SizedBox(width: screenWidth * 0.02),
+              Text(
+                "QUIZLY",
+                style: TextStyle(
+                  color: const Color(0xff62DDE1),
+                  fontSize: screenWidth * 0.085,
+                  fontFamily: "DMSerifDisplay",
+                ),
+              ),
+            ],
+          ),
+        ),
+        listtitle(
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const WrapperTeacherPage()),
+          ),
+          context,
+          const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
+          "Home",
+        ),
+        listtitle(
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 1)),
+          ),
+          context,
+          const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
+          "Profile",
+        ),
+        listtitle(
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 2)),
+          ),
+          context,
+          const Icon(Icons.list, color: Color(0xff62DDE1)),
+          "My Quizzes",
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: const Color(0xff4FB3B7),
+                width: screenHeight * 0.001,
+              ),
+            ),
+          ),
+          child: ListTile(
+            leading: const Icon(Icons.settings, color: Color(0xff62DDE1)),
+            title: Text(
+              "Setting",
+              style: TextStyle(
+                color: const Color(0xff62DDE1),
+                fontSize: screenWidth * 0.06,
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 3)),
+              );
+            },
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget listtitle(Function callback, BuildContext context, Icon icon, String txt) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+
+  return Container(
+    decoration: BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          color: const Color(0xff4FB3B7),
+          width: screenHeight * 0.001,
+        ),
       ),
-    );
-  }
-  Widget listtitle(Function callback,context,Icon icon,String txt){
-      final screenWidth = MediaQuery.of(context).size.width;
-      final screenHeight = MediaQuery.of(context).size.height;
-      return Container(
-      decoration: BoxDecoration(
-      border: Border(bottom: BorderSide(color: Color(0xff4FB3B7)))
+    ),
+    child: ListTile(
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: screenWidth * 0.04,
+        vertical: screenHeight * 0.01,
       ),
-      child: ListTile( 
       leading: icon,
-      title: Text(txt,style: TextStyle(
-      color: Color(0xff62DDE1),
-      fontSize: screenWidth*.06
-      ),),
-      onTap: () {
-        callback();
-      },
+      title: Text(
+        txt,
+        style: TextStyle(
+          color: const Color(0xff62DDE1),
+          fontSize: screenWidth * 0.06,
+        ),
       ),
-        
-    );
-  }
+      onTap: () => callback(),
+    ),
+  );
+}
+
+  
 }
