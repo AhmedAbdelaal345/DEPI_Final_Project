@@ -18,20 +18,29 @@ class QuizHistoryModel {
     required this.details,
   });
 
-  factory QuizHistoryModel.fromFirestore(
-    String quizId,
-    Map<String, dynamic> data,
-    
-  ) {
-    return QuizHistoryModel(
-      quizId: quizId,
-      score: data[AppConstants.score] ?? 0,
-      total: data[AppConstants.total] ?? 0,
-      status: data[AppConstants.status] ?? 'Unknown',
-      createdAt: (data[AppConstants.createdAt] as Timestamp?)?.toDate(),
-      details: List<Map<String, dynamic>>.from(data[AppConstants.details] ?? []),
-    );
-  }
+factory QuizHistoryModel.fromFirestore(
+  String quizId,
+  Map<String, dynamic> data,
+) {
+  final num rawScore = data[AppConstants.score] ?? 0;
+  final num rawTotal = data[AppConstants.total] ?? 1;
+  final num? rawAccuracy = data[AppConstants.accuracy];
+
+  final int score = rawScore.toInt();
+  final int total = rawTotal.toInt();
+  final double accuracy = rawAccuracy != null
+      ? rawAccuracy.toDouble()
+      : (total > 0 ? score / total : 0.0);
+
+  return QuizHistoryModel(
+    quizId: quizId,
+    score: score.toDouble(), // store consistently as double
+    total: total,
+    status: data[AppConstants.status] ?? 'Unknown',
+    createdAt: (data[AppConstants.createdAt] as Timestamp?)?.toDate(),
+    details: List<Map<String, dynamic>>.from(data[AppConstants.details] ?? []),
+  );
+}
 
   Map<String, dynamic> toFirestore() {
     return {
@@ -43,10 +52,11 @@ class QuizHistoryModel {
     };
   }
 
-  double get accuracy => total > 0 ? score.toDouble() : 0.0;
-  
+  // FIXED: Calculate accuracy correctly as score divided by total
+  double get accuracy => total > 0 ? score / total : 0.0;
+
   String get accuracyPercentage => '${(accuracy * 100).toStringAsFixed(0)}%';
-  
+
   String get formattedDate {
     if (createdAt == null) return 'Unknown';
     return '${createdAt!.day}/${createdAt!.month}/${createdAt!.year}';

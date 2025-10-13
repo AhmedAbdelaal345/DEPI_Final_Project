@@ -149,6 +149,10 @@
 "noQuizResultsAvailable": "لا توجد نتائج اختبار متاحة",
 "completeAQuizFirst": "أكمل اختباراً أولاً لمراجعة إجاباتك",
 "noQuestionsToShow": "لا توجد أسئلة لعرضها.",
-"featureWillGetSoon":"سيتم توفير الخاصية قريبا"
+"featureWillGetSoon":"سيتم توفير الخاصية قريبا",
+"logOut":"تسجيل الخروج",
+"logOutDetails":"اضغط هنا لتسجيل الخروج",
+"deleteAccount":"حذف الحساب",
+"deleteAccountDetails":"حذف حسابك"
 
 }

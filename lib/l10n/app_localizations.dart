@@ -835,6 +835,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Feature Will Get Soon'**
   String get featureWillGetSoon;
+
+  /// No description provided for @logOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get logOut;
+
+  /// No description provided for @logOutDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'If you need To Log out, plesse press here'**
+  String get logOutDetails;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Your Account'**
+  String get deleteAccountDetails;
 }
 
 class _AppLocalizationsDelegate

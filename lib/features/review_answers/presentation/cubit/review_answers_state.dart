@@ -17,7 +17,7 @@ class ReviewAnswersLoading extends ReviewAnswersState {}
 class ReviewAnswersLoaded extends ReviewAnswersState {
   final List<ReviewQuestion> questions;
 
-  const ReviewAnswersLoaded(this.questions);
+  const ReviewAnswersLoaded(this.questions,);
 }
 
 // حالة حدوث خطأ

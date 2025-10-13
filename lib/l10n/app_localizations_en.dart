@@ -400,4 +400,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get featureWillGetSoon => 'Feature Will Get Soon';
+
+  @override
+  String get logOut => 'Log Out';
+
+  @override
+  String get logOutDetails => 'If you need To Log out, plesse press here';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountDetails => 'Delete Your Account';
 }

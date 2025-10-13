@@ -398,4 +398,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get featureWillGetSoon => 'سيتم توفير الخاصية قريبا';
+
+  @override
+  String get logOut => 'تسجيل الخروج';
+
+  @override
+  String get logOutDetails => 'اضغط هنا لتسجيل الخروج';
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get deleteAccountDetails => 'حذف حسابك';
 }

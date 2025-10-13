@@ -7,44 +7,56 @@ import 'history_state.dart';
 class HistoryCubit extends Cubit<HistoryState> {
   HistoryCubit() : super(InitialState());
 
+  List<QuizHistoryModel> allQuizzes = [];
+
   Future<void> getQuizzesForStudent(String uidForStudent) async {
     emit(LoadingState());
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      // Get all quizzes from the subcollection
-      QuerySnapshot<Map<String, dynamic>> quizzesSnapshot =
-          await firestore
-              .collection(AppConstants.studentCollection)
-              .doc(uidForStudent)
-              .collection(AppConstants.questionsCollection)
-              .get();
+      // 🔹 نجيب كل الكويزات من Firestore
+      QuerySnapshot<Map<String, dynamic>> quizzesSnapshot = await firestore
+          .collection(AppConstants.studentCollection)
+          .doc(uidForStudent)
+          .collection(AppConstants.quizzessmall)
+          .get();
+
+      // 🔹 العدد الفعلي من Firestore
+      int totalQuizzes = quizzesSnapshot.docs.length;
+      print("✅ Total actual quizzes taken: $totalQuizzes");
 
       if (quizzesSnapshot.docs.isEmpty) {
         emit(EmptyState());
         return;
       }
 
-      // Convert documents to QuizHistoryModel list
-      List<QuizHistoryModel> allQuizzes =
-          quizzesSnapshot.docs.map((doc) {
-            return QuizHistoryModel.fromFirestore(doc.id, doc.data());
-          }).toList();
+      // ✅ امسح اللي قبل كده عشان ميتراكمش
+      allQuizzes.clear();
 
-      // Group quizzes by subject (extracted from quizId)
-      Map<String, List<QuizHistoryModel>> groupedQuizzes = {};
-
-      for (var quiz in allQuizzes) {
-        // Extract subject from quizId (assuming format like "Math_quiz1", "Physics_basics", etc.)
-        String subject = _extractSubjectFromQuizId(quiz.quizId);
-
-        if (!groupedQuizzes.containsKey(subject)) {
-          groupedQuizzes[subject] = [];
+      // 🔹 حوّل كل كويز إلى موديل
+      for (var doc in quizzesSnapshot.docs) {
+        try {
+          final quizData = doc.data();
+          allQuizzes.add(QuizHistoryModel.fromFirestore(doc.id, quizData));
+        } catch (e) {
+          print('Error processing quiz ${doc.id}: $e');
         }
-        groupedQuizzes[subject]!.add(quiz);
       }
 
-      emit(LoadedState(groupedQuizzes));
+      if (allQuizzes.isEmpty) {
+        emit(EmptyState());
+        return;
+      }
+
+      // 🔹 نجمعهم حسب المادة
+      Map<String, List<QuizHistoryModel>> groupedQuizzes = {};
+      for (var quiz in allQuizzes) {
+        String subject = await _getSubjectFromQuizId(quiz.quizId);
+        groupedQuizzes.putIfAbsent(subject, () => []).add(quiz);
+      }
+
+      // 🔹 نمرر العدد الحقيقي كمان
+      emit(LoadedState(groupedQuizzes, totalQuizzes));
     } on FirebaseException catch (e) {
       emit(ErrorState(e.message ?? 'Failed to load quiz history'));
     } catch (e) {
@@ -52,55 +64,37 @@ class HistoryCubit extends Cubit<HistoryState> {
     }
   }
 
-  // Helper method to extract subject name from quizId
-  String _extractSubjectFromQuizId(String quizId) {
-    // If quizId contains underscore, split and take first part
-    if (quizId.contains('_')) {
-      return quizId.split('_')[0];
+  // 🔹 Helper: نجيب المادة من كويز
+  Future<String> _getSubjectFromQuizId(String quizId) async {
+    try {
+      final quizDoc = await FirebaseFirestore.instance
+          .collection(AppConstants.quizzesCollection)
+          .doc(quizId)
+          .get();
+
+      if (quizDoc.exists) {
+        final data = quizDoc.data();
+        if (data != null && data['subject'] != null) {
+          String subject = data['subject'].toString();
+          return subject.isEmpty
+              ? 'General'
+              : subject[0].toUpperCase() + subject.substring(1);
+        }
+      }
+    } catch (e) {
+      print('Error fetching subject for quiz $quizId: $e');
     }
 
-    // If quizId contains numbers, remove them and capitalize
-    String subject = quizId.replaceAll(RegExp(r'[0-9]'), '').trim();
+    return _extractSubjectFromQuizId(quizId);
+  }
 
-    // Capitalize first letter
+  String _extractSubjectFromQuizId(String quizId) {
+    if (quizId.contains('_')) {
+      String subject = quizId.split('_')[0];
+      return subject[0].toUpperCase() + subject.substring(1);
+    }
+    String subject = quizId.replaceAll(RegExp(r'[0-9]'), '').trim();
     if (subject.isEmpty) return 'General';
     return subject[0].toUpperCase() + subject.substring(1);
   }
-
-  // Optional: Method to get quizzes for a specific subject
-  // Future<void> getQuizzesForSubject(String uidForStudent, String subject) async {
-  //   emit(LoadingState());
-  //   try {
-  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  //     QuerySnapshot<Map<String, dynamic>> quizzesSnapshot = await firestore
-  //         .collection(AppConstants.studentCollection)
-  //         .doc(uidForStudent)
-  //         .collection(AppConstants.questionsCollection)
-  //         .get();
-
-  //     if (quizzesSnapshot.docs.isEmpty) {
-  //       emit(EmptyState());
-  //       return;
-  //     }
-
-  //     List<QuizHistoryModel> filteredQuizzes = quizzesSnapshot.docs
-  //         .map((doc) => QuizHistoryModel.fromFirestore(doc.id, doc.data()))
-  //         .where((quiz) => _extractSubjectFromQuizId(quiz.quizId) == subject)
-  //         .toList();
-
-  //     Map<String, List<QuizHistoryModel>> groupedQuizzes = {
-  //       subject: filteredQuizzes
-  //     };
-
-  //     emit(LoadedState(groupedQuizzes));
-  //   } on FirebaseException catch (e) {
-  //     emit(ErrorState(e.message ?? 'Failed to load quiz history'));
-  //   } catch (e) {
-  //     emit(ErrorState('An unexpected error occurred: ${e.toString()}'));
-  //   }
-  // }
-  // void resetState() {
-  //   emit(InitialState());
-  // }
 }

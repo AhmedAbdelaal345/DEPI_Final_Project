@@ -76,59 +76,62 @@ class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {
     }
   }
 
-  Future<void> loadStudentAnswers({
-    required String quizId,
-    required String studentId,
-  }) async {
-    try {
-      emit(ReviewAnswersLoading());
+Future<void> loadStudentAnswers({
+  required String quizId,
+  required String studentId,
+}) async {
+  try {
+    emit(ReviewAnswersLoading());
 
-      // Fetch the student's quiz result from Firebase
-      var resultDoc = await FirebaseFirestore.instance
-          .collection('quiz_results') // Change to your collection name
-          .where('quizId', isEqualTo: quizId)
-          .where('studentId', isEqualTo: studentId)
-          .limit(1)
-          .get();
+    // 🔹 Query Firestore
+    final resultDoc = await FirebaseFirestore.instance
+        .collection('quiz_results')
+        .where('quizId', isEqualTo: quizId)
+        .where('studentId', isEqualTo: studentId)
+        .limit(1)
+        .get();
 
-      if (resultDoc.docs.isEmpty) {
-        emit(ReviewAnswersError('No results found for this quiz.'));
-        return;
-      }
-
-      var resultData = resultDoc.docs.first.data();
-      
-      // Parse the answers from Firebase
-      List<dynamic> answersData = resultData['answers'] ?? [];
-      
-      _correctAnswers = [];
-      _wrongAnswers = [];
-
-      for (var answerData in answersData) {
-        var question = ReviewQuestion(
-          id: answerData['id'] ?? '',
-          questionText: answerData['question'] ?? '',
-          options: List<String>.from(answerData['options'] ?? []),
-          correctAnswerIndex: answerData['correctAnswerIndex'] ?? 0,
-          correctAnswer: answerData['correctAnswer'] ?? '',
-          userAnswerIndex: answerData['userAnswerIndex'] ?? -1,
-          studentAnswer: answerData['studentAnswer'] ?? '',
-          explanation: answerData['explanation'] ?? '',
-          isCorrect: answerData['isCorrect'] ?? false,
-        );
-
-        if (question.isCorrect) {
-          _correctAnswers.add(question);
-        } else {
-          _wrongAnswers.add(question);
-        }
-      }
-
-      emit(ReviewAnswersInitial());
-    } catch (e) {
-      emit(ReviewAnswersError('Failed to load answers: ${e.toString()}'));
+    // 🔹 Check if no results found
+    if (resultDoc.docs.isEmpty) {
+      emit(const ReviewAnswersError('No quiz results found for this student.'));
+      return;
     }
+
+    // ✅ Safe access
+    final resultData = resultDoc.docs.first.data();
+
+    // Parse answers
+    final answersData = resultData['answers'] ?? [];
+
+    _correctAnswers = [];
+    _wrongAnswers = [];
+
+    for (var answerData in answersData) {
+      final question = ReviewQuestion(
+        id: answerData['id'] ?? '',
+        questionText: answerData['question'] ?? '',
+        options: List<String>.from(answerData['options'] ?? []),
+        correctAnswerIndex: answerData['correctAnswerIndex'] ?? 0,
+        correctAnswer: answerData['correctAnswer'] ?? '',
+        userAnswerIndex: answerData['userAnswerIndex'] ?? -1,
+        studentAnswer: answerData['studentAnswer'] ?? '',
+        explanation: answerData['explanation'] ?? '',
+        isCorrect: answerData['isCorrect'] ?? false,
+      );
+
+      if (question.isCorrect) {
+        _correctAnswers.add(question);
+      } else {
+        _wrongAnswers.add(question);
+      }
+    }
+
+    // ✅ Return to initial state after loading
+    emit(ReviewAnswersInitial());
+  } catch (e) {
+    emit(ReviewAnswersError('Failed to load answers: ${e.toString()}'));
   }
+}
 
   // Helper method to get all answers
   List<ReviewQuestion> getAllAnswers() {

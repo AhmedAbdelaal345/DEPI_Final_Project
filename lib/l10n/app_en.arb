@@ -146,5 +146,9 @@
 "noQuizResultsAvailable": "No quiz results available",
 "completeAQuizFirst": "Complete a quiz first to review your answers",
 "noQuestionsToShow": "No questions to show.",
-"featureWillGetSoon":"Feature Will Get Soon"
+"featureWillGetSoon":"Feature Will Get Soon",
+"logOut":"Log Out",
+"logOutDetails":"If you need To Log out, plesse press here",
+"deleteAccount":"Delete Account",
+"deleteAccountDetails":"Delete Your Account"
 }

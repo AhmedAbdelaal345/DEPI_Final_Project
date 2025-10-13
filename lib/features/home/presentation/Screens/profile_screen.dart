@@ -1,10 +1,9 @@
-// screens/profile_screen.dart
-//
-// screens/profile_screen.dart
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:depi_final_project/features/home/presentation/manager/history_cubit/history_cubit.dart';
+import 'package:depi_final_project/features/home/presentation/manager/history_cubit/history_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
-// import 'package:iconify_flutter/icons/arcticons.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,26 +13,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final Map<String, List<Map<String, String>>> subjects = const {
-    "Math": [
-      {"title": "Math Basics", "date": "23/9/2025", "score": "80%"},
-      {"title": "Math1", "date": "12/9/2025", "score": "76%"},
-      {"title": "Math2", "date": "10/9/2025", "score": "83%"},
-    ],
-    "Physics": [
-      {"title": "Physics Basics", "date": "20/9/2025", "score": "78%"},
-      {"title": "Physics1", "date": "15/9/2025", "score": "72%"},
-    ],
-    "Programming 1": [
-      {"title": "Intro to C++", "date": "18/9/2025", "score": "88%"},
-      {"title": "Data Structures", "date": "14/9/2025", "score": "90%"},
-    ],
-  };
   User? user;
+
   @override
-  Future<void> initState() async {
-    user = FirebaseAuth.instance.currentUser!;
+  void initState() {
     super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      context.read<HistoryCubit>().getQuizzesForStudent(user!.uid);
+    }
   }
 
   @override
@@ -42,128 +30,124 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
     const designWidth = 390.0;
     const designHeight = 844.0;
-
     final widthRatio = screenWidth / designWidth;
     final heightRatio = screenHeight / designHeight;
 
-    int totalQuizzes = subjects.values
-        .map((quizList) => quizList.length)
-        .reduce((a, b) => a + b);
-
-    int totalSubjects = subjects.length;
-
-    List<int> allScores = [];
-    subjects.values.forEach((quizList) {
-      quizList.forEach((quiz) {
-        allScores.add(int.parse(quiz["score"]!.replaceAll("%", "")));
-      });
-    });
-    int averageScore =
-        (allScores.reduce((a, b) => a + b) / allScores.length).round();
     return Scaffold(
       backgroundColor: const Color(0xFF000920),
       appBar: AppBar(
         backgroundColor: const Color(0xFF000920),
         elevation: 0,
-        title: Text(l10n.profile, style: TextStyle(color: Colors.white)),
+        title: Text(l10n.profile, style: const TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 91 * heightRatio),
-            Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Positioned(
-                  top: 0,
-                  bottom: 100 * heightRatio,
-                  child: CustomPaint(
-                    size: Size(2 * widthRatio, 200 * heightRatio),
-                    painter: DashedLinePainter(widthRatio: widthRatio),
-                  ),
-                ),
-                Container(
-                  width: 152 * widthRatio,
-                  height: 152 * heightRatio,
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/profile_image.jpg',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[800],
-                          child: Icon(
-                            Icons.pets,
-                            size: 80 * widthRatio,
-                            color: Colors.white,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 5 * heightRatio),
-            Text(
-              user!.displayName!,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24 * widthRatio,
-                fontWeight: FontWeight.bold,
+      body: BlocBuilder<HistoryCubit, HistoryState>(
+        builder: (context, state) {
+          if (state is LoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is EmptyState) {
+            return const Center(
+              child: Text(
+                "No quizzes found",
+                style: TextStyle(color: Colors.white),
               ),
-            ),
-            SizedBox(height: 4 * heightRatio),
-            Text(
-              user!.email!,
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 14 * widthRatio,
+            );
+          } else if (state is ErrorState) {
+            return Center(
+              child: Text(
+                state.error,
+                style: const TextStyle(color: Colors.redAccent),
               ),
-            ),
-            SizedBox(height: 32 * heightRatio),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 37 * widthRatio,
-                right: 36 * widthRatio,
-              ),
+            );
+          } else if (state is LoadedState) {
+            final subjects = state.groupedQuizzes;
+            final totalSubjects = subjects.keys.length;
+            final totalQuizzes = state.totalQuizzes; // ✅ العدد الحقيقي من Firestore
+
+            // حساب متوسط النتيجة (اختياري)
+            List<int> allScores = [];
+            for (var list in subjects.values) {
+              for (var quiz in list) {
+                if (quiz.score != null && quiz.total != null) {
+                  allScores.add(
+                      ((quiz.score / quiz.total) * 100).round());
+                }
+              }
+            }
+            int averageScore = allScores.isEmpty
+                ? 0
+                : (allScores.reduce((a, b) => a + b) / allScores.length).round();
+
+            return SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildStatCard(
-                    icon: Icons.list,
-                    label: "All Quizzes taken",
-                    value: totalQuizzes.toString(),
-                    widthRatio: widthRatio,
-                    heightRatio: heightRatio,
+                  SizedBox(height: 60 * heightRatio),
+                  CircleAvatar(
+                    radius: 60 * widthRatio,
+                    backgroundImage: const AssetImage(
+                      'assets/profile_image.jpg',
+                    ),
+                    onBackgroundImageError: (_, __) {},
                   ),
-                  SizedBox(height: 20 * heightRatio),
-                  _buildStatCard(
-                    icon: Icons.book,
-                    label: "Subjects",
-                    value: totalSubjects.toString(),
-                    widthRatio: widthRatio,
-                    heightRatio: heightRatio,
+                  SizedBox(height: 10 * heightRatio),
+                  Text(
+                    user?.displayName ?? "User",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22 * widthRatio,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  SizedBox(height: 16 * heightRatio),
-                  _buildStatCard(
-                    icon: Icons.star_border,
-                    label: "Average Score",
-                    value: "$averageScore%",
-                    widthRatio: widthRatio,
-                    heightRatio: heightRatio,
-                    isLast: true,
+                  Text(
+                    user?.email ?? "",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14 * widthRatio,
+                    ),
+                  ),
+                  SizedBox(height: 32 * heightRatio),
+
+                  // Cards
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 36 * widthRatio),
+                    child: Column(
+                      children: [
+                        _buildStatCard(
+                          icon: Icons.list,
+                          label: "All Quizzes Taken",
+                          value: totalQuizzes.toString(), // ✅ من Firestore
+                          widthRatio: widthRatio,
+                          heightRatio: heightRatio,
+                        ),
+                        SizedBox(height: 20 * heightRatio),
+                        _buildStatCard(
+                          icon: Icons.book,
+                          label: "Subjects",
+                          value: totalSubjects.toString(),
+                          widthRatio: widthRatio,
+                          heightRatio: heightRatio,
+                        ),
+                        SizedBox(height: 16 * heightRatio),
+                        _buildStatCard(
+                          icon: Icons.star_border,
+                          label: "Average Score",
+                          value: "$averageScore%",
+                          widthRatio: widthRatio,
+                          heightRatio: heightRatio,
+                          isLast: true,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 20 * heightRatio),
-          ],
-        ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
@@ -217,35 +201,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-}
-
-class DashedLinePainter extends CustomPainter {
-  final double widthRatio;
-
-  DashedLinePainter({required this.widthRatio});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = Colors.white.withOpacity(0.3)
-          ..strokeWidth = 2 * widthRatio
-          ..style = PaintingStyle.stroke;
-
-    final dashWidth = 5.0 * widthRatio;
-    final dashSpace = 5.0 * widthRatio;
-    double startY = 0;
-
-    while (startY < size.height) {
-      canvas.drawLine(
-        Offset(size.width / 2, startY),
-        Offset(size.width / 2, startY + dashWidth),
-        paint,
-      );
-      startY += dashWidth + dashSpace;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

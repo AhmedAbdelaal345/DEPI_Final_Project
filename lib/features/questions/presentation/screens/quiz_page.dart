@@ -161,6 +161,7 @@ class _QuizPageState extends State<QuizPage> {
     int correctCount = 0;
     int wrongCount = 0;
     final questions = state.questions;
+    developer.log("Abdelaal: ${questions.toString()}");
     List<ReviewQuestion> correctAnswers = [];
     List<ReviewQuestion> wrongAnswers = [];
     try {

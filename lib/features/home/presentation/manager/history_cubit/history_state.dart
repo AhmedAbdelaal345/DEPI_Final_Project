@@ -4,16 +4,18 @@ abstract class HistoryState {}
 
 class InitialState extends HistoryState {}
 
-class LoadedState extends HistoryState {
-  Map<String, List<QuizHistoryModel>> groupedQuizzes;
-  LoadedState(this.groupedQuizzes);
-}
-
 class LoadingState extends HistoryState {}
 
 class EmptyState extends HistoryState {}
 
 class ErrorState extends HistoryState {
-  String error;
+  final String error;
   ErrorState(this.error);
+}
+
+class LoadedState extends HistoryState {
+  final Map<String, List<QuizHistoryModel>> groupedQuizzes;
+  final int totalQuizzes;
+
+  LoadedState(this.groupedQuizzes, this.totalQuizzes);
 }

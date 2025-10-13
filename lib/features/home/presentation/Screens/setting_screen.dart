@@ -1,4 +1,6 @@
+import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,12 +30,13 @@ class SettingScreen extends StatelessWidget {
             title: l10n.notifications,
             subtitle: l10n.manageNotifications,
             onTap: () {
-Fluttertoast.showToast(
+              Fluttertoast.showToast(
                 msg: l10n.featureWillGetSoon,
                 backgroundColor: AppColors.white,
                 textColor: AppColors.hint,
                 fontSize: 16,
-              );            },
+              );
+            },
           ),
           _buildSettingsTile(
             icon: Icons.dark_mode,
@@ -62,24 +65,44 @@ Fluttertoast.showToast(
             title: l10n.helpAndSupport,
             subtitle: l10n.getHelpAndSupport,
             onTap: () {
-Fluttertoast.showToast(
+              Fluttertoast.showToast(
                 msg: l10n.featureWillGetSoon,
                 backgroundColor: AppColors.white,
                 textColor: AppColors.hint,
                 fontSize: 16,
-              );            },
+              );
+            },
           ),
           _buildSettingsTile(
             icon: Icons.info,
             title: l10n.about,
             subtitle: l10n.appVersionInfo,
             onTap: () {
-Fluttertoast.showToast(
+              Fluttertoast.showToast(
                 msg: l10n.featureWillGetSoon,
                 backgroundColor: AppColors.white,
                 textColor: AppColors.hint,
                 fontSize: 16,
-              );            },
+              );
+            },
+          ),
+          _buildSettingsTile(
+            icon: Icons.logout,
+            title: l10n.logOut,
+            subtitle: l10n.logOutDetails,
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushNamed(context, LoginScreen.id);
+            },
+          ),
+          _buildSettingsTile(
+            icon: Icons.person_add_disabled_outlined,
+            title: l10n.deleteAccount,
+            subtitle: l10n.deleteAccountDetails,
+            onTap: () {
+              FirebaseAuth.instance.currentUser!.delete();
+              Navigator.pushNamed(context, LoginScreen.id);
+            },
           ),
         ],
       ),
