@@ -91,8 +91,8 @@ class SettingScreen extends StatelessWidget {
             title: l10n.logOut,
             subtitle: l10n.logOutDetails,
             onTap: () async {
-              await FirebaseAuth.instance.signOut();
               Navigator.pushNamed(context, LoginScreen.id);
+              await FirebaseAuth.instance.signOut();
             },
           ),
           _buildSettingsTile(

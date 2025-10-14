@@ -52,12 +52,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (state is LoadingState) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is EmptyState) {
-            return const Center(
-              child: Text(
-                "No quizzes found",
-                style: TextStyle(color: Colors.white),
+            return  SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 60 * heightRatio),
+                  CircleAvatar(
+                    radius: 60 * widthRatio,
+                    backgroundImage: const AssetImage(
+                      'assets/profile_image.jpg',
+                    ),
+                    onBackgroundImageError: (_, __) {},
+                  ),
+                  SizedBox(height: 10 * heightRatio),
+                  Text(
+                    user?.displayName ?? "User",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22 * widthRatio,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    user?.email ?? "",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14 * widthRatio,
+                    ),
+                  ),
+                  SizedBox(height: 32 * heightRatio),
+
+                  // Cards
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 36 * widthRatio),
+                    child: Column(
+                      children: [
+                        _buildStatCard(
+                          icon: Icons.list,
+                          label: "All Quizzes Taken",
+                          value: "0", // ✅ من Firestore
+                          widthRatio: widthRatio,
+                          heightRatio: heightRatio,
+                        ),
+                        SizedBox(height: 20 * heightRatio),
+                        _buildStatCard(
+                          icon: Icons.book,
+                          label: "Subjects",
+                          value: "0",
+                          widthRatio: widthRatio,
+                          heightRatio: heightRatio,
+                        ),
+                        SizedBox(height: 16 * heightRatio),
+                        _buildStatCard(
+                          icon: Icons.star_border,
+                          label: "Average Score",
+                          value: "0%",
+                          widthRatio: widthRatio,
+                          heightRatio: heightRatio,
+                          isLast: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             );
+
           } else if (state is ErrorState) {
             return Center(
               child: Text(
