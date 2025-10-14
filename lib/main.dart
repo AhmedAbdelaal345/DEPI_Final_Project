@@ -1,6 +1,7 @@
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/register_details_cubit.dart';
+import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
@@ -95,6 +96,7 @@ class MyApp extends StatelessWidget {
               ResultPage.id: (context) => ResultPage(),
               ReviewDetailsScreen.id:
                   (context) => ReviewDetailsScreen(fetchWrongAnswers: true),
+              LoginScreen.id: (context) => LoginScreen(),
             },
           );
         },
