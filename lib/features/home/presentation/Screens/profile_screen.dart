@@ -27,11 +27,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-
+   
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    
+    
     const designWidth = 390.0;
     const designHeight = 844.0;
+    
+   
     final widthRatio = screenWidth / designWidth;
     final heightRatio = screenHeight / designHeight;
 
@@ -150,8 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       ),
     );
-  }
-
+  } 
   Widget _buildStatCard({
     required IconData icon,
     required String label,
@@ -177,7 +180,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white, size: 28 * widthRatio),
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 28 * widthRatio,
+          ),
           SizedBox(width: 16 * widthRatio),
           Expanded(
             child: Text(

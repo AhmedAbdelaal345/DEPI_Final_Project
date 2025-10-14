@@ -69,9 +69,8 @@ class Myquizzes extends StatelessWidget {
   }
     return Center(
       child: Container(
-        height: screenHeight * heightFactor,
-        width:  screenWidth * 0.9, 
-        margin:EdgeInsets.only(bottom:  screenHeight *.04),
+        width:  screenWidth * 0.9,
+        margin:EdgeInsets.only(top:  screenHeight *.02),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
@@ -86,7 +85,7 @@ class Myquizzes extends StatelessWidget {
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       txt,
@@ -96,7 +95,8 @@ class Myquizzes extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         fontSize: screenWidth * 0.05,
                       ),
-                          ),
+                    ),
+                    SizedBox(height: 4),
                     Text(
                       "code $quizid",
                       textAlign: TextAlign.center,
@@ -105,8 +105,8 @@ class Myquizzes extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         fontSize: screenWidth * 0.039,
                       ),
-                          ),
-                          
+                    ),
+                    SizedBox(height: 4),
                     Text(
                       "Created on ${formattedDate}" ,
                       textAlign: TextAlign.center,
@@ -115,7 +115,7 @@ class Myquizzes extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                         fontSize: screenWidth * 0.03,
                       ),
-                          ),
+                    ),
                   ],
                 ),
                  IconButton(onPressed: () async{

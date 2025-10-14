@@ -14,6 +14,8 @@ import 'package:depi_final_project/features/review_answers/presentation/widgets/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
+import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key, this.quizId});
@@ -33,6 +35,7 @@ class _QuizPageState extends State<QuizPage> {
   int? _timeLeft; // هنا هنخزن الوقت بالثواني
   String? _currentQuizId;
   bool _isInitialized = false;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -154,7 +157,10 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void _submitQuiz(QuizState state) {
+    if (_isSubmitting) return; // guard against duplicate submits
+    _isSubmitting = true;
     if (state is! LoadedState || !mounted) {
+      _isSubmitting = false;
       return;
     }
     _timer?.cancel();
@@ -172,10 +178,9 @@ class _QuizPageState extends State<QuizPage> {
           question.options,
         );
         final reviewQuestion = ReviewQuestion(
-          studentAnswer:
-              userAnswers.containsKey(i)
-                  ? question.options.toList()[userAnswers[i]!]
-                  : 'Unanswered',
+          studentAnswer: userAnswers.containsKey(i)
+              ? question.options.toList()[userAnswers[i]!]
+              : 'Unanswered',
           id: i.toString(),
           questionText: question.text,
           options: question.options.toList(),
@@ -198,8 +203,7 @@ class _QuizPageState extends State<QuizPage> {
           wrongAnswers.add(reviewQuestion);
         }
       }
-      double accuracy =
-          questions.isNotEmpty ? correctCount / questions.length : 0.0;
+      double accuracy = questions.isNotEmpty ? correctCount / questions.length : 0.0;
       try {
         context.read<ReviewAnswersCubit>().setQuizResults(
           correctAnswers,
@@ -208,16 +212,39 @@ class _QuizPageState extends State<QuizPage> {
       } catch (e) {
         print(e);
       }
+
+      // Build per-question details and save immediately
+      final List<Map<String, dynamic>> questionsWithAnswers = [];
+      for (int i = 0; i < questions.length; i++) {
+        final q = questions[i];
+        final studentAns = userAnswers.containsKey(i)
+            ? q.options.toList()[userAnswers[i]!]
+            : 'Unanswered';
+        questionsWithAnswers.add({
+          'question': q.text,
+          'options': q.options.toList(),
+          'answer': q.correctAnswer,
+          'studentAnswer': studentAns,
+        });
+      }
+      final status = (questions.isNotEmpty && (correctCount / questions.length) >= 0.5) ? 'Pass' : 'Fail';
+      try {
+        context.read<ResultCubit>().saveStudentQuizResult(
+              studentId: FirebaseAuth.instance.currentUser!.uid,
+              quizId: _currentQuizId ?? ModalRoute.of(context)!.settings.arguments.toString(),
+              questionsWithAnswers: questionsWithAnswers,
+              questions: questions,
+              status: status,
+            );
+      } catch (_) {}
+
       QuizResult result = QuizResult(
         totalQuestions: questions.length,
         correctAnswers: correctCount,
         wrongAnswers: wrongCount,
         accuracy: accuracy,
-        quizId: ModalRoute.of(context)!.settings.arguments.toString(),
-        detailedResults: [
-          {'correct': correctAnswers.length},
-          {'wrong': wrongAnswers.length},
-        ],
+        quizId: (_currentQuizId ?? ModalRoute.of(context)!.settings.arguments.toString()),
+        detailedResults: questionsWithAnswers,
         questions: questions,
       );
       Navigator.pushAndRemoveUntil(
@@ -227,6 +254,8 @@ class _QuizPageState extends State<QuizPage> {
       );
     } catch (e) {
       _showErrorAndGoBack('Error calculating results');
+    } finally {
+      // keep it true until navigation completes to avoid double-trigger
     }
   }
 
@@ -311,9 +340,9 @@ class _QuizPageState extends State<QuizPage> {
                         decoration: BoxDecoration(
                           color:
                               _timeLeft != null && _timeLeft! <= 10
-                                  ? Colors.red.withOpacity(0.2)
-                                  : ColorApp.primaryButtonColor.withOpacity(
-                                    0.2,
+                                  ? Colors.red.withValues(alpha: 0.2)
+                                  : ColorApp.primaryButtonColor.withValues(
+                                    alpha: 0.2,
                                   ),
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -381,10 +410,10 @@ class _QuizPageState extends State<QuizPage> {
                       child: ElevatedButton(
                         onPressed: () => _submitQuiz(state),
                         style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(
+                          backgroundColor: WidgetStatePropertyAll(
                             ColorApp.primaryButtonColor,
                           ),
-                          shape: MaterialStatePropertyAll(
+                          shape: WidgetStatePropertyAll(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),

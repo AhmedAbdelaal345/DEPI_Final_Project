@@ -1,8 +1,5 @@
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
-import 'package:depi_final_project/features/Teacher/screens/homeTeacher.dart';
 import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +14,8 @@ class PerformanceReportScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PerformanceReportScreen> createState() => _PerformanceReportScreenState();
+  State<PerformanceReportScreen> createState() =>
+      _PerformanceReportScreenState();
 }
 
 class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
@@ -57,25 +55,36 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
           double totalScore = 0;
           int passedStudents = 0;
 
-          final students = studentsData.map((data) {
-            final score = (data['score'] ?? 0).toDouble();
-            final status = data['status'] ?? 'Fail';
-            
-            totalScore += score;
-            if (status == 'Pass') passedStudents++;
+          final students =
+              studentsData.map((data) {
+                // Use percentage (0-100). Prefer value provided by cubit; fallback to compute from score/total.
+                final double scorePercentage = (
+                  (data['averageScore'] ??
+                      (((data['total'] ?? 0) == 0)
+                          ? 0.0
+                          : ((data['score'] ?? 0) / (data['total'] ?? 1) * 100)))
+                ).toDouble();
+                final status = data['status'] ?? 'Fail';
 
-            return (
-              name: data['studentName'] ?? 'Unknown',
-              score: score,
-              status: status,
-            );
-          }).toList();
+                totalScore += scorePercentage;
+                if (status == 'Pass') passedStudents++;
+
+                return (
+                  name: data['studentName'] ?? 'Unknown',
+                  score: scorePercentage,
+                  status: status,
+                );
+              }).toList();
 
           if (mounted) {
             setState(() {
               quizStudents = students;
-              averageScore = students.isNotEmpty ? totalScore / students.length : 0.0;
-              passRate = students.isNotEmpty ? (passedStudents / students.length) * 100 : 0.0;
+              averageScore =
+                  students.isNotEmpty ? totalScore / students.length : 0.0;
+              passRate =
+                  students.isNotEmpty
+                      ? (passedStudents / students.length) * 100
+                      : 0.0;
               isLoading = false;
             });
           }
@@ -110,7 +119,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
 
     return Scaffold(
       endDrawer: drawer(context),
-      
+
       backgroundColor: const Color(0xFF0A1628),
       appBar: AppBar(
         backgroundColor: const Color(0xFF0A1628),
@@ -175,10 +184,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
       children: [
         Text(
           'Select Quiz',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: width * 0.05,
-          )     
+          style: TextStyle(color: Colors.white, fontSize: width * 0.05),
         ),
         SizedBox(height: width * 0.02),
         Container(
@@ -191,10 +197,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
               isExpanded: true,
               value: selectedQuiz,
               dropdownColor: const Color(0xFF1E293B),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: width * 0.045,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: width * 0.045),
               icon: Icon(
                 Icons.keyboard_arrow_down,
                 color: const Color(0xff4FB3B7),
@@ -204,12 +207,13 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                 horizontal: width * 0.04,
                 vertical: width * 0.03,
               ),
-              items: quizzes.map((String title) {
-                return DropdownMenuItem<String>(
-                  value: title,
-                  child: Text(title),
-                );
-              }).toList(),
+              items:
+                  quizzes.map((String title) {
+                    return DropdownMenuItem<String>(
+                      value: title,
+                      child: Text(title),
+                    );
+                  }).toList(),
               onChanged: (quiz) {
                 if (quiz != null && quiz != selectedQuiz) {
                   setState(() {
@@ -227,7 +231,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
 
   Widget buildStatsCards(double width, double height) {
     return Container(
-      height: height*.5,
+      // Remove fixed height to avoid overflow on small screens
       padding: EdgeInsets.all(width * 0.05),
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xff4FB3B7), width: 2),
@@ -240,7 +244,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
             children: [
               Expanded(
                 child: buildStatCard(
-                  '${averageScore.toStringAsFixed(1)}%',
+                  '${averageScore.toStringAsFixed(0)}%',
                   'Average Score',
                   const Color(0xffF5BBE7),
                   const Color(0xffF5BBE7),
@@ -251,7 +255,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
               SizedBox(width: width * 0.04),
               Expanded(
                 child: buildStatCard(
-                  '${passRate.toStringAsFixed(1)}%',
+                  '${passRate.toStringAsFixed(0)}%',
                   'Pass Rate',
                   const Color(0xff4DFF01),
                   const Color(0xff4DFF01),
@@ -267,7 +271,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
             'Total Attempts',
             const Color(0xffE1FFA5),
             const Color(0xffE1FFA5),
-            width*.9,
+            width * .9,
             height,
           ),
         ],
@@ -285,8 +289,9 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
   ) {
     return Container(
       width: width,
-      height: height*.2,
-      padding: EdgeInsets.all(width * 0.05),
+      height: height * 0.15,
+      // Remove fixed height to allow content to dictate size
+      padding: EdgeInsets.all(width * 0.02),
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xff4FB3B7), width: 3),
         borderRadius: BorderRadius.circular(15),
@@ -305,10 +310,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
           SizedBox(height: height * 0.01),
           Text(
             label,
-            style: TextStyle(
-              color: labelColor,
-              fontSize: width * 0.035,
-            ),
+            style: TextStyle(color: labelColor, fontSize: width * 0.035),
             textAlign: TextAlign.center,
           ),
         ],
@@ -332,9 +334,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                 topLeft: Radius.circular(14),
                 topRight: Radius.circular(14),
               ),
-              border: Border(
-                bottom: BorderSide(color: Color(0xff4FB3B7)),
-              ),
+              border: Border(bottom: BorderSide(color: Color(0xff4FB3B7))),
             ),
             child: Row(
               children: [
@@ -373,7 +373,9 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
               ],
             ),
           ),
-          ...quizStudents.map((student) => _buildStudentRow(student, width, height)),
+          ...quizStudents.map(
+            (student) => _buildStudentRow(student, width, height),
+          ),
         ],
       ),
     );
@@ -383,29 +385,21 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     return Container(
       padding: EdgeInsets.all(width * 0.04),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.blue.withOpacity(0.3)),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.blue.withValues(alpha: 0.3))),
       ),
       child: Row(
         children: [
           Expanded(
             child: Text(
               student.name,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: width * 0.035,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: width * 0.035),
             ),
           ),
           Expanded(
             child: Text(
               '${student.score.toStringAsFixed(1)}%',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: width * 0.035,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: width * 0.035),
             ),
           ),
           Expanded(
@@ -423,130 +417,141 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
       ),
     );
   }
-   Widget drawer(BuildContext context) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final screenHeight = MediaQuery.of(context).size.height;
 
-  return Drawer(
-    backgroundColor: const Color(0xff061438),
-    child: ListView(
-      children: [
-        DrawerHeader(
-          decoration: BoxDecoration(
-            color: const Color(0xff061438),
-            border: Border(
-              bottom: BorderSide(
-                color: const Color(0xff4FB3B7),
-                width: screenHeight * 0.001,
-              ),
-            ),
-          ),
-          child: Row(
-            children: [
-              SizedBox(
-                height: screenHeight * 0.08,
-                width: screenHeight * 0.08,
-                child: Image.asset("assets/images/brain_logo.png"),
-              ),
-              SizedBox(width: screenWidth * 0.02),
-              Text(
-                "QUIZLY",
-                style: TextStyle(
-                  color: const Color(0xff62DDE1),
-                  fontSize: screenWidth * 0.085,
-                  fontFamily: "DMSerifDisplay",
+  Widget drawer(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Drawer(
+      backgroundColor: const Color(0xff061438),
+      child: ListView(
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: const Color(0xff061438),
+              border: Border(
+                bottom: BorderSide(
+                  color: const Color(0xff4FB3B7),
+                  width: screenHeight * 0.001,
                 ),
               ),
-            ],
-          ),
-        ),
-        listtitle(
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const WrapperTeacherPage()),
-          ),
-          context,
-          const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
-          "Home",
-        ),
-        listtitle(
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 1)),
-          ),
-          context,
-          const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
-          "Profile",
-        ),
-        listtitle(
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 2)),
-          ),
-          context,
-          const Icon(Icons.list, color: Color(0xff62DDE1)),
-          "My Quizzes",
-        ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: const Color(0xff4FB3B7),
-                width: screenHeight * 0.001,
-              ),
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  height: screenHeight * 0.08,
+                  width: screenHeight * 0.08,
+                  child: Image.asset("assets/images/brain_logo.png"),
+                ),
+                SizedBox(width: screenWidth * 0.02),
+                Text(
+                  "QUIZLY",
+                  style: TextStyle(
+                    color: const Color(0xff62DDE1),
+                    fontSize: screenWidth * 0.085,
+                    fontFamily: "DMSerifDisplay",
+                  ),
+                ),
+              ],
             ),
           ),
-          child: ListTile(
-            leading: const Icon(Icons.settings, color: Color(0xff62DDE1)),
-            title: Text(
-              "Setting",
-              style: TextStyle(
-                color: const Color(0xff62DDE1),
-                fontSize: screenWidth * 0.06,
+          listtitle(
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const WrapperTeacherPage()),
+            ),
+            context,
+            const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
+            "Home",
+          ),
+          listtitle(
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const WrapperTeacherPage(index: 1),
               ),
             ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 3)),
-              );
-            },
+            context,
+            const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
+            "Profile",
+          ),
+          listtitle(
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const WrapperTeacherPage(index: 2),
+              ),
+            ),
+            context,
+            const Icon(Icons.list, color: Color(0xff62DDE1)),
+            "My Quizzes",
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: const Color(0xff4FB3B7),
+                  width: screenHeight * 0.001,
+                ),
+              ),
+            ),
+            child: ListTile(
+              leading: const Icon(Icons.settings, color: Color(0xff62DDE1)),
+              title: Text(
+                "Setting",
+                style: TextStyle(
+                  color: const Color(0xff62DDE1),
+                  fontSize: screenWidth * 0.06,
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const WrapperTeacherPage(index: 3),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget listtitle(
+    Function callback,
+    BuildContext context,
+    Icon icon,
+    String txt,
+  ) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: const Color(0xff4FB3B7),
+            width: screenHeight * 0.001,
           ),
         ),
-      ],
-    ),
-  );
-}
-
-Widget listtitle(Function callback, BuildContext context, Icon icon, String txt) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final screenHeight = MediaQuery.of(context).size.height;
-
-  return Container(
-    decoration: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: const Color(0xff4FB3B7),
-          width: screenHeight * 0.001,
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.04,
+          vertical: screenHeight * 0.01,
         ),
-      ),
-    ),
-    child: ListTile(
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.04,
-        vertical: screenHeight * 0.01,
-      ),
-      leading: icon,
-      title: Text(
-        txt,
-        style: TextStyle(
-          color: const Color(0xff62DDE1),
-          fontSize: screenWidth * 0.06,
+        leading: icon,
+        title: Text(
+          txt,
+          style: TextStyle(
+            color: const Color(0xff62DDE1),
+            fontSize: screenWidth * 0.06,
+          ),
         ),
+        onTap: () => callback(),
       ),
-      onTap: () => callback(),
-    ),
-  );
-}
-
+    );
+  }
 }

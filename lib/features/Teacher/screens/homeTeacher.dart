@@ -42,10 +42,12 @@ class _HometeacherState extends State<Hometeacher> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                 TitleBar(title: l10n.home),
+                TitleBar(title: l10n.home),
                 SizedBox(height: screenHeight * 0.06),
                 FutureBuilder<String?>(
-                  future: context.read<CreateQuizCubit>().getname(credintial!.uid),
+                  future: context.read<CreateQuizCubit>().getname(
+                    credintial!.uid,
+                  ),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Text("Loading...");
@@ -68,21 +70,24 @@ class _HometeacherState extends State<Hometeacher> {
                 GestureDetector(
                   onTap: () async {
                     final cubit = context.read<CreateQuizCubit>();
-                    final teacherId = await cubit.getname(credintial!.uid) ?? "unknow";
-                    final subject = await cubit.getsubject(credintial.uid) ?? "unknow";
+                    final teacherId =
+                        await cubit.getname(credintial!.uid) ?? "unknow";
+                    final subject =
+                        await cubit.getsubject(credintial.uid) ?? "unknow";
                     final quizid = await cubit.getSixRandomNumbers();
                     final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => BlocProvider.value(
-                          value: cubit, 
-                          child: Createnewquiz(
-                            teacherId: teacherId,
-                            subject: subject,
-                            quizId: quizid,
-                            uid: credintial.uid,
-                          ),
-                        ),
+                        builder:
+                            (_) => BlocProvider.value(
+                              value: cubit,
+                              child: Createnewquiz(
+                                teacherId: teacherId,
+                                subject: subject,
+                                quizId: quizid,
+                                uid: credintial.uid,
+                              ),
+                            ),
                       ),
                     );
                     if (result == true && mounted) {
@@ -99,15 +104,16 @@ class _HometeacherState extends State<Hometeacher> {
                       onTap: () async {
                         final cubit = context.read<CreateQuizCubit>();
                         await cubit.getquizzes(credintial!.uid);
-                        
+
                         if (mounted) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                value: cubit,
-                                child: Recentquizzes(),
-                              ),
+                              builder:
+                                  (_) => BlocProvider.value(
+                                    value: cubit,
+                                    child: Recentquizzes(),
+                                  ),
                             ),
                           );
                         }
@@ -118,18 +124,19 @@ class _HometeacherState extends State<Hometeacher> {
                       onTap: () async {
                         final cubit = context.read<CreateQuizCubit>();
                         await cubit.getquizzes(credintial!.uid);
-                        final title = await cubit.gettitle(credintial.uid);      
+                        final title = await cubit.gettitle(credintial.uid);
                         if (mounted) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                value: cubit,
-                                child: PerformanceReportScreen(
-                                  uid: credintial.uid,
-                                  quizTitles: title,
-                                ),
-                              ),
+                              builder:
+                                  (_) => BlocProvider.value(
+                                    value: cubit,
+                                    child: PerformanceReportScreen(
+                                      uid: credintial.uid,
+                                      quizTitles: title,
+                                    ),
+                                  ),
                             ),
                           );
                         }
@@ -145,7 +152,13 @@ class _HometeacherState extends State<Hometeacher> {
       ),
     );
   }
-  Widget container(BuildContext context, double heightFactor, double widthFactor, String txt) {
+
+  Widget container(
+    BuildContext context,
+    double heightFactor,
+    double widthFactor,
+    String txt,
+  ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -155,10 +168,7 @@ class _HometeacherState extends State<Hometeacher> {
       decoration: BoxDecoration(
         color: Color(0xff1877F2).withOpacity(0.11),
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: const Color(0xff4FB3B7),
-          width: 2,
-        ),
+        border: Border.all(color: const Color(0xff4FB3B7), width: 2),
       ),
       child: Center(
         child: Text(
