@@ -1,4 +1,3 @@
-import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,7 +42,7 @@ class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
       password,
       confirmPassword,
     );
-    final bool isPhoneValid = phone == null || phone.isEmpty || _validatePhone(phone);
+    final bool isPhoneValid = phone == null || phone.isEmpty ;
 
     if (isFullNameValid &&
         isEmailValid &&
@@ -103,15 +102,15 @@ class RegisterDetailsCubit extends Cubit<RegisterDetailsState> {
     return true;
   }
 
-  bool _validatePhone(String phone) {
-    if (!AppConstants.phoneRegExp.hasMatch(phone)) {
-      emit(
-        state.copyWith(phoneError: 'The phone number is not valid'),
-      );
-      return false;
-    }
-    return true;
-  }
+  // bool _validatePhone(String phone) {
+  //   if (!AppConstants.phoneRegExp.hasMatch(phone)) {
+  //     emit(
+  //       state.copyWith(phoneError: 'The phone number is not valid'),
+  //     );
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   bool _validateConfirmPassword(String password, String confirmPassword) {
     if (password != confirmPassword) {

@@ -1,6 +1,6 @@
+import 'package:depi_final_project/core/constants/appbar.dart';
 import 'package:depi_final_project/features/Quiz/presentation/Screens/before_quiz_screen.dart';
 import 'package:flutter/material.dart';
-import '../widgets/title_bar.dart';
 import '../widgets/input_field.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/app_constants.dart';
@@ -17,16 +17,32 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.bg,
+      appBar: CustomAppBar(Title: l10n.home),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: sx(context, 16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               TitleBar(title: l10n.home),
+              // Motivational Message
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: sx(context, 20)),
+                child: Text(
+                  '"Success is the sum of small efforts repeated day in and day out."',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: sy(context, 18),
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.white,
+                    fontStyle: FontStyle.italic,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+
               SizedBox(height: sy(context, 48)),
 
-              // input field
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),

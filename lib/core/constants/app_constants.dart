@@ -21,6 +21,6 @@ abstract class AppConstants {
   static final String details = 'details';
   static final String title = 'title';
   static final String accuracy = 'accuracy';
-  static final RegExp phoneRegExp = RegExp(r'^\+[1-9]\d{1,14}$');
+  // static final RegExp phoneRegExp = RegExp(r'^\d{1,14}$');
   
 }

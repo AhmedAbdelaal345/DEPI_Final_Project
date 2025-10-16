@@ -11,8 +11,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
 import '../widgets/auth_header.dart';
-import '../widgets/divider_with_text.dart';
-import '../widgets/social_login_buttons.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
 
@@ -122,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: _formKey,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.065,
+                      horizontal: screenWidth * 0.055,
                     ),
                     child: SingleChildScrollView(
                       child: Column(
@@ -133,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             subtitle: l10n.welcomeMessage,
                           ),
 
-                          SizedBox(height: screenHeight * 0.05),
+                          SizedBox(height: screenHeight * 0.02),
                           CustomTextField(
                             controller: _emailController,
                             hintText: l10n.enterYourEmail,
@@ -167,37 +165,41 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
 
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: state.rememberMe,
-                                onChanged: (value) {
-                                  context.read<LoginCubit>().rememberMeChanged(
-                                    value,
-                                  );
-                                },
-                                fillColor: MaterialStateProperty.all(
-                                  ColorApp.whiteColor,
-                                ),
-                                checkColor: ColorApp.backgroundColor,
-                                activeColor: ColorApp.whiteColor,
+                          SizedBox(height: screenHeight * 0.02),
 
-                                side: const BorderSide(
-                                  width: 2,
-                                  color: ColorApp.splashTextColor,
-                                ),
-                              ),
-                              Text(
-                                l10n.rememberThisDevice,
-                                style: TextStyle(
-                                  color: ColorApp.whiteColor,
-                                  fontSize: screenWidth * 0.028,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              Spacer(),
-                              TextButton(
-                                onPressed: () {
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Checkbox(
+                              //   value: state.rememberMe,
+                              //   onChanged: (value) {
+                              //     context.read<LoginCubit>().rememberMeChanged(
+                              //       value,
+                              //     );
+                              //   },
+                              //   fillColor: MaterialStateProperty.all(
+                              //     ColorApp.whiteColor,
+                              //   ),
+                              //   checkColor: ColorApp.backgroundColor,
+                              //   activeColor: ColorApp.whiteColor,
+                              //
+                              //   side: const BorderSide(
+                              //     width: 2,
+                              //     color: ColorApp.splashTextColor,
+                              //   ),
+                              // ),
+                              // Text(
+                              //   l10n.rememberThisDevice,
+                              //   style: TextStyle(
+                              //     color: ColorApp.whiteColor,
+                              //     fontSize: screenWidth * 0.028,
+                              //     fontWeight: FontWeight.w400,
+                              //   ),
+                              // ),
+                              // Spacer(),
+                              InkWell(
+                                onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -218,7 +220,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
 
-                          SizedBox(height: screenHeight * 0.04),
+                          SizedBox(height: screenHeight * 0.02),
+
+                          // SizedBox(height: screenHeight * 0.01),
                           if (state.status == LoginStatus.loading)
                             const Center(child: CircularProgressIndicator())
                           else
@@ -303,13 +307,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                             ),
-                          SizedBox(height: screenHeight * 0.05),
-                          DividerWithText(text: l10n.orLoginWith),
-                          SizedBox(height: screenHeight * 0.05),
+                          // SizedBox(height: screenHeight * 0.05),
+                          // DividerWithText(text: l10n.orLoginWith),
+                          // SizedBox(height: screenHeight * 0.05),
+                          //
+                          // SocialLoginButtons(),
 
-                          SocialLoginButtons(),
-
-                          SizedBox(height: screenHeight * 0.04),
+                          // SizedBox(height: screenHeight * 0.04),
 
                           TextButton(
                             onPressed: () {

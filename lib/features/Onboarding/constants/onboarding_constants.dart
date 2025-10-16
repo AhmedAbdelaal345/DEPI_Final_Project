@@ -22,13 +22,14 @@ class OnboardingConstants {
         title: l10n.onboarding3Title,
         desc: l10n.onboarding3Desc,
         imageAsset: 'assets/images/onbording3.svg',
-      ),
-      OnboardPageModel(
-        title: l10n.onboarding4Title,
-        desc: '',
-        imageAsset: 'assets/images/onbording4.svg',
         isLast: true,
       ),
+      // OnboardPageModel(
+      //   title: l10n.onboarding4Title,
+      //   desc: '',
+      //   imageAsset: 'assets/images/onbording4.svg',
+      //   isLast: true,
+      // ),
     ];
   }
 }

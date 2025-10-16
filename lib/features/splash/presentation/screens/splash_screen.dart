@@ -1,11 +1,9 @@
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/features/Onboarding/screens/onboarding_screen.dart';
-import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../auth/presentation/screens/register_details_screen.dart';
 import '../cubit/splash_cubit.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 

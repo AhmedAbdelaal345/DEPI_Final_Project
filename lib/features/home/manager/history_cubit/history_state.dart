@@ -1,4 +1,4 @@
-import 'package:depi_final_project/features/home/presentation/model/history_model.dart';
+import 'package:depi_final_project/features/home/model/history_model.dart';
 
 abstract class HistoryState {}
 

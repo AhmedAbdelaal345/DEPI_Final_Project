@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/auth_navigation_link.dart';
-import '../widgets/divider_with_text.dart';
-import '../widgets/social_login_buttons.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
@@ -72,7 +70,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
         'fullName': _fullNameController.text.trim(),
         'email': _emailController.text.trim(),
         'password': _passwordController.text,
-        'phone': _phoneController.text.trim(),
+        'phone': "+2${_phoneController.text.trim()}",
         if (widget.isTeacher) 'subject': _subjectController.text.trim(),
         'uid': credential.user?.uid,
       });
@@ -158,11 +156,13 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  HeightSpace2(screenHeight: screenHeight),
+
                   AuthHeader(
                     title: l10n.register,
                     subtitle: l10n.welcomeMessage,
                   ),
-                  SizedBox(height: screenHeight * 0.05),
+                  HeightSpace2(screenHeight: screenHeight),
                   CustomTextField(
                     controller: _fullNameController,
                     hintText: l10n.fullName,
@@ -231,9 +231,9 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.pleaseEnterPhoneNumber;
                       }
-                      if (!AppConstants.phoneRegExp.hasMatch(value.trim())) {
-                        return l10n.enterValidPhoneNumber;
-                      }
+                      // if (!AppConstants.phoneRegExp.hasMatch(value.trim())) {
+                      //   return l10n.enterValidPhoneNumber;
+                      // }
                       return null;
                     },
                   ),
@@ -252,7 +252,7 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                         return null;
                       },
                     ),
-                  SizedBox(height: screenHeight * 0.04),
+                  HeightSpace2(screenHeight: screenHeight),
                   if (_isRegistering)
                     const Center(child: CircularProgressIndicator())
                   else
@@ -260,11 +260,11 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
                       text: l10n.register,
                       onPressed: _handleRegistration,
                     ),
-                  SizedBox(height: screenHeight * 0.05),
-                  DividerWithText(text: l10n.orRegisterWith),
-                  SizedBox(height: screenHeight * 0.05),
-                  SocialLoginButtons(),
-                  SizedBox(height: screenHeight * 0.035),
+                  // SizedBox(height: screenHeight * 0.05),
+                  // DividerWithText(text: l10n.orRegisterWith),
+                  // SizedBox(height: screenHeight * 0.05),
+                  // SocialLoginButtons(),
+                  // SizedBox(height: screenHeight * 0.035),
                   AuthNavigationLink(
                     baseText: l10n.alreadyHaveAnAccount,
                     clickableText: l10n.login,
@@ -302,5 +302,19 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
         ),
       ),
     );
+  }
+}
+
+class HeightSpace2 extends StatelessWidget {
+  const HeightSpace2({
+    super.key,
+    required this.screenHeight,
+  });
+
+  final double screenHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(height: screenHeight * 0.02);
   }
 }

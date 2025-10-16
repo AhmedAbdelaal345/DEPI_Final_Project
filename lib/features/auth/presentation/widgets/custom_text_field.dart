@@ -34,7 +34,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Padding(
-      padding:  EdgeInsets.symmetric(vertical:screenHeight * 0.002 ),
+      padding:  EdgeInsets.symmetric(vertical:screenHeight * 0.001 ),
       child: SizedBox(
         height: screenHeight * 0.09,
         width: double.infinity,

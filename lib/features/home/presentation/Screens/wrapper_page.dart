@@ -1,5 +1,6 @@
-import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
+// import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
+import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart' ;
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
@@ -27,7 +28,7 @@ class _WrapperPageState extends State<WrapperPage> {
 
   List<Widget> get _screens => [
     const HomeScreen(),
-    ProfileScreen(),
+    ProfileScreenWithFirebase(),
     const QuizHistoryScreen(),
     SettingScreen(),
   ];
@@ -59,10 +60,10 @@ class _WrapperPageState extends State<WrapperPage> {
       backgroundColor: const Color(0xFF1A1C2B),
       drawer: AppDrawer1(
         onItemTapped: (index) {
-          // عندما يتم الضغط على عنصر في القائمة
+
           _onPageChanged(index); // غير الصفحة
 
-          // هذا السطر مهم لتحديث شكل الأيقونة في شريط التنقل السفلي
+
           final navigationState = _bottomNavigationKey.currentState;
           navigationState?.setPage(index);
         },

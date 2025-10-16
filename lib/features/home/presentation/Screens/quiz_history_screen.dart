@@ -1,6 +1,7 @@
-import 'package:depi_final_project/features/home/presentation/manager/history_cubit/history_cubit.dart';
-import 'package:depi_final_project/features/home/presentation/manager/history_cubit/history_state.dart';
-import 'package:depi_final_project/features/home/presentation/model/history_model.dart';
+import 'package:depi_final_project/core/constants/appbar.dart';
+import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
+import 'package:depi_final_project/features/home/manager/history_cubit/history_state.dart';
+import 'package:depi_final_project/features/home/model/history_model.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/primary_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,13 +33,7 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: AppBar(
-        backgroundColor: AppColors.bg,
-        elevation: 0,
-        title:
-             Text(l10n.quizHistory, style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(Title: l10n.quizHistory,),
       body: BlocBuilder<HistoryCubit, HistoryState>(
         builder: (context, state) {
           if (state is LoadingState) {

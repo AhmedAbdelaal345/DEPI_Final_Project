@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/onboard_page_model.dart';
 import 'onboarding_texts.dart';
 import 'onboarding_navigation.dart';
-import 'last_page_buttons.dart';
 
 class OnboardingContentSection extends StatelessWidget {
   final int currentIndex;
@@ -33,10 +32,11 @@ class OnboardingContentSection extends StatelessWidget {
           OnboardingTexts(currentIndex: currentIndex, pages: pages),
           const Spacer(),
           // Dots and nav OR last buttons
-          if (pages[currentIndex].isLast)
-            const LastPageButtons()
-          else
+          // if (pages[currentIndex].isLast)
+          //   const LastPageButtons()
+          // else
             OnboardingNavigation(
+              isLast:pages[currentIndex].isLast ,
               currentIndex: indicatorIndex,
               totalIndicators: indicatorsCount,
               onNext: onNext,

@@ -1,3 +1,5 @@
+import 'package:depi_final_project/core/constants/appbar.dart';
+import 'package:depi_final_project/features/Onboarding/widgets/last_page_buttons.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import '../cubit/locale_cubit.dart';
+import 'package:depi_final_project/features/home/cubit/locale_cubit.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -16,28 +17,23 @@ class SettingScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: AppBar(
-        title: Text(l10n.settings, style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.bg,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
+      appBar: CustomAppBar(Title: l10n.settings),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildSettingsTile(
-            icon: Icons.notifications,
-            title: l10n.notifications,
-            subtitle: l10n.manageNotifications,
-            onTap: () {
-              Fluttertoast.showToast(
-                msg: l10n.featureWillGetSoon,
-                backgroundColor: AppColors.white,
-                textColor: AppColors.hint,
-                fontSize: 16,
-              );
-            },
-          ),
+          // _buildSettingsTile(
+          //   icon: Icons.notifications,
+          //   title: l10n.notifications,
+          //   subtitle: l10n.manageNotifications,
+          //   onTap: () {
+          //     Fluttertoast.showToast(
+          //       msg: l10n.featureWillGetSoon,
+          //       backgroundColor: AppColors.white,
+          //       textColor: AppColors.hint,
+          //       fontSize: 16,
+          //     );
+          //   },
+          // ),
           _buildSettingsTile(
             icon: Icons.dark_mode,
             title: l10n.darkMode,
@@ -60,38 +56,42 @@ class SettingScreen extends StatelessWidget {
             },
           ),
 
-          _buildSettingsTile(
-            icon: Icons.help,
-            title: l10n.helpAndSupport,
-            subtitle: l10n.getHelpAndSupport,
-            onTap: () {
-              Fluttertoast.showToast(
-                msg: l10n.featureWillGetSoon,
-                backgroundColor: AppColors.white,
-                textColor: AppColors.hint,
-                fontSize: 16,
-              );
-            },
-          ),
-          _buildSettingsTile(
-            icon: Icons.info,
-            title: l10n.about,
-            subtitle: l10n.appVersionInfo,
-            onTap: () {
-              Fluttertoast.showToast(
-                msg: l10n.featureWillGetSoon,
-                backgroundColor: AppColors.white,
-                textColor: AppColors.hint,
-                fontSize: 16,
-              );
-            },
-          ),
+          // _buildSettingsTile(
+          //   icon: Icons.help,
+          //   title: l10n.helpAndSupport,
+          //   subtitle: l10n.getHelpAndSupport,
+          //   onTap: () {
+          //     Fluttertoast.showToast(
+          //       msg: l10n.featureWillGetSoon,
+          //       backgroundColor: AppColors.white,
+          //       textColor: AppColors.hint,
+          //       fontSize: 16,
+          //     );
+          //   },
+          // ),
+          // _buildSettingsTile(
+          //   icon: Icons.info,
+          //   title: l10n.about,
+          //   subtitle: l10n.appVersionInfo,
+          //   onTap: () {
+          //     Fluttertoast.showToast(
+          //       msg: l10n.featureWillGetSoon,
+          //       backgroundColor: AppColors.white,
+          //       textColor: AppColors.hint,
+          //       fontSize: 16,
+          //     );
+          //   },
+          // ),
           _buildSettingsTile(
             icon: Icons.logout,
             title: l10n.logOut,
             subtitle: l10n.logOutDetails,
             onTap: () async {
-              Navigator.pushNamed(context, LoginScreen.id);
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                SelectUserPage.id,
+                (route) => false,
+              );
               await FirebaseAuth.instance.signOut();
             },
           ),
@@ -100,8 +100,7 @@ class SettingScreen extends StatelessWidget {
             title: l10n.deleteAccount,
             subtitle: l10n.deleteAccountDetails,
             onTap: () {
-              FirebaseAuth.instance.currentUser!.delete();
-              Navigator.pushNamed(context, LoginScreen.id);
+              _showDeleteAccountDialog(context);
             },
           ),
         ],
@@ -186,6 +185,97 @@ class SettingScreen extends StatelessWidget {
         ),
         onTap: onTap,
       ),
+    );
+  }
+}
+
+void _showDeleteAccountDialog(BuildContext context) {
+  final l10n = AppLocalizations.of(context);
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        backgroundColor: const Color(0xFF2C2F48),
+        title: Text(
+          l10n.deleteAccount,
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          'Are you sure you want to delete your account? This action cannot be undone.',
+          style: TextStyle(color: Colors.grey.shade400),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              await _deleteUserAccount(context);
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<void> _deleteUserAccount(BuildContext context) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    // حذف بيانات المستخدم من Firestore (إذا كان موجود)
+    // await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+
+    // حذف حساب Authentication
+    await user.delete();
+
+    // الانتقال لشاشة تسجيل الدخول
+    if (context.mounted) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        SelectUserPage.id,
+        (route) => false,
+      );
+    }
+
+    Fluttertoast.showToast(
+      msg: 'Account deleted successfully',
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+    );
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'requires-recent-login') {
+      // يتطلب إعادة تسجيل دخول حديث
+      Fluttertoast.showToast(
+        msg: 'Please log in again before deleting your account',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      // يمكنك تسجيل خروج المستخدم وإعادته لشاشة تسجيل الدخول
+      await FirebaseAuth.instance.signOut();
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          LoginScreen.id,
+          (route) => false,
+        );
+      }
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Error deleting account: ${e.message}',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  } catch (e) {
+    Fluttertoast.showToast(
+      msg: 'Error: $e',
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
     );
   }
 }

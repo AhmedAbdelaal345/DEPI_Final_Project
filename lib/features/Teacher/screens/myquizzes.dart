@@ -1,11 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
-import 'package:depi_final_project/features/Teacher/screens/homeTeacher.dart';
-import 'package:depi_final_project/features/Teacher/screens/viewQuizScreen.dart';
-import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,3 +1,4 @@
+import 'package:depi_final_project/features/Onboarding/widgets/last_page_buttons.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingNavigation extends StatelessWidget {
@@ -5,6 +6,7 @@ class OnboardingNavigation extends StatelessWidget {
   final int totalIndicators; // number of indicator dots
   final VoidCallback onNext;
   final VoidCallback onPrev;
+  final bool isLast;
 
   const OnboardingNavigation({
     super.key,
@@ -12,6 +14,7 @@ class OnboardingNavigation extends StatelessWidget {
     required this.totalIndicators,
     required this.onNext,
     required this.onPrev,
+    required this.isLast,
   });
 
   @override
@@ -50,7 +53,20 @@ class OnboardingNavigation extends StatelessWidget {
         ),
 
         // Next button
-        _roundButton(icon: Icons.chevron_right, onTap: onNext),
+        _roundButton(
+          icon: Icons.chevron_right,
+          onTap: () {
+            if (!isLast) {
+              onNext();
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                SelectUserPage.id,
+                (route) => false,
+              );
+            }
+          },
+        ),
       ],
     );
   }

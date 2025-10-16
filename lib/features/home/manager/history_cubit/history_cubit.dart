@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
-import 'package:depi_final_project/features/home/presentation/model/history_model.dart';
+import 'package:depi_final_project/features/home/model/history_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'history_state.dart';
 

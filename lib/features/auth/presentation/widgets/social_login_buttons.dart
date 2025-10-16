@@ -3,7 +3,6 @@ import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.
 import 'package:depi_final_project/features/auth/presentation/cubit/register_details_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/widgets/social_icon_button.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

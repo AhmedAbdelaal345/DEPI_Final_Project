@@ -1,9 +1,10 @@
+import 'package:depi_final_project/features/Onboarding/widgets/last_page_buttons.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/register_details_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
-import 'package:depi_final_project/features/home/presentation/manager/history_cubit/history_cubit.dart';
+import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
@@ -18,8 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'features/home/presentation/cubit/locale_cubit.dart';
+import 'package:depi_final_project/features/home/cubit/locale_cubit.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
@@ -92,6 +92,7 @@ class MyApp extends StatelessWidget {
 
             routes: {
               WrapperPage.id: (context) => WrapperPage(),
+              SelectUserPage.id: (context) => SelectUserPage(),
               QuizPage.id: (context) => QuizPage(),
               ResultPage.id: (context) => ResultPage(),
               ReviewDetailsScreen.id:
