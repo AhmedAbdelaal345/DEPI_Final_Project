@@ -1,25 +1,27 @@
 import 'package:depi_final_project/features/Teacher/screens/homeTeacher.dart';
 import 'package:depi_final_project/features/Teacher/screens/myquizzes.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
-import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart';
+// import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class WrapperTeacherPage extends StatefulWidget {
-  final int?index;
-  const WrapperTeacherPage({super.key,this.index=0});
+  final int? index;
+  const WrapperTeacherPage({super.key, this.index = 0});
   static const String id = '/wrapper-page';
   @override
   State<WrapperTeacherPage> createState() => _WrapperPageState();
 }
 
 class _WrapperPageState extends State<WrapperTeacherPage> {
-  late int _currentIndex ;
+  late int _currentIndex;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   List<Widget> get _screens => [
     Hometeacher(),
-    ProfileScreenWithFirebase(),
+    // ProfileScreenWithFirebase(),
+    const ProfileScreen(),
     Myquizzes(),
     SettingScreen(),
   ];
@@ -37,7 +39,7 @@ class _WrapperPageState extends State<WrapperTeacherPage> {
     'Recent Quizzes',
     'Settings',
   ];
-    @override
+  @override
   void initState() {
     super.initState();
     _currentIndex = widget.index ?? 0;
