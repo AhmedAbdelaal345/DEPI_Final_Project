@@ -20,7 +20,17 @@ abstract class AppConstants {
   static final String submittedAt = 'submittedAt';
   static final String details = 'details';
   static final String title = 'title';
+  static final String id = 'id';
+  static final String uId = "uid";
+  static final String quizId = "quizid";
+  static final String teacherId = "teacherId";
   static final String accuracy = 'accuracy';
+  static final String answer = 'answer';
+  static final String subject = 'subject';
+  static final String duration = "duration";
+  static final String quesCount = "question_count";
+  static final String name = "name";
+
   // static final RegExp phoneRegExp = RegExp(r'^\d{1,14}$');
   
 }

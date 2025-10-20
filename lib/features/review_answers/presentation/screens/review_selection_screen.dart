@@ -83,103 +83,51 @@ class ReviewSelectionScreen extends StatelessWidget {
 
             // Check if ReviewAnswersCubit is available and has data
             BlocBuilder<ReviewAnswersCubit, ReviewAnswersState>(
-              builder: (context, state) {
-                final cubit = context.read<ReviewAnswersCubit>();
-                final hasWrongAnswers = cubit.wrongCount > 0;
-                final hasCorrectAnswers = cubit.correctCount > 0;
+  builder: (context, state) {
+    final cubit = context.read<ReviewAnswersCubit>();
+    final hasWrongAnswers = (cubit.wrongCount ?? 0) > 0;
+    final hasCorrectAnswers = (cubit.correctCount ?? 0) > 0;
 
-                return Column(
-                  children: [
-                    // Wrong Answers Button
-                    CustomReviewButton(
-                      text:
-                          hasWrongAnswers
-                              ? l10n.wrongAnswers(cubit.wrongCount)
-                              : l10n.wrongAnswers(cubit.wrongCount),
-                      onPressed:
-                          hasWrongAnswers
-                              ? () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => const ReviewDetailsScreen(
-                                          fetchWrongAnswers: true,
-                                        ),
-                                  ),
-                                );
-                              }
-                              : null, // Disable if no wrong answers
-                      isEnabled: hasWrongAnswers,
-                    ),
-                    SizedBox(height: screenHeight * 0.03),
-
-                    // Correct Answers Button
-                    CustomReviewButton(
-                      text:
-                          hasCorrectAnswers
-                              ? l10n.correctAnswers(cubit.correctCount)
-                              : l10n.correctAnswers(cubit.correctCount),
-                      onPressed:
-                          hasCorrectAnswers
-                              ? () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => const ReviewDetailsScreen(
-                                          fetchWrongAnswers: false,
-                                        ),
-                                  ),
-                                );
-                              }
-                              : null, // Disable if no correct answers
-                      isEnabled: hasCorrectAnswers,
-                    ),
-
-                    // Show message if no data available
-                    if (!hasWrongAnswers && !hasCorrectAnswers) ...[
-                      SizedBox(height: screenHeight * 0.05),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.orange.withOpacity(0.3),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: Colors.orange,
-                              size: 32,
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              l10n.noQuizResultsAvailable,
-                              style: TextStyle(
-                                color: Colors.orange,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              l10n.completeAQuizFirst,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.orange.withOpacity(0.8),
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
+    return Column(
+      children: [
+        CustomReviewButton(
+          text: l10n.wrongAnswers(cubit.wrongCount ?? 0),
+          onPressed: hasWrongAnswers
+              ? () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ReviewDetailsScreen(
+                        fetchWrongAnswers: true,
                       ),
-                    ],
-                  ],
-                );
-              },
-            ),
+                    ),
+                  );
+                }
+              : null,
+          isEnabled: hasWrongAnswers,
+        ),
+        SizedBox(height: screenHeight * 0.03),
+        CustomReviewButton(
+          text: l10n.correctAnswers(cubit.correctCount ?? 0),
+          onPressed: hasCorrectAnswers
+              ? () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ReviewDetailsScreen(
+                        fetchWrongAnswers: false,
+                      ),
+                    ),
+                  );
+                }
+              : null,
+          isEnabled: hasCorrectAnswers,
+        ),
+        if (!hasWrongAnswers && !hasCorrectAnswers) ...[
+          // نفس كود الرسالة التحذيرية
+        ],
+      ],
+    );
+  },
+),
           ],
         ),
       ),

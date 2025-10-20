@@ -412,4 +412,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccountDetails => 'Delete Your Account';
+
+  @override
+  String get enterTeacherCode => 'Enter Teacher Code';
+
+  @override
+  String get phase =>
+      'Success is the sum of small efforts repeated day in and day out.';
 }

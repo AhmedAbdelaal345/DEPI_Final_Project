@@ -4,6 +4,7 @@ class QuizCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final String score;
+  final String? id;
   final bool showAverage;
 
   const QuizCard({
@@ -11,6 +12,7 @@ class QuizCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.score,
+    this.id ,
     this.showAverage = false,
   });
 
@@ -26,25 +28,38 @@ class QuizCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text(subtitle, style: const TextStyle(color: Colors.white70)),
-          ]),
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(id ?? "0", style: const TextStyle(color: Colors.white70)),
+              const SizedBox(height: 4),
+              Text(subtitle, style: const TextStyle(color: Colors.white70)),
+            ],
+          ),
           Column(
             children: [
-              Text(score,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold)),
+              Text(
+                score,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 4),
-              Text(showAverage ? "Average Score" : "Score",
-                  style: const TextStyle(color: Colors.white70, fontSize: 12)),
+              Text(
+                showAverage ? "Average Score" : "Score",
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+              ),
             ],
           ),
         ],

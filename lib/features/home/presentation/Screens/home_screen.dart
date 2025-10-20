@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final TextEditingController quiz = TextEditingController();
+    final TextEditingController teacherId = TextEditingController();
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -29,7 +30,7 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: sx(context, 20)),
                 child: Text(
-                  '"Success is the sum of small efforts repeated day in and day out."',
+                  l10n.phase,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: sy(context, 18),
@@ -46,9 +47,15 @@ class HomeScreen extends StatelessWidget {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: InputField(
-                    hint: l10n.enterQuizCode,
-                    controller: quiz,
+                  child: Column(
+                    children: [
+                      InputField(
+                        hint: l10n.enterTeacherCode,
+                        controller: teacherId,
+                      ),
+                      SizedBox(height: sy(context, 16)),
+                      InputField(hint: l10n.enterQuizCode, controller: quiz),
+                    ],
                   ),
                 ),
               ),
@@ -63,14 +70,17 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => BeforeQuizScreen(
-                            quizId: quiz.text, // 👈 مرر الـ quizId هنا
-                          ),
+                          builder:
+                              (_) => BeforeQuizScreen(
+                                quizId: quiz.text,
+                                teacherId:
+                                    teacherId.text, 
+                              ),
                         ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                         SnackBar(
+                        SnackBar(
                           content: Text(l10n.pleaseEnterQuizCode),
                           backgroundColor: Colors.red,
                         ),

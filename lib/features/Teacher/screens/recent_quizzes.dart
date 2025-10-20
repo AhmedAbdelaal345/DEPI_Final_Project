@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quiz_cubit.dart';
-import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quiz_state.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
+import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
+
 import 'package:depi_final_project/features/Teacher/screens/view_quiz_screen.dart';
 import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
 import 'package:flutter/material.dart';
@@ -35,11 +37,11 @@ class Recentquizzes extends StatelessWidget {
               itemBuilder: (context, index) {
                 final quiz = quizzes[index];
                 return GestureDetector(
-                  child: container(index,context, screenHeight * .00015, screenWidth *.00009, quiz["title"],quiz["createdAt"],quiz,quizzesid));
+                  child: container(index,context, screenHeight * .00015, screenWidth *.00009, quiz[AppConstants.title],quiz[AppConstants.createdAt],quiz,quizzesid));
               },
             );
           } else if (state is GetQuizError) {
-            return Center(child: Text("Erprr: ${state.message}"));
+            return Center(child: Text("Erorr: ${state.message}"));
           }
 
           return Center(child: CircularProgressIndicator());

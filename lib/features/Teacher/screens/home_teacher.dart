@@ -1,6 +1,6 @@
-import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quiz_cubit.dart';
-import 'package:depi_final_project/features/Teacher/screens/performance_report.dart';
+import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/screens/create_new_quiz.dart';
+import 'package:depi_final_project/features/Teacher/screens/performance_report.dart';
 import 'package:depi_final_project/features/Teacher/screens/recent_quizzes.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/title_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,7 +70,8 @@ class _HometeacherState extends State<Hometeacher> {
                   onTap: () async {
                     final cubit = context.read<CreateQuizCubit>();
                     final teacherId =
-                        await cubit.getname(credintial!.uid) ?? "unknow";
+                        await FirebaseAuth.instance.currentUser!.uid;
+
                     final subject =
                         await cubit.getsubject(credintial.uid) ?? "unknow";
                     final quizid = await cubit.getSixRandomNumbers();

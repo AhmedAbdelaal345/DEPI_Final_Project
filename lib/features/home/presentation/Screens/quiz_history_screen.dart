@@ -1,3 +1,4 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/appbar.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_state.dart';
@@ -98,60 +99,53 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
             );
           }
 
-          if (state is LoadedState) {
-            final groupQuizzes = state.groupedQuizzes;
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: ListView(
-                children:
-                    groupQuizzes.entries.map((entry) {
-                      String subjectName = entry.key;
-                      List<QuizHistoryModel> quizzes = entry.value;
+        if (state is LoadedState) {
+  final groupQuizzes = state.groupedQuizzes;
+  return Padding(
+    padding: const EdgeInsets.all(16),
+    child: ListView(
+      children: groupQuizzes.entries.map((entry) {
+        String subjectName = entry.key;
+        List<QuizHistoryModel> quizzes = entry.value;
 
-                      // Calculate average
-                      double avg =
-                          quizzes.isEmpty
-                              ? 0.0
-                              : quizzes
-                                      .map((q) => q.accuracy)
-                                      .reduce((a, b) => a + b) /
-                                  quizzes.length;
+        double avg = quizzes.isEmpty
+            ? 0.0
+            : quizzes.map((q) => q.accuracy).reduce((a, b) => a + b) /
+                quizzes.length;
 
-                      // Convert to format expected by QuizListScreen
-                      List<Map<String, String>> quizzesForList =
-                          quizzes.map((q) {
-                            return {
-                              "title": q.quizId,
-                              "date": q.formattedDate,
-                              "score": q.accuracyPercentage,
-                            };
-                          }).toList();
+        List<Map<String, String>> quizzesForList = quizzes.map((q) {
+          return {
+            AppConstants.title: subjectName,           // ✅ Quiz document ID (not subject name!)
+            AppConstants.id: q.quizId,              // ✅ Same as title
+            "date": q.formattedDate,                // ✅ Date
+            AppConstants.score: q.accuracyPercentage, // ✅ Individual score
+          };
+        }).toList();
 
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => QuizListScreen(
-                                    subject: subjectName,
-                                    quizzes: quizzesForList,
-                                    score: "${(avg*100).toStringAsFixed(0)}%",
-                                  ),
-                            ),
-                          );
-                        },
-                        child: QuizCard(
-                          title: subjectName,
-                          subtitle: "${quizzes.length} quizzes",
-                          score: "${(avg*100).toStringAsFixed(0)}%",
-                          showAverage: true,
-                        ),
-                      );
-                    }).toList(),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => QuizListScreen(
+                  subject: subjectName,  // ✅ Just the subject name
+                  quizzes: quizzesForList,
+                  score: "${(avg * 100).toStringAsFixed(0)}%",  // ✅ Average score
+                ),
               ),
             );
-          }
+          },
+          child: QuizCard(
+            title: subjectName,
+            subtitle: "${quizzes.length} quizzes",
+            score: "${(avg * 100).toStringAsFixed(0)}%",
+            showAverage: true,
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
 
           return const SizedBox();
         },

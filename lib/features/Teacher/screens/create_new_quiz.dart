@@ -1,9 +1,9 @@
+import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
+import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
 import 'package:depi_final_project/features/Teacher/screens/quizcreatesuccesfully.dart';
 import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quiz_cubit.dart';
-import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quiz_state.dart';
 
 class Createnewquiz extends StatefulWidget {
   final String teacherId;

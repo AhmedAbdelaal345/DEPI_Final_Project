@@ -20,7 +20,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createNewQuiz => 'إنشاء اختبار جديد';
 
   @override
-  String get recentQuizzes => 'أحدث\n الاختبارات';
+  String get recentQuizzes => 'أحدث\nالاختبارات';
 
   @override
   String get performanceReport => 'تقرير الأداء';
@@ -333,7 +333,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get startYourJourney => 'اضغط لبدء رحلتك';
 
   @override
-  String get backToHome => 'العودة للرئيسية';
+  String get backToHome => 'العودة إلى الرئيسية';
 
   @override
   String get submitQuiz => 'إرسال الاختبار';
@@ -397,7 +397,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noQuestionsToShow => 'لا توجد أسئلة لعرضها.';
 
   @override
-  String get featureWillGetSoon => 'سيتم توفير الخاصية قريبا';
+  String get featureWillGetSoon => 'سيتم توفير الخاصية قريباً';
 
   @override
   String get logOut => 'تسجيل الخروج';
@@ -410,4 +410,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get deleteAccountDetails => 'حذف حسابك';
+
+  @override
+  String get enterTeacherCode => 'ادخل كود المعلم ';
+
+  @override
+  String get phase =>
+      'النجاح هو مجموع الجهود الصغيرة التي تتكرر يوماً بعد يوم.';
 }

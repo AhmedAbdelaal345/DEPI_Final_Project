@@ -49,34 +49,38 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
         return;
       }
 
-      final quizId = widget.quizData[AppConstants.title] ?? widget.quizData["title"];
-      
-      // Fetch student's quiz results from Student/{userId}/quizzes/{quizId}
-      final studentDoc = await FirebaseFirestore.instance
-          .collection('Student')
-          .doc(userId)
-          .collection('quizzes')
-          .doc(quizId)
-          .get();
+      final quizId =
+          widget.quizData[AppConstants.id] ?? widget.quizData[AppConstants.id];
 
-      // Fetch quiz metadata from Quizzes/{quizId}
-      final quizDoc = await FirebaseFirestore.instance
-          .collection('Quizzes')
-          .doc(quizId)
-          .get();
+      // ✅ Use the correct collection name
+      final studentDoc =
+          await FirebaseFirestore.instance
+              .collection(
+                AppConstants.studentCollection,
+              ) // Changed from 'Student'
+              .doc(userId)
+              .collection(AppConstants.quizzessmall) // ✅ Changed from 'quizzes'
+              .doc(quizId)
+              .get(); // Fetch quiz metadata from Quizzes/{quizId}
+      final quizDoc =
+          await FirebaseFirestore.instance
+              .collection('Quizzes')
+              .doc(quizId)
+              .get();
 
       Map<String, dynamic>? teacherData;
       if (quizDoc.exists) {
         final quizData = quizDoc.data();
         final teacherId = quizData?['teacherId'];
-        
+
         // Fetch teacher details from teacher/{teacherId}
         if (teacherId != null && teacherId.toString().isNotEmpty) {
-          final teacherDoc = await FirebaseFirestore.instance
-              .collection('teacher')
-              .doc(teacherId)
-              .get();
-          
+          final teacherDoc =
+              await FirebaseFirestore.instance
+                  .collection('teacher')
+                  .doc(teacherId)
+                  .get();
+
           if (teacherDoc.exists) {
             teacherData = teacherDoc.data();
           }
@@ -109,25 +113,27 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
       final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) return;
 
-      final quizId = widget.quizData[AppConstants.title] ?? widget.quizData["title"];
+      final quizId =
+          widget.quizData[AppConstants.title] ;
 
       // Show loading dialog
       if (!mounted) return;
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(color: Color(0xFF4FB3B7)),
-        ),
+        builder:
+            (context) => const Center(
+              child: CircularProgressIndicator(color: Color(0xFF4FB3B7)),
+            ),
       );
 
       // Delete the quiz result from Firebase
-      await FirebaseFirestore.instance
-          .collection('Student')
-          .doc(userId)
-          .collection('quizzes')
-          .doc(quizId)
-          .delete();
+     await FirebaseFirestore.instance
+        .collection(AppConstants.studentCollection)  // Changed from 'Student'
+        .doc(userId)
+        .collection(AppConstants.quizzessmall)  // ✅ Changed from 'quizzes'
+        .doc(quizId)
+        .delete();
 
       // Close loading dialog
       if (!mounted) return;
@@ -138,9 +144,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => BeforeQuizScreen(
-            quizId: quizId,
-          ),
+          builder: (context) => BeforeQuizScreen(quizId: quizId),
         ),
       );
     } catch (e) {
@@ -176,174 +180,185 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
         ),
         centerTitle: true,
       ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFF4FB3B7)),
-            )
-          : errorMessage != null
+      body:
+          isLoading
+              ? const Center(
+                child: CircularProgressIndicator(color: Color(0xFF4FB3B7)),
+              )
+              : errorMessage != null
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, color: Colors.red, size: 60),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          errorMessage!,
-                          style: const TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        errorMessage!,
+                        style: const TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            isLoading = true;
-                            errorMessage = null;
-                          });
-                          _fetchAllQuizDetails();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4FB3B7),
-                        ),
-                        child: const Text('Retry'),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          isLoading = true;
+                          errorMessage = null;
+                        });
+                        _fetchAllQuizDetails();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4FB3B7),
                       ),
-                    ],
-                  ),
-                )
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      DetailItem(
-                        icon: IconParkOutline.list,
-                        label: "Questions",
-                        value: "${_getQuestionCount()}",
-                      ),
-                      const SizedBox(height: 16),
-                      DetailItem(
-                        icon: Lucide.alarm_clock,
-                        label: "Time limit",
-                        value: _getTimeLimit(),
-                      ),
-                      const SizedBox(height: 16),
-                      DetailItem(
-                        icon: Mdi.account_tie_outline,
-                        label: "Creator",
-                        value: _getCreator(),
-                      ),
-                      const SizedBox(height: 16),
-                      DetailItem(
-                        icon: Mdi.calendar_month,
-                        label: "Completed on",
-                        value: _formatDate(studentQuizDetails?['createdAt']),
-                      ),
-                      const SizedBox(height: 16),
-                      DetailItem(
-                        icon: Mdi.star_circle_outline,
-                        label: "Score",
-                        value: _calculateScore(),
-                      ),
-                      const SizedBox(height: 24),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF4FB3B7),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            onPressed: () {
-                              // Show confirmation dialog
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext dialogContext) {
-                                  return AlertDialog(
-                                    backgroundColor: AppColors.bg,
-                                    title: const Text(
-                                      'Resolve Quiz',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    content: const Text(
-                                      'This will delete your current result and let you retake the quiz. Are you sure?',
-                                      style: TextStyle(color: Colors.white70),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(dialogContext),
-                                        child: const Text(
-                                          'Cancel',
-                                          style: TextStyle(color: Colors.white70),
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(0xFF4FB3B7),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(dialogContext);
-                                          _deleteQuizResult();
-                                        },
-                                        child: const Text(
-                                          'Yes, Resolve',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: const Text(
-                              "Resolve Quiz",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF4FB3B7),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            onPressed: () {
-                              String studentUid = FirebaseAuth.instance.currentUser!.uid;
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StudentReviewSelectionScreen(
-                                    quizId: widget.quizData[AppConstants.title] ??
-                                        widget.quizData["title"]!,
-                                    studentId: studentUid,
-                                    quizTitle: widget.subject,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              "View Answers",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ),
+              )
+              : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    DetailItem(
+                      icon: IconParkOutline.list,
+                      label: "Questions",
+                      value: "${_getQuestionCount()}",
+                    ),
+                    const SizedBox(height: 16),
+                    DetailItem(
+                      icon: Lucide.alarm_clock,
+                      label: "Time limit",
+                      value: _getTimeLimit(),
+                    ),
+                    const SizedBox(height: 16),
+                    DetailItem(
+                      icon: Mdi.account_tie_outline,
+                      label: "Creator",
+                      value: _getCreator(),
+                    ),
+                    const SizedBox(height: 16),
+                    DetailItem(
+                      icon: Mdi.calendar_month,
+                      label: "Completed on",
+                      value: _formatDate(studentQuizDetails?['createdAt']),
+                    ),
+                    const SizedBox(height: 16),
+                    DetailItem(
+                      icon: Mdi.star_circle_outline,
+                      label: "Score",
+                      value: _calculateScore(),
+                    ),
+                    const SizedBox(height: 24),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF4FB3B7),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () {
+                            // Show confirmation dialog
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext dialogContext) {
+                                return AlertDialog(
+                                  backgroundColor: AppColors.bg,
+                                  title: const Text(
+                                    'Resolve Quiz',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  content: const Text(
+                                    'This will delete your current result and let you retake the quiz. Are you sure?',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.pop(dialogContext),
+                                      child: const Text(
+                                        'Cancel',
+                                        style: TextStyle(color: Colors.white70),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFF4FB3B7,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(dialogContext);
+                                        _deleteQuizResult();
+                                      },
+                                      child: const Text(
+                                        'Yes, Resolve',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text(
+                            "Resolve Quiz",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF4FB3B7),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () {
+                            String studentUid =
+                                FirebaseAuth.instance.currentUser!.uid;
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => StudentReviewSelectionScreen(
+                                      quizId:
+                                          widget.quizData[AppConstants.title] ??
+                                          widget.quizData["title"]!,
+                                      studentId: studentUid,
+                                      quizTitle: widget.subject,
+                                    ),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "View Answers",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
     );
   }
 
@@ -352,18 +367,19 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
     if (studentQuizDetails != null && studentQuizDetails!['total'] != null) {
       return studentQuizDetails!['total'];
     }
-    
+
     // Try to get from quiz metadata
     if (quizMetadata != null) {
       if (quizMetadata!['question_count'] != null) {
         return quizMetadata!['question_count'];
       }
       // Check if questions array exists
-      if (quizMetadata!['questions'] != null && quizMetadata!['questions'] is List) {
+      if (quizMetadata!['questions'] != null &&
+          quizMetadata!['questions'] is List) {
         return (quizMetadata!['questions'] as List).length;
       }
     }
-    
+
     return 0;
   }
 
@@ -393,18 +409,18 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
         return fullName;
       }
     }
-    
+
     // Fallback to quiz metadata teacherId
     if (quizMetadata != null && quizMetadata!['teacherId'] != null) {
       return quizMetadata!['teacherId'].toString();
     }
-    
+
     return 'Unknown';
   }
 
   String _formatDate(dynamic timestamp) {
     if (timestamp == null) return widget.quizData["date"] ?? 'Unknown';
-    
+
     try {
       DateTime date;
       if (timestamp is Timestamp) {
@@ -422,12 +438,12 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
 
   String _calculateScore() {
     if (studentQuizDetails == null) return widget.quizData["score"] ?? 'N/A';
-    
+
     final score = (studentQuizDetails!['score'] ?? 0).toDouble();
     final total = studentQuizDetails!['total'] ?? 1;
-    
+
     if (total == 0) return '0%';
-    
+
     final percentage = (score / total * 100).toStringAsFixed(0);
     return '$percentage%';
   }

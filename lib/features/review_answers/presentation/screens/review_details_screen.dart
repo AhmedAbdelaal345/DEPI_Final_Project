@@ -29,16 +29,22 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
   int _currentIndex = 0;
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.showAll!) {
-      context.read<ReviewAnswersCubit>().fetchAllAnswers();
+void initState() {
+  super.initState();
+
+  // لتأجيل التنفيذ لما بعد أول build
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final reviewCubit = context.read<ReviewAnswersCubit>();
+
+    if (widget.showAll == true) {
+      reviewCubit.fetchAllAnswers();
     } else if (widget.fetchWrongAnswers) {
-      context.read<ReviewAnswersCubit>().fetchWrongAnswers();
+      reviewCubit.fetchWrongAnswers();
     } else {
-      context.read<ReviewAnswersCubit>().fetchCorrectAnswers();
+      reviewCubit.fetchCorrectAnswers();
     }
-  }
+  });
+}
 
   @override
   Widget build(BuildContext context) {

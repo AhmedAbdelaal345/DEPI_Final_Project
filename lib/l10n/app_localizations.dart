@@ -859,6 +859,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete Your Account'**
   String get deleteAccountDetails;
+
+  /// No description provided for @enterTeacherCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Teacher Code'**
+  String get enterTeacherCode;
+
+  /// No description provided for @phase.
+  ///
+  /// In en, this message translates to:
+  /// **'Success is the sum of small efforts repeated day in and day out.'**
+  String get phase;
 }
 
 class _AppLocalizationsDelegate

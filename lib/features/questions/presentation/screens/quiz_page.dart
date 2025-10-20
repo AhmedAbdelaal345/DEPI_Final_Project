@@ -18,9 +18,10 @@ import 'package:depi_final_project/features/questions/presentation/cubit/result_
 import 'package:firebase_auth/firebase_auth.dart';
 
 class QuizPage extends StatefulWidget {
-  const QuizPage({super.key, this.quizId});
+  const QuizPage({super.key, this.quizId, this.teacherId});
   static const String id = '/quiz-page';
   final String? quizId;
+  final String? teacherId;
 
   @override
   State<QuizPage> createState() => _QuizPageState();
@@ -34,59 +35,74 @@ class _QuizPageState extends State<QuizPage> {
   Timer? _timer;
   int? _timeLeft; // هنا هنخزن الوقت بالثواني
   String? _currentQuizId;
+  String? _teacherId;
   bool _isInitialized = false;
   bool _isSubmitting = false;
 
   @override
   void initState() {
-    super.initState();
     _fetchTimeLeft();
+    super.initState();
   }
 
-  /// 🕒 دالة تجيب الـ duration من Firestore (بالدقايق) وتحوله ثواني
-  Future<void> _fetchTimeLeft() async {
-    final doc =
-        await FirebaseFirestore.instance
-            .collection(AppConstants.quizzesCollection)
-            .doc(widget.quizId)
-            .get();
+ Future<void> _fetchTimeLeft() async {
+  if (_teacherId == null || _currentQuizId == null) return;
 
-    final minutes = await doc.data()!["duration"];
-    if (minutes != null) {
-      setState(() {
-        _timeLeft = minutes * 60; // minutes → seconds
-      });
-    } else {
-      setState(() {
-        _timeLeft = 60; // default
-      });
-    }
+  final doc = await FirebaseFirestore.instance
+      .collection(AppConstants.teacherCollection)
+      .doc(_teacherId)
+      .collection(AppConstants.quizzesCollection)
+      .doc(_currentQuizId)
+      .get();
+
+  final data = doc.data();
+  if (data == null) {
+    setState(() => _timeLeft = 60);
+    return;
   }
 
+  final minutes = data[AppConstants.duration];
+  if (minutes is int) {
+    setState(() => _timeLeft = minutes * 60);
+  } else {
+    setState(() => _timeLeft = 60);
+  }
+}
   int? get timeLeft => _timeLeft;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+void didChangeDependencies() {
+  super.didChangeDependencies();
 
-    if (_isInitialized) return;
-    _isInitialized = true;
+  if (_isInitialized) return;
+  _isInitialized = true;
 
-    final route = ModalRoute.of(context);
-    final String? routeQuizId = route?.settings.arguments as String?;
-    _currentQuizId = routeQuizId ?? widget.quizId;
+  final args = ModalRoute.of(context)?.settings.arguments;
 
-    if (_currentQuizId == null || _currentQuizId!.isEmpty) {
-      _showErrorAndGoBack('No Quiz ID provided');
-      return;
-    }
-
-    _initializeQuiz();
+  if (args is List && args.length >= 2) {
+    _currentQuizId = args[0] as String?;
+    _teacherId = args[1] as String?;
+  } else if (args is Map) {
+    _currentQuizId = args['quizId'] as String?;
+    _teacherId = args['teacherId'] as String?;
+  } else {
+    _showErrorAndGoBack('Missing quiz or teacher ID');
+    return;
   }
+
+  if (_teacherId == null || _currentQuizId == null) {
+    _showErrorAndGoBack('Invalid quiz data');
+    return;
+  }
+
+  _fetchTimeLeft();
+  _initializeQuiz();
+}
+
 
   void _initializeQuiz() {
     if (_currentQuizId != null && _currentQuizId!.isNotEmpty) {
-      context.read<QuizCubit>().getQuestions(_currentQuizId!);
+      context.read<QuizCubit>().getQuestions(_currentQuizId!, _teacherId!);
       _startTimer();
     }
   }
@@ -178,9 +194,10 @@ class _QuizPageState extends State<QuizPage> {
           question.options,
         );
         final reviewQuestion = ReviewQuestion(
-          studentAnswer: userAnswers.containsKey(i)
-              ? question.options.toList()[userAnswers[i]!]
-              : 'Unanswered',
+          studentAnswer:
+              userAnswers.containsKey(i)
+                  ? question.options.toList()[userAnswers[i]!]
+                  : 'Unanswered',
           id: i.toString(),
           questionText: question.text,
           options: question.options.toList(),
@@ -203,7 +220,8 @@ class _QuizPageState extends State<QuizPage> {
           wrongAnswers.add(reviewQuestion);
         }
       }
-      double accuracy = questions.isNotEmpty ? correctCount / questions.length : 0.0;
+      double accuracy =
+          questions.isNotEmpty ? correctCount / questions.length : 0.0;
       try {
         context.read<ReviewAnswersCubit>().setQuizResults(
           correctAnswers,
@@ -217,9 +235,10 @@ class _QuizPageState extends State<QuizPage> {
       final List<Map<String, dynamic>> questionsWithAnswers = [];
       for (int i = 0; i < questions.length; i++) {
         final q = questions[i];
-        final studentAns = userAnswers.containsKey(i)
-            ? q.options.toList()[userAnswers[i]!]
-            : 'Unanswered';
+        final studentAns =
+            userAnswers.containsKey(i)
+                ? q.options.toList()[userAnswers[i]!]
+                : 'Unanswered';
         questionsWithAnswers.add({
           'question': q.text,
           'options': q.options.toList(),
@@ -227,15 +246,20 @@ class _QuizPageState extends State<QuizPage> {
           'studentAnswer': studentAns,
         });
       }
-      final status = (questions.isNotEmpty && (correctCount / questions.length) >= 0.5) ? 'Pass' : 'Fail';
+      final status =
+          (questions.isNotEmpty && (correctCount / questions.length) >= 0.5)
+              ? 'Pass'
+              : 'Fail';
       try {
         context.read<ResultCubit>().saveStudentQuizResult(
-              studentId: FirebaseAuth.instance.currentUser!.uid,
-              quizId: _currentQuizId ?? ModalRoute.of(context)!.settings.arguments.toString(),
-              questionsWithAnswers: questionsWithAnswers,
-              questions: questions,
-              status: status,
-            );
+          studentId: FirebaseAuth.instance.currentUser!.uid,
+          quizId:
+              _currentQuizId ??
+              ModalRoute.of(context)!.settings.arguments.toString(),
+          questionsWithAnswers: questionsWithAnswers,
+          questions: questions,
+          status: status,
+        );
       } catch (_) {}
 
       QuizResult result = QuizResult(
@@ -243,7 +267,9 @@ class _QuizPageState extends State<QuizPage> {
         correctAnswers: correctCount,
         wrongAnswers: wrongCount,
         accuracy: accuracy,
-        quizId: (_currentQuizId ?? ModalRoute.of(context)!.settings.arguments.toString()),
+        quizId:
+            (_currentQuizId ??
+                ModalRoute.of(context)!.settings.arguments.toString()),
         detailedResults: questionsWithAnswers,
         questions: questions,
       );

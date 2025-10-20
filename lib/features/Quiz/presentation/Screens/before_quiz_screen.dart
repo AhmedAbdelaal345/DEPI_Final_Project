@@ -11,13 +11,18 @@ import '../../../home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class BeforeQuizScreen extends StatelessWidget {
-  BeforeQuizScreen({super.key, this.quizId});
+  BeforeQuizScreen({super.key, this.quizId, this.teacherId});
   final String? quizId;
-
+  final String? teacherId;
   static final String id = "/details";
 
   Future<DocumentSnapshot<Map<String, dynamic>>> _getQuizData() {
-    return FirebaseFirestore.instance.collection(AppConstants.quizzesCollection).doc(quizId).get();
+    return FirebaseFirestore.instance
+        .collection(AppConstants.teacherCollection)
+        .doc(teacherId)
+        .collection(AppConstants.quizzesCollection)
+        .doc(quizId)
+        .get();
   }
 
   @override
@@ -46,7 +51,7 @@ class BeforeQuizScreen extends StatelessWidget {
             final title = quizData["title"] ?? "Quiz";
             final questions = quizData["question_count"]?.toString() ?? "N/A";
             final timeLimit = quizData["duration"]?.toString() ?? "N/A";
-            final creator = quizData["teacherId"] ?? "Unknown";
+            final creator = quizData[AppConstants.name] ?? "Unknown";
 
             return SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: sx(context, 16)),
@@ -90,8 +95,8 @@ class BeforeQuizScreen extends StatelessWidget {
                   SizedBox(height: sy(context, 14)),
 
                   // Instructions block
-                   QuizInstructionsCard(
-                     title: l10n.instructions,
+                  QuizInstructionsCard(
+                    title: l10n.instructions,
                     instructions: [
                       l10n.instruction1,
                       l10n.instruction2,
@@ -106,8 +111,8 @@ class BeforeQuizScreen extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         QuizPage.id,
-                        arguments:
-                            quizId, // 👈 كده نمرر الـ quizId لصفحة الكويز
+                        arguments: [quizId, teacherId],
+                        // 👈 كده نمرر الـ quizId لصفحة الكويز
                       );
                     },
                   ),

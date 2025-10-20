@@ -29,7 +29,7 @@ class QuizResult {
   });
 }
 
-class ResultPage extends StatelessWidget {
+class ResultPage extends StatefulWidget {
   final QuizResult? quizResult;
 
   const ResultPage({super.key, this.quizResult});
@@ -37,8 +37,39 @@ class ResultPage extends StatelessWidget {
   static const id = "/resultpage";
 
   @override
+  State<ResultPage> createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+  @override
+  @override
+void initState() {
+  super.initState();
+
+  // تأجيل استدعاء bloc لما بعد build الأول
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    final quizResult = widget.quizResult;
+    if (quizResult == null) return;
+
+    try {
+      await context.read<ResultCubit>().saveStudentQuizResult(
+        studentId: FirebaseAuth.instance.currentUser?.uid ?? 'unknown',
+        quizId: quizResult.quizId,
+        questionsWithAnswers: quizResult.detailedResults ?? [],
+        questions: quizResult.questions,
+        status: quizResult.correctAnswers / quizResult.totalQuestions >= 0.5
+            ? "Pass"
+            : "Fail",
+      );
+    } catch (e) {
+      debugPrint('❌ Error saving quiz result: $e');
+    }
+  });
+}
+
+  @override
   Widget build(BuildContext context) {
-    final accuracyPercentage = (quizResult!.accuracy * 100).toInt();
+    final accuracyPercentage = (widget.quizResult!.accuracy * 100).toInt();
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: SafeArea(
@@ -73,11 +104,11 @@ class ResultPage extends StatelessWidget {
                     width: 200,
                     height: 200,
                     child: CircularProgressIndicator(
-                      value: quizResult!.accuracy,
+                      value: widget.quizResult!.accuracy,
                       strokeWidth: 12,
                       backgroundColor: AppColors.bg.withOpacity(0.3),
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        _getAccuracyColor(quizResult!.accuracy),
+                        _getAccuracyColor(widget.quizResult!.accuracy),
                       ),
                       strokeCap: StrokeCap.round,
                     ),
@@ -105,7 +136,7 @@ class ResultPage extends StatelessWidget {
                 ],
               ),
 
-                SizedBox(height: sy(context, 60)),
+              SizedBox(height: sy(context, 60)),
 
               // Statistics Row with dynamic values
               Row(
@@ -117,57 +148,41 @@ class ResultPage extends StatelessWidget {
                     AppColors.tealHighlight,
                   ),
                   _buildStatColumn(
-                    "${quizResult!.correctAnswers}",
+                    "${widget.quizResult!.correctAnswers}",
                     l10n.correct,
                     Colors.green,
                   ),
                   _buildStatColumn(
-                    "${quizResult!.wrongAnswers}",
+                    "${widget.quizResult!.wrongAnswers}",
                     l10n.wrong,
                     Colors.red,
                   ),
                 ],
               ),
 
-                SizedBox(height: sy(context, 60)),
+              SizedBox(height: sy(context, 60)),
 
               // Performance message
-              _buildPerformanceMessage(context,quizResult!.accuracy),
+              _buildPerformanceMessage(context, widget.quizResult!.accuracy),
 
-                SizedBox(height: sy(context, 60)),
+              SizedBox(height: sy(context, 60)),
 
-                // Action buttons
-                SizedBox(
-                  width: double.infinity,
-                  child: PrimaryButton(
-                    label: l10n.reviewAnswers,
-                    onTap: () async {
-                      
-                      await BlocProvider.of<ResultCubit>(
-                        context,
-                      ).saveStudentQuizResult(
-                        
-                        studentId: FirebaseAuth.instance.currentUser!.uid,
-                        quizId: quizResult!.quizId,
-                        questionsWithAnswers: quizResult!.detailedResults!,
-                        questions: quizResult!.questions,
-                        status:
-                            quizResult!.correctAnswers /
-                                        quizResult!.totalQuestions >=
-                                    0.5
-                                ? "Pass"
-                                : "Fail",
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ReviewSelectionScreen(),
-                        ),
-                      );
-                    },
-                  ),
+              // Action buttons
+              SizedBox(
+                width: double.infinity,
+                child: PrimaryButton(
+                  label: l10n.reviewAnswers,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReviewSelectionScreen(),
+                      ),
+                    );
+                  },
                 ),
-                SizedBox(height: sy(context, 16)),
+              ),
+              SizedBox(height: sy(context, 16)),
 
               SizedBox(
                 width: double.infinity,
@@ -183,13 +198,12 @@ class ResultPage extends StatelessWidget {
                 ),
               ),
 
-                SizedBox(height: sy(context, 23)),
-              ],
-            ),
+              SizedBox(height: sy(context, 23)),
+            ],
           ),
         ),
-      );
-    
+      ),
+    );
   }
 
   Widget _buildStatColumn(String value, String label, Color valueColor) {
@@ -215,7 +229,7 @@ class ResultPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPerformanceMessage(BuildContext context,double accuracy) {
+  Widget _buildPerformanceMessage(BuildContext context, double accuracy) {
     final l10n = AppLocalizations.of(context);
     String message;
     Color messageColor;

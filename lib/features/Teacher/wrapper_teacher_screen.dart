@@ -1,4 +1,4 @@
-import 'package:depi_final_project/features/Teacher/screens/homeTeacher.dart';
+import 'package:depi_final_project/features/Teacher/screens/home_teacher.dart';
 import 'package:depi_final_project/features/Teacher/screens/myquizzes.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart';

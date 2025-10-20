@@ -150,5 +150,7 @@
 "logOut":"Log Out",
 "logOutDetails":"If you need To Log out, plesse press here",
 "deleteAccount":"Delete Account",
-"deleteAccountDetails":"Delete Your Account"
+"deleteAccountDetails":"Delete Your Account",
+"enterTeacherCode":"Enter Teacher Code",
+"phase":"Success is the sum of small efforts repeated day in and day out."
 }
