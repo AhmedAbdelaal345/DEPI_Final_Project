@@ -1,5 +1,6 @@
 // features/profile/data/repositories/profile_repository.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_profile_model.dart';
 
@@ -13,11 +14,18 @@ class ProfileRepository {
   // Get user profile
   Future<UserProfileModel?> getUserProfile(String userId) async {
     try {
-      final doc = await _firestore.collection('Student').doc(userId).get();
+      final doc =
+          await _firestore
+              .collection(AppConstants.studentCollection)
+              .doc(userId)
+              .get();
 
       if (doc.exists) {
-        return UserProfileModel.fromFirestore(doc.data()!, doc.id);
+        
+          return UserProfileModel.fromFirestore(doc.data()!, doc.id);
+        
       }
+
       return null;
     } catch (e) {
       print('Error getting user profile: $e');
@@ -25,22 +33,24 @@ class ProfileRepository {
     }
   }
 
-  // Stream user profile for real-time updates
   Stream<UserProfileModel?> streamUserProfile(String userId) {
     return _firestore
-        .collection('Student')
+        .collection(AppConstants.studentCollection)
         .doc(userId)
         .snapshots()
         .map((doc) {
-      if (doc.exists) {
-        return UserProfileModel.fromFirestore(doc.data()!, doc.id);
-      }
-      return null;
-    });
+          if (doc.exists) {
+            return UserProfileModel.fromFirestore(doc.data()!, doc.id);
+          }
+          return null;
+        });
   }
 
   // Update user profile
-  Future<bool> updateUserProfile(String userId, Map<String, dynamic> data) async {
+  Future<bool> updateUserProfile(
+    String userId,
+    Map<String, dynamic> data,
+  ) async {
     try {
       await _firestore.collection('Student').doc(userId).update(data);
       return true;
@@ -54,7 +64,9 @@ class ProfileRepository {
   Future<bool> subscribeToPro(String userId) async {
     try {
       final now = DateTime.now();
-      final expiryDate = now.add(const Duration(days: 30)); // 30 days subscription
+      final expiryDate = now.add(
+        const Duration(days: 30),
+      ); // 30 days subscription
 
       await _firestore.collection('Student').doc(userId).update({
         'isPro': true,
@@ -87,10 +99,11 @@ class ProfileRepository {
   Future<Map<String, int>> getQuizStatistics(String userId) async {
     try {
       // Query quizzes taken by user
-      final quizzesSnapshot = await _firestore
-          .collection('Quizzes')
-          .where('userId', isEqualTo: userId)
-          .get();
+      final quizzesSnapshot =
+          await _firestore
+              .collection('Quizzes')
+              .where('userId', isEqualTo: userId)
+              .get();
 
       int totalQuizzes = quizzesSnapshot.docs.length;
 
@@ -110,7 +123,8 @@ class ProfileRepository {
         }
       }
 
-      int averageScore = quizzesWithScore > 0 ? (totalScore / quizzesWithScore).round() : 0;
+      int averageScore =
+          quizzesWithScore > 0 ? (totalScore / quizzesWithScore).round() : 0;
 
       return {
         'quizzesTaken': totalQuizzes,
@@ -119,11 +133,7 @@ class ProfileRepository {
       };
     } catch (e) {
       print('Error getting quiz statistics: $e');
-      return {
-        'quizzesTaken': 0,
-        'subjects': 0,
-        'averageScore': 0,
-      };
+      return {'quizzesTaken': 0, 'subjects': 0, 'averageScore': 0};
     }
   }
 
@@ -137,4 +147,3 @@ class ProfileRepository {
     }
   }
 }
-

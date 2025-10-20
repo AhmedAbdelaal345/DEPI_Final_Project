@@ -49,7 +49,7 @@ class QuizListScreen extends StatelessWidget {
                     );
                   },
                   child: QuizCard(
-                    title: quiz["title"]!,
+                    title: subject,
                     subtitle: "Completed on ${quiz["date"]}",
                     score: score,
                   ),

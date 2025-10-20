@@ -1,5 +1,6 @@
 // features/profile/data/repositories/firebase_setup_helper.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 
 class FirebaseSetupHelper {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -12,19 +13,22 @@ class FirebaseSetupHelper {
     String? phone,
   }) async {
     try {
-      await _firestore.collection('Student').doc(userId).set({
-        'fullName': fullName,
-        'email': email,
-        'phone': phone,
-        'profileImageUrl': null,
-        'isPro': false,
-        'proSubscriptionDate': null,
-        'proExpiryDate': null,
-        'quizzesTaken': 0,
-        'subjects': 0,
-        'averageScore': 0,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      await _firestore
+          .collection(AppConstants.studentCollection)
+          .doc(userId)
+          .set({
+            'fullName': fullName,
+            'email': email,
+            'phone': phone,
+            'profileImageUrl': null,
+            'isPro': false,
+            'proSubscriptionDate': null,
+            'proExpiryDate': null,
+            'quizzesTaken': 0,
+            'subjects': 0,
+            'averageScore': 0,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
       print('✅ User profile created successfully');
     } catch (e) {
       print('❌ Error creating user profile: $e');
@@ -35,7 +39,11 @@ class FirebaseSetupHelper {
   /// Check if user profile exists
   static Future<bool> userProfileExists(String userId) async {
     try {
-      final doc = await _firestore.collection('Student').doc(userId).get();
+      final doc =
+          await _firestore
+              .collection(AppConstants.studentCollection)
+              .doc(userId)
+              .get();
       return doc.exists;
     } catch (e) {
       print('Error checking user profile: $e');
@@ -46,7 +54,11 @@ class FirebaseSetupHelper {
   /// Migrate existing user to new profile structure
   static Future<void> migrateUserProfile(String userId) async {
     try {
-      final doc = await _firestore.collection('Student').doc(userId).get();
+      final doc =
+          await _firestore
+              .collection(AppConstants.studentCollection)
+              .doc(userId)
+              .get();
 
       if (doc.exists) {
         final data = doc.data()!;
@@ -92,4 +104,3 @@ class FirebaseSetupHelper {
     }
   }
 }
-

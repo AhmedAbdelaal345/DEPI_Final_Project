@@ -1,5 +1,6 @@
 // features/profile/presentation/screens/profile_screen_with_firebase.dart
 import 'package:depi_final_project/core/constants/appbar.dart';
+import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +43,7 @@ class _ProfileScreenContent extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFF000920),
-      appBar: CustomAppBar( Title:l10n.profile ,),
+      appBar: CustomAppBar(Title: l10n.profile),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           if (state is ProfileError) {
@@ -71,9 +72,7 @@ class _ProfileScreenContent extends StatelessWidget {
         builder: (context, state) {
           if (state is ProfileLoading) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF5AC7C7),
-              ),
+              child: CircularProgressIndicator(color: Color(0xFF5AC7C7)),
             );
           }
 
@@ -82,11 +81,7 @@ class _ProfileScreenContent extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 64,
-                  ),
+                  const Icon(Icons.error_outline, color: Colors.red, size: 64),
                   const SizedBox(height: 16),
                   Text(
                     state.message,
@@ -127,7 +122,8 @@ class _ProfileScreenContent extends StatelessWidget {
                     ProfileHeader(
                       userName: profile.fullName,
                       userEmail: profile.email,
-                      profileImageUrl: profile.profileImageUrl ??
+                      profileImageUrl:
+                          profile.profileImageUrl ??
                           "assets/images/brain_logo.png",
                       isPro: profile.isProActive,
                     ),
@@ -140,10 +136,11 @@ class _ProfileScreenContent extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                value: context.read<ProfileCubit>(),
-                                child: const ProFeaturesScreen(),
-                              ),
+                              builder:
+                                  (_) => BlocProvider.value(
+                                    value: context.read<ProfileCubit>(),
+                                    child: const ProFeaturesScreen(),
+                                  ),
                             ),
                           );
                         },
@@ -152,13 +149,14 @@ class _ProfileScreenContent extends StatelessWidget {
                     ],
 
                     // Pro Status Info (if Pro)
-                    if (profile.isProActive && profile.proExpiryDate != null) ...[
+                    if (profile.isProActive &&
+                        profile.proExpiryDate != null) ...[
                       _buildProStatusCard(profile.proExpiryDate!),
                       const SizedBox(height: 24),
                     ],
 
                     // Statistics Cards
-                    _buildStatisticsSection(profile),
+                    _buildStatisticsSection(context),
                   ],
                 ),
               ),
@@ -167,9 +165,7 @@ class _ProfileScreenContent extends StatelessWidget {
 
           // Default loading state
           return const Center(
-            child: CircularProgressIndicator(
-              color: Color(0xFF5AC7C7),
-            ),
+            child: CircularProgressIndicator(color: Color(0xFF5AC7C7)),
           );
         },
       ),
@@ -220,10 +216,7 @@ class _ProfileScreenContent extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   "$daysLeft days remaining",
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
                 ),
               ],
             ),
@@ -233,28 +226,46 @@ class _ProfileScreenContent extends StatelessWidget {
     );
   }
 
-  Widget _buildStatisticsSection(profile) {
+  Widget _buildStatisticsSection(BuildContext context) {
+    List<int> allScores = [];
+    for (var list in context.read<HistoryCubit>().groupedQuizzes.values) {
+      for (var quiz in list) {
+        if (quiz.score != null && quiz.total != null) {
+          allScores.add(((quiz.score / quiz.total) * 100).round());
+        }
+      }
+    }
+    int averageScore =
+        allScores.isEmpty
+            ? 0
+            : (allScores.reduce((a, b) => a + b) / allScores.length).round();
+
     return Column(
       children: [
         StatCard(
           icon: IconParkOutline.list,
           label: "All Quizzes taken",
-          value: "${profile.quizzesTaken}",
+          value: context.read<HistoryCubit>().allQuizzes.length.toString(),
         ),
         const SizedBox(height: 16),
         StatCard(
           icon: Tabler.books,
           label: "Subjects",
-          value: "${profile.subjects}",
+          value:
+              context
+                  .read<HistoryCubit>()
+                  .groupedQuizzes
+                  .keys
+                  .length
+                  .toString(),
         ),
         const SizedBox(height: 16),
         StatCard(
           icon: Tabler.star,
           label: "Average Score",
-          value: "${profile.averageScore}%",
+          value: "${averageScore}%",
         ),
       ],
     );
   }
 }
-

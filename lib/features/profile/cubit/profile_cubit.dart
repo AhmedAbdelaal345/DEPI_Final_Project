@@ -36,19 +36,16 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileLoading());
     _profileSubscription?.cancel();
 
-    _profileSubscription = _repository.streamUserProfile(userId).listen(
-      (profile) {
-        if (profile != null) {
-          _currentProfile = profile;
-          emit(ProfileLoaded(profile));
-        } else {
-          emit(ProfileError('User profile not found'));
-        }
-      },
-      onError: (error) {
-        emit(ProfileError('Failed to stream profile: $error'));
-      },
-    );
+    _profileSubscription = _repository.streamUserProfile(userId).listen((
+      profile,
+    ) {
+      if (profile != null) {
+        _currentProfile = profile;
+        emit(ProfileLoaded(profile));
+      } else {
+        emit(ProfileError('User profile not found'));
+      }
+    });
   }
 
   // Update user profile
@@ -120,4 +117,3 @@ class ProfileCubit extends Cubit<ProfileState> {
     return super.close();
   }
 }
-

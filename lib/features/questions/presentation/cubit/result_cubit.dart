@@ -18,8 +18,8 @@ Future<void> saveStudentQuizResult({
    
 
     for (var answer in questionsWithAnswers) {
-  final userAnswer = answer['selectedAnswer'] ?? answer['userAnswer'];
-  final correctAnswer = answer['correctAnswer'];
+  final userAnswer = answer['studentAnswer'] ;
+  final correctAnswer = answer['answer'];
 
   if (userAnswer != null && correctAnswer != null && userAnswer == correctAnswer) {
     correctAnswers++;
@@ -40,7 +40,7 @@ Future<void> saveStudentQuizResult({
     if (existing.exists) {
   print('🔄 Updating existing quiz result for quiz: $quizId');
     }
-final double accuracy = total == 0 ? 0.0 : correctAnswers / total;
+final double accuracy = (correctAnswers / total)*100;
 
     // Prepare data to save
     final Map<String, dynamic> quizResultData = {

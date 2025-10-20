@@ -8,6 +8,7 @@ class HistoryCubit extends Cubit<HistoryState> {
   HistoryCubit() : super(InitialState());
 
   List<QuizHistoryModel> allQuizzes = [];
+  Map<String, List<QuizHistoryModel>> groupedQuizzes = {};
 
   Future<void> getQuizzesForStudent(String uidForStudent) async {
     emit(LoadingState());
@@ -15,11 +16,12 @@ class HistoryCubit extends Cubit<HistoryState> {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       // 🔹 نجيب كل الكويزات من Firestore
-      QuerySnapshot<Map<String, dynamic>> quizzesSnapshot = await firestore
-          .collection(AppConstants.studentCollection)
-          .doc(uidForStudent)
-          .collection(AppConstants.quizzessmall)
-          .get();
+      QuerySnapshot<Map<String, dynamic>> quizzesSnapshot =
+          await firestore
+              .collection(AppConstants.studentCollection)
+              .doc(uidForStudent)
+              .collection(AppConstants.quizzessmall)
+              .get();
 
       // 🔹 العدد الفعلي من Firestore
       int totalQuizzes = quizzesSnapshot.docs.length;
@@ -33,6 +35,7 @@ class HistoryCubit extends Cubit<HistoryState> {
       // ✅ امسح اللي قبل كده عشان ميتراكمش
       allQuizzes.clear();
 
+      groupedQuizzes.clear();
       // 🔹 حوّل كل كويز إلى موديل
       for (var doc in quizzesSnapshot.docs) {
         try {
@@ -49,7 +52,6 @@ class HistoryCubit extends Cubit<HistoryState> {
       }
 
       // 🔹 نجمعهم حسب المادة
-      Map<String, List<QuizHistoryModel>> groupedQuizzes = {};
       for (var quiz in allQuizzes) {
         String subject = await _getSubjectFromQuizId(quiz.quizId);
         groupedQuizzes.putIfAbsent(subject, () => []).add(quiz);
@@ -67,10 +69,11 @@ class HistoryCubit extends Cubit<HistoryState> {
   // 🔹 Helper: نجيب المادة من كويز
   Future<String> _getSubjectFromQuizId(String quizId) async {
     try {
-      final quizDoc = await FirebaseFirestore.instance
-          .collection(AppConstants.quizzesCollection)
-          .doc(quizId)
-          .get();
+      final quizDoc =
+          await FirebaseFirestore.instance
+              .collection(AppConstants.quizzesCollection)
+              .doc(quizId)
+              .get();
 
       if (quizDoc.exists) {
         final data = quizDoc.data();

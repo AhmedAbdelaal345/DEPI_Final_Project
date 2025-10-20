@@ -11,7 +11,6 @@ import '../widgets/quiz_card.dart';
 import 'quiz_list_screen.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
-
 class QuizHistoryScreen extends StatefulWidget {
   const QuizHistoryScreen({super.key});
 
@@ -23,9 +22,9 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HistoryCubit>(context).getQuizzesForStudent(
-      FirebaseAuth.instance.currentUser!.uid,
-    );
+    BlocProvider.of<HistoryCubit>(
+      context,
+    ).getQuizzesForStudent(FirebaseAuth.instance.currentUser!.uid);
   }
 
   @override
@@ -33,7 +32,7 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: CustomAppBar(Title: l10n.quizHistory,),
+      appBar: CustomAppBar(Title: l10n.quizHistory),
       body: BlocBuilder<HistoryCubit, HistoryState>(
         builder: (context, state) {
           if (state is LoadingState) {
@@ -41,7 +40,7 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
               child: CircularProgressIndicator(color: AppColors.teal),
             );
           }
-          
+
           if (state is EmptyState) {
             return Center(
               child: Column(
@@ -66,7 +65,7 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
               ),
             );
           }
-          
+
           if (state is ErrorState) {
             return Center(
               child: Column(
@@ -89,8 +88,8 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
                       final userId = FirebaseAuth.instance.currentUser?.uid;
                       if (userId != null) {
                         context.read<HistoryCubit>().getQuizzesForStudent(
-                              userId,
-                            );
+                          userId,
+                        );
                       }
                     },
                   ),
@@ -98,60 +97,62 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
               ),
             );
           }
-          
+
           if (state is LoadedState) {
             final groupQuizzes = state.groupedQuizzes;
             return Padding(
               padding: const EdgeInsets.all(16),
               child: ListView(
-                children: groupQuizzes.entries.map((entry) {
-                  String subjectName = entry.key;
-                  List<QuizHistoryModel> quizzes = entry.value;
+                children:
+                    groupQuizzes.entries.map((entry) {
+                      String subjectName = entry.key;
+                      List<QuizHistoryModel> quizzes = entry.value;
 
-                  // Calculate average
-                  double avg = quizzes.isEmpty
-                      ? 0.0
-                      : quizzes
-                              .map((q) => q.accuracy)
-                              .reduce((a, b) => a + b) /
-                          quizzes.length;
+                      // Calculate average
+                      double avg =
+                          quizzes.isEmpty
+                              ? 0.0
+                              : quizzes
+                                      .map((q) => q.accuracy)
+                                      .reduce((a, b) => a + b) /
+                                  quizzes.length;
 
-                  // Convert to format expected by QuizListScreen
-                  List<Map<String, String>> quizzesForList =
-                      quizzes.map((q) {
-                    return {
-                      "title": q.quizId,
-                      "date": q.formattedDate,
-                      "score": q.accuracyPercentage,
-                      
-                    };
-                  }).toList();
+                      // Convert to format expected by QuizListScreen
+                      List<Map<String, String>> quizzesForList =
+                          quizzes.map((q) {
+                            return {
+                              "title": q.quizId,
+                              "date": q.formattedDate,
+                              "score": q.accuracyPercentage,
+                            };
+                          }).toList();
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => QuizListScreen(
-                            subject: subjectName,
-                            quizzes: quizzesForList,
-                            score:"${(avg * 100).toStringAsFixed(0)}%",
-                          ),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (_) => QuizListScreen(
+                                    subject: subjectName,
+                                    quizzes: quizzesForList,
+                                    score: "${(avg*100).toStringAsFixed(0)}%",
+                                  ),
+                            ),
+                          );
+                        },
+                        child: QuizCard(
+                          title: subjectName,
+                          subtitle: "${quizzes.length} quizzes",
+                          score: "${(avg*100).toStringAsFixed(0)}%",
+                          showAverage: true,
                         ),
                       );
-                    },
-                    child: QuizCard(
-                      title: subjectName,
-                      subtitle: "${quizzes.length} quizzes",
-                      score: "${(avg * 100).toStringAsFixed(0)}%",
-                      showAverage: true,
-                    ),
-                  );
-                }).toList(),
+                    }).toList(),
               ),
             );
           }
-          
+
           return const SizedBox();
         },
       ),
