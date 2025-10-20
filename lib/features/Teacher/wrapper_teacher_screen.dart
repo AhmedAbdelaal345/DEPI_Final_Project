@@ -1,5 +1,6 @@
 import 'package:depi_final_project/features/Teacher/screens/home_teacher.dart';
 import 'package:depi_final_project/features/Teacher/screens/myquizzes.dart';
+import 'package:depi_final_project/features/Teacher/screens/teacher_profile.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class _WrapperPageState extends State<WrapperTeacherPage> {
 
   List<Widget> get _screens => [
     Hometeacher(),
-     ProfileScreenWithFirebase(),
+    TeacherProfileScreen(),
     Myquizzes(),
     SettingScreen(),
   ];

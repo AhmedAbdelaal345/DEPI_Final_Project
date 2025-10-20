@@ -34,188 +34,190 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
       appBar: AppBar(),
       body: SafeArea(
         top: true,
-        child: Column(
-          children: [
-            SizedBox(height: screenHeight * .02),
-            container(
-              context,
-              screenHeight * .00008,
-              screenWidth * .00009,
-              widget.title,
-              widget.createdAt,
-            ),
-            Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.53,
-                child: PageView.builder(
-                  controller: pageController,
-                  itemCount: widget.questions.length,
-                  onPageChanged: (index) {
-                    setState(() {
-                      currentPage = index;
-                    });
-                  },
-                  itemBuilder: (context, index) {
-                    final question = widget.questions[index];
-                    return containerQuestion(
-                      context,
-                      index,
-                      widget.questions[index]["question"]?.toString() ??
-                          "No Question",
-                      List<String>.from(
-                        widget.questions[index]["option"] ?? [],
-                      ),
-                      widget.questions[index]["answer"]?.toString() ?? "",
-                    );
-                  },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: screenHeight * .02),
+              container(
+                context,
+                screenHeight * .00008,
+                screenWidth * .00009,
+                widget.title,
+                widget.createdAt,
+              ),
+              Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.53,
+                  child: PageView.builder(
+                    controller: pageController,
+                    itemCount: widget.questions.length,
+                    onPageChanged: (index) {
+                      setState(() {
+                        currentPage = index;
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      final question = widget.questions[index];
+                      return containerQuestion(
+                        context,
+                        index,
+                        widget.questions[index]["question"]?.toString() ??
+                            "No Question",
+                        List<String>.from(
+                          widget.questions[index]["option"] ?? [],
+                        ),
+                        widget.questions[index]["answer"]?.toString() ?? "",
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: ListTile(
-                    title: const Text(
-                      "Duration (Min)",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    subtitle: TextFormField(
-                      readOnly: true,
-                      keyboardType: TextInputType.number,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: widget.duration,
-                        hintStyle: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xff000920),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: Color(0x1877F21C),
-                            width: 2,
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      title: const Text(
+                        "Duration (Min)",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                      subtitle: TextFormField(
+                        readOnly: true,
+                        keyboardType: TextInputType.number,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: widget.duration,
+                          hintStyle: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xff000920),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(
+                              color: Color(0x1877F21C),
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(
+                              color: Color(0xff1ABC9C),
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 12,
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: ListTile(
+                      title: const Text(
+                        "Quiz Code",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                      subtitle: Container(
+                        height: 60,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 26,
+                          vertical: 18,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff455A64),
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: Color(0xff1ABC9C),
-                            width: 2,
+                        ),
+                        child: Text(
+                          widget.quizzesId,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 12,
-                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: ListTile(
-                    title: const Text(
-                      "Quiz Code",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    subtitle: Container(
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 26,
-                        vertical: 18,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff455A64),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Text(
-                        widget.quizzesId,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                        ),
+                ],
+              ),
+              SizedBox(height: screenHeight * .04),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      fixedSize: Size(screenWidth * 0.4, screenHeight * 0.06),
+                      backgroundColor:
+                          currentPage == 0
+                              ? Color(0xff8DA2ABA8)
+                              : const Color(0xff4FB3B7),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: screenHeight * .04),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  style: TextButton.styleFrom(
-                    fixedSize: Size(screenWidth * 0.4, screenHeight * 0.06),
-                    backgroundColor:
-                        currentPage == 0
-                            ? Color(0xff8DA2ABA8)
-                            : const Color(0xff4FB3B7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                    onPressed:
+                        currentPage > 0
+                            ? () {
+                              pageController.previousPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                              setState(() {
+                                currentPage--;
+                              });
+                            }
+                            : null,
+                    child: Text(
+                      "Prev",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: screenWidth * 0.06,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  onPressed:
-                      currentPage > 0
-                          ? () {
-                            pageController.previousPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                            setState(() {
-                              currentPage--;
-                            });
-                          }
-                          : null,
-                  child: Text(
-                    "Prev",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: screenWidth * 0.06,
-                      fontWeight: FontWeight.bold,
+                  SizedBox(width: screenWidth * .035),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      fixedSize: Size(screenWidth * 0.4, screenHeight * 0.06),
+                      backgroundColor:
+                          currentPage == widget.questions.length - 1
+                              ? Color(0xff8DA2ABA8)
+                              : const Color(0xff4FB3B7),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    onPressed:
+                        currentPage < widget.questions.length - 1
+                            ? () {
+                              pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                              setState(() {
+                                currentPage++;
+                              });
+                            }
+                            : null,
+                    child: Text(
+                      "Next",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: screenWidth * 0.06,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: screenWidth * .035),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    fixedSize: Size(screenWidth * 0.4, screenHeight * 0.06),
-                    backgroundColor:
-                        currentPage == widget.questions.length - 1
-                            ? Color(0xff8DA2ABA8)
-                            : const Color(0xff4FB3B7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  onPressed:
-                      currentPage < widget.questions.length - 1
-                          ? () {
-                            pageController.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                            setState(() {
-                              currentPage++;
-                            });
-                          }
-                          : null,
-                  child: Text(
-                    "Next",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: screenWidth * 0.06,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
