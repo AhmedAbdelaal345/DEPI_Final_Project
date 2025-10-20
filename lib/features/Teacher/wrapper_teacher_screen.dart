@@ -47,11 +47,11 @@ class _WrapperPageState extends State<WrapperTeacherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1C2B),
+      // backgroundColor: const Color(0xFF1A1C2B),
       body: SafeArea(child: _screens[_currentIndex]),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
-        backgroundColor: const Color(0xFF1A1C2B),
+        backgroundColor:  Colors.transparent,
         color: const Color(0xff4FB3B7),
         buttonBackgroundColor: const Color(0xFF5AC7C7),
         height: 65,
