@@ -44,7 +44,6 @@ class SocialLoginButtons extends StatelessWidget {
                   isTeacher: isTeacher,
                 );
                 
-                // Navigate based on user type
                 if (context.mounted) {
                   Navigator.pushReplacement(
                     context,
