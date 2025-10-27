@@ -113,8 +113,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
       final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) return;
 
-      final quizId =
-          widget.quizData[AppConstants.title] ;
+      final quizId = widget.quizData[AppConstants.id];
 
       // Show loading dialog
       if (!mounted) return;
@@ -128,12 +127,12 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
       );
 
       // Delete the quiz result from Firebase
-     await FirebaseFirestore.instance
-        .collection(AppConstants.studentCollection)  // Changed from 'Student'
-        .doc(userId)
-        .collection(AppConstants.quizzessmall)  // ✅ Changed from 'quizzes'
-        .doc(quizId)
-        .delete();
+      await FirebaseFirestore.instance
+          .collection(AppConstants.studentCollection)
+          .doc(userId)
+          .collection(AppConstants.quizzessmall)
+          .doc(quizId)
+          .delete();
 
       // Close loading dialog
       if (!mounted) return;

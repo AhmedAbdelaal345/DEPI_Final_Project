@@ -18,8 +18,6 @@ class BeforeQuizScreen extends StatelessWidget {
 
   Future<DocumentSnapshot<Map<String, dynamic>>> _getQuizData() {
     return FirebaseFirestore.instance
-        .collection(AppConstants.teacherCollection)
-        .doc(teacherId)
         .collection(AppConstants.quizzesCollection)
         .doc(quizId)
         .get();
@@ -111,7 +109,7 @@ class BeforeQuizScreen extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         QuizPage.id,
-                        arguments: [quizId, teacherId],
+                        arguments: [quizId, teacherId, timeLimit],
                         // 👈 كده نمرر الـ quizId لصفحة الكويز
                       );
                     },

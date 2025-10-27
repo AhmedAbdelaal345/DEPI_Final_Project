@@ -1,4 +1,3 @@
-import 'package:depi_final_project/features/Teacher/screens/homeTeacher.dart';
 import 'package:depi_final_project/features/Teacher/screens/home_teacher.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/register_details_cubit.dart';

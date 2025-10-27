@@ -10,12 +10,13 @@ class Createnewquiz extends StatefulWidget {
   final String subject;
   final String quizId;
   final String uid;
-
+  final String teacherName;
   const Createnewquiz({
     required this.quizId,
     required this.subject,
     required this.teacherId,
     required this.uid,
+    required this.teacherName,
     super.key,
   });
 
@@ -37,9 +38,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth  = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final cubit        = context.read<CreateQuizCubit>();
+    final cubit = context.read<CreateQuizCubit>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (cubit.state.questions.isEmpty) {
@@ -73,17 +74,15 @@ class _CreatenewquizState extends State<Createnewquiz> {
                   horizontal: screenWidth * 0.05,
                   vertical: screenHeight * 0.01,
                 ),
-                child: containerField(
-                  context,
-                  quizTitle,
-                  "Enter Quiz title",
-                ),
+                child: containerField(context, quizTitle, "Enter Quiz title"),
               ),
               Expanded(
                 child: BlocBuilder<CreateQuizCubit, CreateQuizState>(
                   builder: (context, state) {
                     return SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.05,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -106,7 +105,10 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                 child: ListTile(
                                   title: const Text(
                                     "Duration (Min)",
-                                    style: TextStyle(fontSize: 20, color: Colors.white),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   subtitle: TextFormField(
                                     controller: durationController,
@@ -139,10 +141,11 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                           width: 2,
                                         ),
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 12,
-                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 12,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -152,11 +155,17 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                 child: ListTile(
                                   title: const Text(
                                     "Quiz Code",
-                                    style: TextStyle(fontSize: 20, color: Colors.white),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   subtitle: Container(
                                     height: 60,
-                                    padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 18),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 26,
+                                      vertical: 18,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: const Color(0xff455A64),
                                       borderRadius: BorderRadius.circular(15),
@@ -181,7 +190,10 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => QuizCreateSuccessful(quizId: widget.quizId),
+                                    builder:
+                                        (_) => QuizCreateSuccessful(
+                                          quizId: widget.quizId,
+                                        ),
                                   ),
                                 );
                                 durationController.clear();
@@ -204,31 +216,36 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
-                                onPressed: state is CreateQuizLoading
-                                    ? null
-                                    : () {
-                                        if (key.currentState!.validate()) {
-                                          cubit.savedQuiz(
-                                            widget.quizId,
-                                            durationController.text.trim(),
-                                            cubit.state.questions.length,
-                                            widget.subject,
-                                            widget.teacherId,
-                                            quizTitle.text.trim(),
-                                            widget.uid,
-                                          );
-                                        }
-                                      },
-                                child: state is CreateQuizLoading
-                                    ? const CircularProgressIndicator(color: Color(0xff4FB3B7))
-                                    : Text(
-                                        "Create",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: screenWidth * 0.06,
-                                          fontWeight: FontWeight.bold,
+                                onPressed:
+                                    state is CreateQuizLoading
+                                        ? null
+                                        : () {
+                                          if (key.currentState!.validate()) {
+                                            cubit.savedQuiz(
+                                              widget.quizId,
+                                              durationController.text.trim(),
+                                              cubit.state.questions.length,
+                                              widget.subject,
+                                              widget.teacherId,
+                                              quizTitle.text.trim(),
+                                              widget.uid,
+                                              widget.teacherName,
+                                            );
+                                          }
+                                        },
+                                child:
+                                    state is CreateQuizLoading
+                                        ? const CircularProgressIndicator(
+                                          color: Color(0xff4FB3B7),
+                                        )
+                                        : Text(
+                                          "Create",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: screenWidth * 0.06,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
                               );
                             },
                           ),
@@ -246,8 +263,12 @@ class _CreatenewquizState extends State<Createnewquiz> {
   }
 
   //================ Helper Widgets ==================
-  Widget containerField(BuildContext context, TextEditingController controller, String hint) {
-    final screenWidth  = MediaQuery.of(context).size.width;
+  Widget containerField(
+    BuildContext context,
+    TextEditingController controller,
+    String hint,
+  ) {
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
@@ -292,9 +313,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
     TextEditingController answerController,
     CreateQuizCubit cubit,
   ) {
-    final screenWidth  = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    int selectedIndex  = -1;
+    int selectedIndex = -1;
 
     return StatefulBuilder(
       builder: (context, setState) {
@@ -345,7 +366,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
                 children: List.generate(optionControllers.length, (i) {
                   bool isSelected = i == selectedIndex;
                   return Padding(
-                    padding: EdgeInsets.symmetric(vertical: screenHeight * 0.008),
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenHeight * 0.008,
+                    ),
                     child: Row(
                       children: [
                         GestureDetector(
@@ -371,9 +394,10 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                 height: screenWidth * 0.03,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: isSelected
-                                      ? const Color(0xff4FB3B7)
-                                      : Colors.transparent,
+                                  color:
+                                      isSelected
+                                          ? const Color(0xff4FB3B7)
+                                          : Colors.transparent,
                                 ),
                               ),
                             ),
@@ -395,7 +419,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
                             ),
                             decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xff4FB3B7)),
+                                borderSide: BorderSide(
+                                  color: Color(0xff4FB3B7),
+                                ),
                               ),
                               border: InputBorder.none,
                               hintStyle: TextStyle(color: Colors.white54),
@@ -454,7 +480,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
           listtitle(
             () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 0)),
+              MaterialPageRoute(
+                builder: (_) => const WrapperTeacherPage(index: 0),
+              ),
             ),
             context,
             const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
@@ -463,7 +491,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
           listtitle(
             () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 1)),
+              MaterialPageRoute(
+                builder: (_) => const WrapperTeacherPage(index: 1),
+              ),
             ),
             context,
             const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
@@ -472,7 +502,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
           listtitle(
             () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 2)),
+              MaterialPageRoute(
+                builder: (_) => const WrapperTeacherPage(index: 2),
+              ),
             ),
             context,
             const Icon(Icons.list, color: Color(0xff62DDE1)),
@@ -499,7 +531,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const WrapperTeacherPage(index: 3)),
+                  MaterialPageRoute(
+                    builder: (_) => const WrapperTeacherPage(index: 3),
+                  ),
                 );
               },
             ),
@@ -509,7 +543,12 @@ class _CreatenewquizState extends State<Createnewquiz> {
     );
   }
 
-  Widget listtitle(Function callback, BuildContext context, Icon icon, String txt) {
+  Widget listtitle(
+    Function callback,
+    BuildContext context,
+    Icon icon,
+    String txt,
+  ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 

@@ -38,72 +38,62 @@ class _QuizPageState extends State<QuizPage> {
   String? _teacherId;
   bool _isInitialized = false;
   bool _isSubmitting = false;
-
   @override
   void initState() {
-    _fetchTimeLeft();
     super.initState();
   }
 
- Future<void> _fetchTimeLeft() async {
-  if (_teacherId == null || _currentQuizId == null) return;
+  Future<void> _fetchTimeLeft() async {
+    if (_teacherId == null || _currentQuizId == null) return;
 
-  final doc = await FirebaseFirestore.instance
-      .collection(AppConstants.teacherCollection)
-      .doc(_teacherId)
-      .collection(AppConstants.quizzesCollection)
-      .doc(_currentQuizId)
-      .get();
+    final doc =
+        await FirebaseFirestore.instance
+            .collection(AppConstants.quizzesCollection)
+            .doc(_currentQuizId)
+            .get();
 
-  final data = doc.data();
-  if (data == null) {
-    setState(() => _timeLeft = 60);
-    return;
+    final data = doc.data();
+    int minutes = 1;
+    if (data != null && data[AppConstants.duration] is int) {
+      minutes = data[AppConstants.duration];
+    }
+
+    setState(() {
+      _timeLeft = minutes * 60;
+    });
+
+    _startTimer(_timeLeft!);
   }
 
-  final minutes = data[AppConstants.duration];
-  if (minutes is int) {
-    setState(() => _timeLeft = minutes * 60);
-  } else {
-    setState(() => _timeLeft = 60);
-  }
-}
   int? get timeLeft => _timeLeft;
 
   @override
-void didChangeDependencies() {
-  super.didChangeDependencies();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-  if (_isInitialized) return;
-  _isInitialized = true;
+    if (_isInitialized) return;
+    _isInitialized = true;
 
-  final args = ModalRoute.of(context)?.settings.arguments;
+    final args = ModalRoute.of(context)?.settings.arguments;
 
-  if (args is List && args.length >= 2) {
-    _currentQuizId = args[0] as String?;
-    _teacherId = args[1] as String?;
-  } else if (args is Map) {
-    _currentQuizId = args['quizId'] as String?;
-    _teacherId = args['teacherId'] as String?;
-  } else {
-    _showErrorAndGoBack('Missing quiz or teacher ID');
-    return;
+    if (args is List && args.length >= 3) {
+      _currentQuizId = args[0] as String?;
+      _teacherId = args[1] as String?;
+      final durationMinutes = int.tryParse(args[2].toString());
+      _timeLeft = (durationMinutes ?? 1) * 60; // نحولها لثواني
+      _startTimer(_timeLeft!);
+    } else {
+      _showErrorAndGoBack('Missing quiz or teacher ID');
+      return;
+    }
+
+    _initializeQuiz();
   }
-
-  if (_teacherId == null || _currentQuizId == null) {
-    _showErrorAndGoBack('Invalid quiz data');
-    return;
-  }
-
-  _fetchTimeLeft();
-  _initializeQuiz();
-}
-
 
   void _initializeQuiz() {
     if (_currentQuizId != null && _currentQuizId!.isNotEmpty) {
-      context.read<QuizCubit>().getQuestions(_currentQuizId!, _teacherId!);
-      _startTimer();
+      context.read<QuizCubit>().getQuestions(_currentQuizId!);
     }
   }
 
@@ -121,24 +111,36 @@ void didChangeDependencies() {
 
   void _showErrorAndGoBack(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) Navigator.of(context).pop();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      final messenger = ScaffoldMessenger.maybeOf(context);
+      if (messenger != null) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+
+      Future.delayed(const Duration(seconds: 2), () {
+        if (!mounted) return;
+        if (Navigator.canPop(context)) {
+          Navigator.of(context).pop();
+        }
+      });
     });
   }
 
   /// 🕒 هنا التايمر بيعد تنازلي من الـ duration
-  void _startTimer() {
+  void _startTimer(int duration) {
     _timer?.cancel();
 
     if (_timeLeft == null || _timeLeft! <= 0) {
-      _timeLeft = 120; // default 1 دقيقة
+      _timeLeft = duration; // default 1 دقيقة
     }
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -173,12 +175,14 @@ void didChangeDependencies() {
   }
 
   void _submitQuiz(QuizState state) {
-    if (_isSubmitting) return; // guard against duplicate submits
+    if (_isSubmitting) return;
     _isSubmitting = true;
+
     if (state is! LoadedState || !mounted) {
       _isSubmitting = false;
       return;
     }
+
     _timer?.cancel();
     int correctCount = 0;
     int wrongCount = 0;
@@ -186,6 +190,7 @@ void didChangeDependencies() {
     developer.log("Abdelaal: ${questions.toString()}");
     List<ReviewQuestion> correctAnswers = [];
     List<ReviewQuestion> wrongAnswers = [];
+
     try {
       for (int i = 0; i < questions.length; i++) {
         final question = questions[i];
@@ -193,6 +198,7 @@ void didChangeDependencies() {
           question.correctAnswer,
           question.options,
         );
+
         final reviewQuestion = ReviewQuestion(
           studentAnswer:
               userAnswers.containsKey(i)
@@ -205,8 +211,10 @@ void didChangeDependencies() {
           userAnswerIndex: userAnswers[i] ?? -1,
           explanation: '',
           correctAnswer: '',
-          isCorrect: selectedAnswerIndex == correctAnswerIndex ? true : false,
+          teacherId: _teacherId ?? '',
+          isCorrect: selectedAnswerIndex == correctAnswerIndex,
         );
+
         if (userAnswers.containsKey(i)) {
           if (userAnswers[i] == correctAnswerIndex) {
             correctCount++;
@@ -220,18 +228,17 @@ void didChangeDependencies() {
           wrongAnswers.add(reviewQuestion);
         }
       }
-      double accuracy =
+
+      final accuracy =
           questions.isNotEmpty ? correctCount / questions.length : 0.0;
-      try {
+
+      if (mounted) {
         context.read<ReviewAnswersCubit>().setQuizResults(
           correctAnswers,
           wrongAnswers,
         );
-      } catch (e) {
-        print(e);
       }
 
-      // Build per-question details and save immediately
       final List<Map<String, dynamic>> questionsWithAnswers = [];
       for (int i = 0; i < questions.length; i++) {
         final q = questions[i];
@@ -246,11 +253,13 @@ void didChangeDependencies() {
           'studentAnswer': studentAns,
         });
       }
+
       final status =
           (questions.isNotEmpty && (correctCount / questions.length) >= 0.5)
               ? 'Pass'
               : 'Fail';
-      try {
+
+      if (mounted) {
         context.read<ResultCubit>().saveStudentQuizResult(
           studentId: FirebaseAuth.instance.currentUser!.uid,
           quizId:
@@ -260,9 +269,9 @@ void didChangeDependencies() {
           questions: questions,
           status: status,
         );
-      } catch (_) {}
+      }
 
-      QuizResult result = QuizResult(
+      final result = QuizResult(
         totalQuestions: questions.length,
         correctAnswers: correctCount,
         wrongAnswers: wrongCount,
@@ -273,15 +282,16 @@ void didChangeDependencies() {
         detailedResults: questionsWithAnswers,
         questions: questions,
       );
+
+      if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => ResultPage(quizResult: result)),
         (route) => route.isFirst,
       );
-    } catch (e) {
+    } catch (e, st) {
+      developer.log('Error in _submitQuiz: $e', stackTrace: st);
       _showErrorAndGoBack('Error calculating results');
-    } finally {
-      // keep it true until navigation completes to avoid double-trigger
     }
   }
 
@@ -327,12 +337,7 @@ void didChangeDependencies() {
             );
           } else if (state is LoadedState) {
             if (mounted) {
-              // هنا مش هتحتاج تجيب duration من questions
-              // لو القيمة اتجابت قبل كده من Firestore، خليها زي ما هي
-              if (_timeLeft == null) {
-                _timeLeft = 60; // default لو لأي سبب ما اتجابتش
-              }
-              _startTimer();
+              _startTimer(_timeLeft??60);
             }
           }
         },
@@ -465,8 +470,10 @@ void didChangeDependencies() {
     );
   }
 
+  @override
   void dispose() {
     _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 }

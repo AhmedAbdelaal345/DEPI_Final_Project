@@ -16,6 +16,7 @@ class Hometeacher extends StatefulWidget {
 }
 
 class _HometeacherState extends State<Hometeacher> {
+  String? name;
   @override
   void initState() {
     super.initState();
@@ -54,9 +55,9 @@ class _HometeacherState extends State<Hometeacher> {
                     if (snapshot.hasError) {
                       return const Text("Error loading name");
                     }
-                    final name = snapshot.data ?? "Unknown";
+                    name = snapshot.data ?? "Unknown";
                     return Text(
-                      l10n.welcomeBack(name),
+                      l10n.welcomeBack(name!),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
@@ -86,6 +87,7 @@ class _HometeacherState extends State<Hometeacher> {
                                 subject: subject,
                                 quizId: quizid,
                                 uid: credintial.uid,
+                                teacherName: name ?? "Unknown",
                               ),
                             ),
                       ),

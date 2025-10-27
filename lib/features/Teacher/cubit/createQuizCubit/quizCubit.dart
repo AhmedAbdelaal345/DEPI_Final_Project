@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -165,11 +166,14 @@ class CreateQuizCubit extends Cubit<CreateQuizState> {
     String teacherId,
     String title,
     String uid,
+    String teacherName,
   ) async {
     try {
       CollectionReference quiz = FirebaseFirestore.instance.collection(
-        AppConstants.teacherCollection,        
+        AppConstants.teacherCollection,
       );
+      CollectionReference independentQuiz = FirebaseFirestore.instance
+          .collection(AppConstants.quizzesCollection);
       final newQuestion = List<TextEditingController>.from(state.questions);
       final newOptions = List<List<TextEditingController>>.from(state.options);
       final newAnswer = List<TextEditingController>.from(state.answers);
@@ -200,9 +204,35 @@ class CreateQuizCubit extends Cubit<CreateQuizState> {
             AppConstants.title: title,
             AppConstants.uId: uid,
             AppConstants.quizId: iddoc,
+            AppConstants.teacherName: teacherName,
+          });
+      // here i save the quiz in independent collection for student to access it easily
+      await FirebaseFirestore.instance
+          .collection(AppConstants.quizzesCollection)
+          .doc(iddoc.trim())
+          .set({
+            AppConstants.createdAt: DateTime.now(),
+            AppConstants.duration: duration,
+            AppConstants.quesCount: qeustionCount,
+            AppConstants.subject: subject,
+            AppConstants.name: await getname(uid) ?? "",
+            AppConstants.teacherId: teacherId,
+            AppConstants.title: title,
+            AppConstants.uId: uid,
+            AppConstants.quizId: iddoc,
+            AppConstants.teacherName: teacherName,
           });
       for (int i = 0; i < question.length; i++) {
         await quizRef
+            .collection(AppConstants.questionsCollection)
+            .doc("q${i + 1}")
+            .set({
+              AppConstants.question: question[i][AppConstants.question],
+              AppConstants.options: question[i][AppConstants.options],
+              AppConstants.answer: question[i][AppConstants.answer],
+            });
+        await independentQuiz
+            .doc(iddoc.trim())
             .collection(AppConstants.questionsCollection)
             .doc("q${i + 1}")
             .set({
@@ -481,6 +511,4 @@ class CreateQuizCubit extends Cubit<CreateQuizState> {
       return [];
     }
   }
-
- 
 }

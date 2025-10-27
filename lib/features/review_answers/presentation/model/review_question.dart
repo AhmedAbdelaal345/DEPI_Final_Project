@@ -10,6 +10,7 @@ class ReviewQuestion {
   final String studentAnswer;
   final String explanation;
   final bool isCorrect;
+  final String teacherId;
 
   ReviewQuestion({
     required this.id,
@@ -21,5 +22,6 @@ class ReviewQuestion {
     required this.studentAnswer,
     required this.explanation,
     required this.isCorrect,
+    required this.teacherId,
   });
 }

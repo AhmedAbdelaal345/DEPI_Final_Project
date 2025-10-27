@@ -8,7 +8,8 @@ class LoadingState extends QuizState {}
 
 class LoadedState extends QuizState {
   List<QuestionModel> questions;
-  LoadedState(this.questions);
+
+  LoadedState(this.questions,);
 }
 
 class ErrorState extends QuizState {

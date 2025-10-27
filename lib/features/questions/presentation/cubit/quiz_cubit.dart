@@ -25,7 +25,7 @@ class QuizCubit extends Cubit<QuizState> {
     }
   }
 
-  Future<void> getQuestions(String quizId, String teacherId) async {
+  Future<void> getQuestions(String quizId) async {
     // Check if cubit is already disposed or closed
     if (_disposed || isClosed) {
       return;
@@ -45,8 +45,6 @@ class QuizCubit extends Cubit<QuizState> {
 
     try {
       final quizDoc = await FirebaseFirestore.instance
-          .collection(AppConstants.teacherCollection)
-          .doc(teacherId)
           .collection(AppConstants.quizzesCollection)
           .doc(quizId)
           .get()
@@ -65,8 +63,6 @@ class QuizCubit extends Cubit<QuizState> {
       }
 
       final snapshot = await FirebaseFirestore.instance
-          .collection(AppConstants.teacherCollection)
-          .doc(teacherId)
           .collection(AppConstants.quizzesCollection)
           .doc(quizId)
           .collection(AppConstants.questionsCollection)
@@ -77,6 +73,13 @@ class QuizCubit extends Cubit<QuizState> {
               throw Exception('Request timeout: Unable to load questions');
             },
           );
+      final doc =
+          await FirebaseFirestore.instance
+              .collection(AppConstants.quizzesCollection)
+              .doc(quizId)
+              .get();
+
+      final data = doc.data();
 
       if (snapshot.docs.isEmpty) {
         if (!_disposed && !isClosed) {
@@ -129,6 +132,8 @@ class QuizCubit extends Cubit<QuizState> {
       developer.log(
         'QuizCubit: Successfully loaded ${questions.length} questions',
       );
+
+
       if (!_disposed && !isClosed) {
         emit(LoadedState(questions));
       }
@@ -189,8 +194,6 @@ class QuizCubit extends Cubit<QuizState> {
       developer.log('QuizCubit: Testing Firestore connection...');
 
       final testSnapshot = await FirebaseFirestore.instance
-          .collection(AppConstants.teacherCollection)
-          .doc()
           .collection(AppConstants.quizzesCollection)
           .limit(1)
           .get()

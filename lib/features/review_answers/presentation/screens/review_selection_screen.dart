@@ -122,7 +122,6 @@ class ReviewSelectionScreen extends StatelessWidget {
           isEnabled: hasCorrectAnswers,
         ),
         if (!hasWrongAnswers && !hasCorrectAnswers) ...[
-          // نفس كود الرسالة التحذيرية
         ],
       ],
     );

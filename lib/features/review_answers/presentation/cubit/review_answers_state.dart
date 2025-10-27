@@ -7,20 +7,16 @@ abstract class ReviewAnswersState {
   const ReviewAnswersState();
 }
 
-// الحالة الأولية
 class ReviewAnswersInitial extends ReviewAnswersState {}
 
-// حالة التحميل
 class ReviewAnswersLoading extends ReviewAnswersState {}
 
-// حالة النجاح في جلب البيانات
 class ReviewAnswersLoaded extends ReviewAnswersState {
   final List<ReviewQuestion> questions;
 
   const ReviewAnswersLoaded(this.questions,);
 }
 
-// حالة حدوث خطأ
 class ReviewAnswersError extends ReviewAnswersState {
   final String message;
 

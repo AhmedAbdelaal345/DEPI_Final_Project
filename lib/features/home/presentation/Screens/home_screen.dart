@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final TextEditingController quiz = TextEditingController();
-    final TextEditingController teacherId = TextEditingController();
+    // final TextEditingController teacherId = TextEditingController();
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -49,10 +49,10 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     children: [
-                      InputField(
-                        hint: l10n.enterTeacherCode,
-                        controller: teacherId,
-                      ),
+                      // InputField(
+                      //   hint: l10n.enterTeacherCode,
+                      //   controller: teacherId,
+                      // ),
                       SizedBox(height: sy(context, 16)),
                       InputField(hint: l10n.enterQuizCode, controller: quiz),
                     ],
@@ -73,8 +73,7 @@ class HomeScreen extends StatelessWidget {
                           builder:
                               (_) => BeforeQuizScreen(
                                 quizId: quiz.text,
-                                teacherId:
-                                    teacherId.text, 
+                                
                               ),
                         ),
                       );
