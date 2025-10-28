@@ -5,6 +5,7 @@ import 'package:depi_final_project/features/review_answers/presentation/widgets/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../chat/presentation/screens/chat_screen.dart';
 
 class StudentReviewSelectionScreen extends StatefulWidget {
   final String quizId;
@@ -250,6 +251,16 @@ class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScr
                     ),
                   ),
                 ],
+                SizedBox(height: screenHeight * 0.03),
+                CustomReviewButton(
+                  text: 'Chat with Tutor',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ChatScreen()),
+                    );
+                  },
+                ),
               ],
             ),
           );
