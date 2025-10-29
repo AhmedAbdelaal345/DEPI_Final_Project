@@ -408,6 +408,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logOutDetails => 'If you need To Log out, plesse press here';
 
   @override
+  String get logoutSuccessful => 'Logged out successfully';
+
+  @override
+  String get logoutConfirmation => 'Are you sure you want to log out?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
   String get deleteAccount => 'Delete Account';
 
   @override

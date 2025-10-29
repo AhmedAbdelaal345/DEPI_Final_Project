@@ -29,22 +29,22 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
   int _currentIndex = 0;
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  // لتأجيل التنفيذ لما بعد أول build
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    final reviewCubit = context.read<ReviewAnswersCubit>();
+    // لتأجيل التنفيذ لما بعد أول build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final reviewCubit = context.read<ReviewAnswersCubit>();
 
-    if (widget.showAll == true) {
-      reviewCubit.fetchAllAnswers();
-    } else if (widget.fetchWrongAnswers) {
-      reviewCubit.fetchWrongAnswers();
-    } else {
-      reviewCubit.fetchCorrectAnswers();
-    }
-  });
-}
+      if (widget.showAll == true) {
+        reviewCubit.fetchAllAnswers();
+      } else if (widget.fetchWrongAnswers) {
+        reviewCubit.fetchWrongAnswers();
+      } else {
+        reviewCubit.fetchCorrectAnswers();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,14 +73,14 @@ void initState() {
       endDrawer: AppDrawer1(
         onItemTapped: (index) async {
           final isTeacher =
-              await BlocProvider.of<LoginCubit>(context).isTeacher();
+          await BlocProvider.of<LoginCubit>(context).isTeacher();
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder:
                   (context) =>
-                      WrapperPage(initialIndex: index, isTeacher: isTeacher),
+                  WrapperPage(initialIndex: index, isTeacher: isTeacher),
             ),
-            (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
           );
         },
       ),
@@ -110,7 +110,7 @@ void initState() {
             }
 
             final ReviewQuestion currentQuestion =
-                state.questions[_currentIndex];
+            state.questions[_currentIndex];
 
             return Padding(
               padding: EdgeInsets.fromLTRB(

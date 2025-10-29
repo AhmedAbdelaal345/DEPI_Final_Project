@@ -848,6 +848,30 @@ abstract class AppLocalizations {
   /// **'If you need To Log out, plesse press here'**
   String get logOutDetails;
 
+  /// No description provided for @logoutSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged out successfully'**
+  String get logoutSuccessful;
+
+  /// No description provided for @logoutConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get logoutConfirmation;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
   /// No description provided for @deleteAccount.
   ///
   /// In en, this message translates to:

@@ -1,5 +1,5 @@
 import 'package:depi_final_project/core/constants/appbar.dart';
-import 'package:depi_final_project/features/Onboarding/widgets/last_page_buttons.dart';
+import 'package:depi_final_project/core/services/auth_service.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,12 +87,38 @@ class SettingScreen extends StatelessWidget {
             title: l10n.logOut,
             subtitle: l10n.logOutDetails,
             onTap: () async {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                SelectUserPage.id,
-                (route) => false,
-              );
-              await FirebaseAuth.instance.signOut();
+              // Show confirmation dialog
+              final shouldLogout = await _showLogoutDialog(context);
+              if (shouldLogout == true) {
+                try {
+                  // Use AuthService to clear login state
+                  await AuthService().signOut();
+
+                  // Show success message
+                  Fluttertoast.showToast(
+                    msg: l10n.logoutSuccessful,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                    fontSize: 16,
+                  );
+
+                  // Navigate to login screen
+                  if (context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      (route) => false,
+                    );
+                  }
+                } catch (e) {
+                  Fluttertoast.showToast(
+                    msg: 'Error logging out: $e',
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16,
+                  );
+                }
+              }
             },
           ),
           _buildSettingsTile(
@@ -105,6 +131,45 @@ class SettingScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future<bool?> _showLogoutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF2C2F48),
+          title: Text(
+            l10n.logOut,
+            style: const TextStyle(color: Colors.white),
+          ),
+          content: Text(
+            l10n.logoutConfirmation,
+            style: TextStyle(color: Colors.grey.shade400),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(
+                l10n.cancel,
+                style: const TextStyle(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF5AC7C7),
+              ),
+              child: Text(
+                l10n.confirm,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -227,6 +292,9 @@ Future<void> _deleteUserAccount(BuildContext context) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
+    // Clear login state using AuthService
+    await AuthService().clearLoginState();
+
     // حذف بيانات المستخدم من Firestore (إذا كان موجود)
     // await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
 
@@ -235,9 +303,9 @@ Future<void> _deleteUserAccount(BuildContext context) async {
 
     // الانتقال لشاشة تسجيل الدخول
     if (context.mounted) {
-      Navigator.pushNamedAndRemoveUntil(
+      Navigator.pushAndRemoveUntil(
         context,
-        SelectUserPage.id,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
         (route) => false,
       );
     }
@@ -249,21 +317,11 @@ Future<void> _deleteUserAccount(BuildContext context) async {
     );
   } on FirebaseAuthException catch (e) {
     if (e.code == 'requires-recent-login') {
-      // يتطلب إعادة تسجيل دخول حديث
       Fluttertoast.showToast(
-        msg: 'Please log in again before deleting your account',
+        msg: 'Please login again to delete your account',
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
-      // يمكنك تسجيل خروج المستخدم وإعادته لشاشة تسجيل الدخول
-      await FirebaseAuth.instance.signOut();
-      if (context.mounted) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          LoginScreen.id,
-          (route) => false,
-        );
-      }
     } else {
       Fluttertoast.showToast(
         msg: 'Error deleting account: ${e.message}',

@@ -406,6 +406,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get logOutDetails => 'اضغط هنا لتسجيل الخروج';
 
   @override
+  String get logoutSuccessful => 'تم تسجيل الخروج بنجاح';
+
+  @override
+  String get logoutConfirmation => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get confirm => 'تأكيد';
+
+  @override
   String get deleteAccount => 'حذف الحساب';
 
   @override
