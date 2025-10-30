@@ -8,7 +8,7 @@ import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
-
+static const String id = '/profile-screen';
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }

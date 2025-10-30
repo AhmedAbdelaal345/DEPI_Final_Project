@@ -7,6 +7,10 @@ import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.
 import 'package:depi_final_project/features/auth/presentation/cubit/register_details_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/login_screen.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/update_page.dart';
+import 'package:depi_final_project/features/chat/cubit/chat_cubit.dart';
+import 'package:depi_final_project/features/chat/data/repositories/chat_repository.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
@@ -64,7 +68,6 @@ void main() async {
     );
   };
 
-
   runApp(const MyApp());
 }
 
@@ -76,15 +79,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   late FirebaseAnalytics analytics;
   late FirebaseAnalyticsObserver observer;
-   @override
+  @override
   void initState() {
     super.initState();
     analytics = FirebaseAnalytics.instance;
     observer = FirebaseAnalyticsObserver(analytics: analytics);
   }
+
   Future<bool> remoteConfig() async {
     try {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -108,8 +111,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -118,13 +119,16 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create: (context) => RegisterDetailsCubit()),
         BlocProvider<QuizCubit>(create: (context) => QuizCubit()),
-        BlocProvider<AuthCubit>(create: (context) => AuthCubit()..userHaveLogin()),
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit()..userHaveLogin(),
+        ),
         BlocProvider<ReviewAnswersCubit>(
           create: (context) => ReviewAnswersCubit(),
         ),
         BlocProvider<CreateQuizCubit>(create: (context) => CreateQuizCubit()),
         BlocProvider(create: (context) => ResultCubit()),
         BlocProvider(create: (context) => HistoryCubit()),
+        BlocProvider(create: (context) => ChatCubit(ChatRepository())),
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {
@@ -186,6 +190,8 @@ class _MyAppState extends State<MyApp> {
 
             routes: {
               WrapperPage.id: (context) => WrapperPage(),
+              ProfileScreen.id: (context) => ProfileScreen(),
+              SettingScreen.id: (context) => SettingScreen(),
               SelectUserPage.id: (context) => SelectUserPage(),
               QuizPage.id: (context) => QuizPage(),
               ResultPage.id: (context) => ResultPage(),
