@@ -68,7 +68,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   // Subscribe to Pro
   Future<void> subscribeToPro(String userId) async {
     try {
-      final success = await _repository.subscribeToPro(userId);
+      final fullName = _currentProfile?.fullName ?? 'Unknown';
+      final success = await _repository.subscribeToPro(userId, fullName);
       if (success) {
         emit(ProSubscriptionSuccess('Successfully subscribed to Pro!'));
         // Reload profile to show Pro status

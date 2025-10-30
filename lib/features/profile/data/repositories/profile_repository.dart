@@ -61,7 +61,7 @@ class ProfileRepository {
   }
 
   // Subscribe to Pro
-  Future<bool> subscribeToPro(String userId) async {
+  Future<bool> subscribeToPro(String userId, String fullName) async {
     try {
       final now = DateTime.now();
       final expiryDate = now.add(
@@ -72,6 +72,7 @@ class ProfileRepository {
         'isPro': true,
         'proSubscriptionDate': now.toIso8601String(),
         'proExpiryDate': expiryDate.toIso8601String(),
+        'fullName': fullName,
       });
 
       return true;

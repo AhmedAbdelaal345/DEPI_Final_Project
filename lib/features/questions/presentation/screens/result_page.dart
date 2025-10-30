@@ -91,7 +91,7 @@ void initState() {
                 l10n.yourPerformanceSummary,
                 style: TextStyle(
                   color: AppColors.white.withOpacity(0.8),
-                  fontSize: 24,
+                  fontSize: 20,
                 ),
               ),
               SizedBox(height: sy(context, 60)),
@@ -136,7 +136,7 @@ void initState() {
                 ],
               ),
 
-              SizedBox(height: sy(context, 60)),
+              SizedBox(height: sy(context, 20)),
 
               // Statistics Row with dynamic values
               Row(
@@ -160,12 +160,12 @@ void initState() {
                 ],
               ),
 
-              SizedBox(height: sy(context, 60)),
+              SizedBox(height: sy(context, 20)),
 
               // Performance message
               _buildPerformanceMessage(context, widget.quizResult!.accuracy),
 
-              SizedBox(height: sy(context, 60)),
+              SizedBox(height: sy(context, 20)),
 
               // Action buttons
               SizedBox(
@@ -249,7 +249,7 @@ void initState() {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
       decoration: BoxDecoration(
         color: messageColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
@@ -259,7 +259,7 @@ void initState() {
         message,
         style: TextStyle(
           color: messageColor,
-          fontSize: 18,
+          fontSize: 15,
           fontWeight: FontWeight.w500,
         ),
       ),

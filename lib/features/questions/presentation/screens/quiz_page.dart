@@ -18,10 +18,12 @@ import 'package:depi_final_project/features/questions/presentation/cubit/result_
 import 'package:firebase_auth/firebase_auth.dart';
 
 class QuizPage extends StatefulWidget {
-  const QuizPage({super.key, this.quizId, this.teacherId});
+  const QuizPage({super.key, this.quizId, this.teacherId, this.name});
+
   static const String id = '/quiz-page';
   final String? quizId;
   final String? teacherId;
+  final String? name;
 
   @override
   State<QuizPage> createState() => _QuizPageState();
@@ -36,8 +38,10 @@ class _QuizPageState extends State<QuizPage> {
   int? _timeLeft; // هنا هنخزن الوقت بالثواني
   String? _currentQuizId;
   String? _teacherId;
+  String? _quizName;
   bool _isInitialized = false;
   bool _isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
@@ -81,6 +85,9 @@ class _QuizPageState extends State<QuizPage> {
       _currentQuizId = args[0] as String?;
       _teacherId = args[1] as String?;
       final durationMinutes = int.tryParse(args[2].toString());
+      if (args.length >= 4) {
+        _quizName = args[3] as String?;
+      }
       _timeLeft = (durationMinutes ?? 1) * 60; // نحولها لثواني
       _startTimer(_timeLeft!);
     } else {
@@ -310,15 +317,19 @@ class _QuizPageState extends State<QuizPage> {
     final double width = MediaQuery.of(context).size.width;
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: ColorApp.backgroundColor,
+      // backgroundColor: ColorApp.backgroundColor,
       appBar: AppBar(
-        title: Text(
-          l10n.quizId(_currentQuizId ?? "Unknown"),
-          style: const TextStyle(fontSize: 14),
+
+        title: Center(
+          child: Text(
+            _quizName ?? l10n.quizId(_currentQuizId ?? "Unknown"),
+            style: const TextStyle(fontSize: 20),
+          ),
         ),
-        backgroundColor: ColorApp.backgroundColor,
-        foregroundColor: ColorApp.whiteColor,
-        automaticallyImplyLeading: true,
+        // backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        // foregroundColor: ColorApp.whiteColor,
+        automaticallyImplyLeading: false,
       ),
       body: BlocConsumer<QuizCubit, QuizState>(
         listener: (context, state) {
@@ -337,7 +348,7 @@ class _QuizPageState extends State<QuizPage> {
             );
           } else if (state is LoadedState) {
             if (mounted) {
-              _startTimer(_timeLeft??60);
+              _startTimer(_timeLeft ?? 60);
             }
           }
         },
@@ -360,7 +371,7 @@ class _QuizPageState extends State<QuizPage> {
                     children: [
                       Text(
                         'Q${currentQuestionIndex + 1}/${state.questions.length}',
-                        style: TextStyle(color: ColorApp.whiteColor),
+                        style: TextStyle(color: ColorApp.whiteColor, fontSize: 18),
                       ),
                       const Spacer(),
                       Container(
