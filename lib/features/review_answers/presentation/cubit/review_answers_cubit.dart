@@ -1,4 +1,6 @@
 // lib/features/review_answers/presentation/cubit/review_answers_cubit.dart
+// import 'dart:developer' show log;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,7 +98,7 @@ class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {
               .get();
 
       // 🔹 Check if no results found
-      if (resultDoc.exists == false) {
+      if (!resultDoc.exists) {
         emit(
           const ReviewAnswersError('No quiz results found for this student.'),
         );
@@ -105,12 +107,15 @@ class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {
 
       // ✅ Safe access
       final resultData = resultDoc.data()!;
+      // for debuge test
+      // print("Result Data: ${resultData.toString()}");
 
       // Parse answers
-      final answersData = resultData[AppConstants.options] ?? [];
-
-      _correctAnswers = [];
-      _wrongAnswers = [];
+      final answersData = resultData[AppConstants.details] ?? [];
+      if (answersData.isEmpty) {
+        emit(const ReviewAnswersError('No answers found in Firestore.'));
+        return;
+      }
 
       for (var answerData in answersData) {
         final question = ReviewQuestion(
@@ -123,7 +128,8 @@ class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {
           userAnswerIndex: answerData['userAnswerIndex'] ?? -1,
           studentAnswer: answerData['studentAnswer'] ?? '',
           explanation: answerData['explanation'] ?? '',
-          isCorrect: answerData['isCorrect'] ?? false,
+          isCorrect:  (answerData['studentAnswer']?.toString().trim() ==
+            answerData['answer']?.toString().trim()),
         );
 
         if (question.isCorrect) {

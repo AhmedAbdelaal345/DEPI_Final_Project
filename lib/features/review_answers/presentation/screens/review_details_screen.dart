@@ -29,28 +29,28 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
   int _currentIndex = 0;
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  // لتأجيل التنفيذ لما بعد أول build
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    final reviewCubit = context.read<ReviewAnswersCubit>();
+    // لتأجيل التنفيذ لما بعد أول build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final reviewCubit = context.read<ReviewAnswersCubit>();
 
-    if (widget.showAll == true) {
-      reviewCubit.fetchAllAnswers();
-    } else if (widget.fetchWrongAnswers) {
-      reviewCubit.fetchWrongAnswers();
-    } else {
-      reviewCubit.fetchCorrectAnswers();
-    }
-  });
-}
+      if (widget.showAll == true) {
+        reviewCubit.fetchAllAnswers();
+      } else if (widget.fetchWrongAnswers) {
+        reviewCubit.fetchWrongAnswers();
+      } else {
+        reviewCubit.fetchCorrectAnswers();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -119,35 +119,37 @@ void initState() {
                 screenWidth * 0.065, // right
                 screenHeight * 0.03, // bottom
               ),
-              child: Column(
-                children: [
-                  QuestionContainer(
-                    questionText: currentQuestion.questionText,
-                    id: currentQuestion.id,
-                  ),
-                  SizedBox(height: screenHeight * 0.03),
-                  ...currentQuestion.options.map((option) {
-                    return AnswerOption(
-                      optionText: option,
-                      question: currentQuestion,
-                    );
-                  }).toList(),
-                  SizedBox(height: screenHeight * 0.18),
-                  NavigationButtons(
-                    canGoBack: _currentIndex > 0,
-                    canGoForward: _currentIndex < state.questions.length - 1,
-                    onPrevious: () {
-                      setState(() {
-                        _currentIndex--;
-                      });
-                    },
-                    onNext: () {
-                      setState(() {
-                        _currentIndex++;
-                      });
-                    },
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    QuestionContainer(
+                      questionText: currentQuestion.questionText,
+                      id: currentQuestion.id,
+                    ),
+                    SizedBox(height: screenHeight * 0.03),
+                    ...currentQuestion.options.map((option) {
+                      return AnswerOption(
+                        optionText: option,
+                        question: currentQuestion,
+                      );
+                    }).toList(),
+                    SizedBox(height: screenHeight * 0.18),
+                    NavigationButtons(
+                      canGoBack: _currentIndex > 0,
+                      canGoForward: _currentIndex < state.questions.length - 1,
+                      onPrevious: () {
+                        setState(() {
+                          _currentIndex--;
+                        });
+                      },
+                      onNext: () {
+                        setState(() {
+                          _currentIndex++;
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           }

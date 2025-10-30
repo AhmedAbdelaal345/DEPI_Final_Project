@@ -22,7 +22,7 @@ class QuestionContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(screenWidth * 0.03),
       ),
       child: Text(
-        '${int.parse(id)+1} : $questionText',
+        'Q: $questionText',
         textAlign: TextAlign.center,
         style: GoogleFonts.judson(
           fontSize: screenWidth * 0.05,

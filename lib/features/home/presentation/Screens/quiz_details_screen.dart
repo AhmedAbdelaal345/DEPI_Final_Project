@@ -330,14 +330,14 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
                           onPressed: () {
                             String studentUid =
                                 FirebaseAuth.instance.currentUser!.uid;
+                            // this for debuge
+                            // print(widget.quizData[AppConstants.id]);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder:
                                     (context) => StudentReviewSelectionScreen(
-                                      quizId:
-                                          widget.quizData[AppConstants.title] ??
-                                          widget.quizData["title"]!,
+                                      quizId: widget.quizData[AppConstants.id]!,
                                       studentId: studentUid,
                                       quizTitle: widget.subject,
                                     ),
