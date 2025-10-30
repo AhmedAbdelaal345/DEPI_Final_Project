@@ -31,7 +31,6 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
   Map<String, dynamic>? teacherDetails;
   bool isLoading = true;
   String? errorMessage;
-
   @override
   void initState() {
     super.initState();
@@ -332,6 +331,8 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
                                 FirebaseAuth.instance.currentUser!.uid;
                             // this for debuge
                             // print(widget.quizData[AppConstants.id]);
+                            final String teacherId =
+                                widget.quizData[AppConstants.teacherId] ?? "";
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -340,6 +341,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
                                       quizId: widget.quizData[AppConstants.id]!,
                                       studentId: studentUid,
                                       quizTitle: widget.subject,
+                                      teacherId: teacherId,
                                     ),
                               ),
                             );

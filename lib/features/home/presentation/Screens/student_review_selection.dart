@@ -1,3 +1,4 @@
+import 'package:depi_final_project/features/chat/presentation/screens/chat_screen.dart';
 import 'package:depi_final_project/features/review_answers/presentation/cubit/review_answers_cubit.dart';
 import 'package:depi_final_project/features/review_answers/presentation/cubit/review_answers_state.dart';
 import 'package:depi_final_project/features/review_answers/presentation/screens/review_details_screen.dart';
@@ -5,24 +6,29 @@ import 'package:depi_final_project/features/review_answers/presentation/widgets/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconify_flutter/icons/academicons.dart';
 
 class StudentReviewSelectionScreen extends StatefulWidget {
   final String quizId;
   final String studentId;
   final String quizTitle;
+  final String teacherId;
 
   const StudentReviewSelectionScreen({
     super.key,
     required this.quizId,
     required this.studentId,
     required this.quizTitle,
+    required this.teacherId,
   });
 
   @override
-  State<StudentReviewSelectionScreen> createState() => _StudentReviewSelectionScreenState();
+  State<StudentReviewSelectionScreen> createState() =>
+      _StudentReviewSelectionScreenState();
 }
 
-class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScreen> {
+class _StudentReviewSelectionScreenState
+    extends State<StudentReviewSelectionScreen> {
   @override
   void initState() {
     super.initState();
@@ -65,9 +71,7 @@ class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScr
         builder: (context, state) {
           if (state is ReviewAnswersLoading) {
             return Center(
-              child: CircularProgressIndicator(
-                color: const Color(0xFF4FB3B7),
-              ),
+              child: CircularProgressIndicator(color: const Color(0xFF4FB3B7)),
             );
           }
 
@@ -109,9 +113,7 @@ class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScr
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                      ),
+                      border: Border.all(color: Colors.white.withOpacity(0.2)),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -149,20 +151,23 @@ class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScr
 
                 // Wrong Answers Button
                 CustomReviewButton(
-                  text: hasWrongAnswers
-                      ? 'Review Wrong Answers (${cubit.wrongCount})'
-                      : 'Wrong Answers (0)',
-                  onPressed: hasWrongAnswers
-                      ? () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ReviewDetailsScreen(
-                                fetchWrongAnswers: true,
+                  text:
+                      hasWrongAnswers
+                          ? 'Review Wrong Answers (${cubit.wrongCount})'
+                          : 'Wrong Answers (0)',
+                  onPressed:
+                      hasWrongAnswers
+                          ? () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const ReviewDetailsScreen(
+                                      fetchWrongAnswers: true,
+                                    ),
                               ),
-                            ),
-                          );
-                        }
-                      : null,
+                            );
+                          }
+                          : null,
                   isEnabled: hasWrongAnswers,
                 ),
 
@@ -170,20 +175,23 @@ class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScr
 
                 // Correct Answers Button
                 CustomReviewButton(
-                  text: hasCorrectAnswers
-                      ? 'Review Correct Answers (${cubit.correctCount})'
-                      : 'Correct Answers (0)',
-                  onPressed: hasCorrectAnswers
-                      ? () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ReviewDetailsScreen(
-                                fetchWrongAnswers: false,
+                  text:
+                      hasCorrectAnswers
+                          ? 'Review Correct Answers (${cubit.correctCount})'
+                          : 'Correct Answers (0)',
+                  onPressed:
+                      hasCorrectAnswers
+                          ? () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const ReviewDetailsScreen(
+                                      fetchWrongAnswers: false,
+                                    ),
                               ),
-                            ),
-                          );
-                        }
-                      : null,
+                            );
+                          }
+                          : null,
                   isEnabled: hasCorrectAnswers,
                 ),
 
@@ -191,24 +199,47 @@ class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScr
 
                 // All Answers Button
                 CustomReviewButton(
-                  text: hasAnswers
-                      ? 'Review All Answers (${cubit.totalCount})'
-                      : 'All Answers (0)',
-                  onPressed: hasAnswers
-                      ? () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ReviewDetailsScreen(
-                                fetchWrongAnswers: false,
-                                showAll: true,
+                  text:
+                      hasAnswers
+                          ? 'Review All Answers (${cubit.totalCount})'
+                          : 'All Answers (0)',
+                  onPressed:
+                      hasAnswers
+                          ? () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const ReviewDetailsScreen(
+                                      fetchWrongAnswers: false,
+                                      showAll: true,
+                                    ),
                               ),
-                            ),
-                          );
-                        }
-                      : null,
+                            );
+                          }
+                          : null,
                   isEnabled: hasAnswers,
                 ),
+                SizedBox(height: screenHeight * 0.03),
 
+                CustomReviewButton(
+                  text: "Chat With Teacher",
+                  onPressed:
+                      hasAnswers
+                          ? () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => ChatScreen(
+                                      quizId: widget.quizId,
+                                      studentId: widget.studentId,
+                                      teacherId: widget.teacherId,
+                                    ),
+                              ),
+                            );
+                          }
+                          : null,
+                  isEnabled: hasAnswers,
+                ),
                 // No data message
                 if (!hasAnswers) ...[
                   SizedBox(height: screenHeight * 0.05),
@@ -217,9 +248,7 @@ class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScr
                     decoration: BoxDecoration(
                       color: Colors.orange.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.orange.withOpacity(0.3),
-                      ),
+                      border: Border.all(color: Colors.orange.withOpacity(0.3)),
                     ),
                     child: Column(
                       children: [
@@ -278,10 +307,7 @@ class _StudentReviewSelectionScreenState extends State<StudentReviewSelectionScr
         ),
         Text(
           label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 14,
-          ),
+          style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14),
         ),
       ],
     );

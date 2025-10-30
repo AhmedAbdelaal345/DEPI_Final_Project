@@ -11,7 +11,7 @@ import 'package:depi_final_project/features/home/cubit/locale_cubit.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
-
+static const String id='/setting-screen';
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);

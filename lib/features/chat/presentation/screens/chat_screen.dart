@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,15 +45,16 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _fetchTeacherName() async {
     try {
-      final teacherDoc = await FirebaseFirestore.instance
-          .collection('teacher')
-          .doc(widget.teacherId)
-          .get();
+      final teacherDoc =
+          await FirebaseFirestore.instance
+              .collection(AppConstants.teacherCollection)
+              .doc(widget.teacherId)
+              .get();
 
       if (teacherDoc.exists) {
         final data = teacherDoc.data();
         setState(() {
-          teacherName = data?['name'] ?? 'Teacher';
+          teacherName = data?['fullName'] ?? 'Teacher';
           isLoadingTeacherName = false;
         });
       } else {
@@ -83,13 +85,13 @@ class _ChatScreenState extends State<ChatScreen> {
     if (text.isEmpty) return;
 
     context.read<ChatCubit>().sendMessage(
-          chatRoomId: chatRoomId,
-          text: text,
-          senderId: currentUserId,
-          studentId: widget.studentId,
-          teacherId: widget.teacherId,
-          quizId: widget.quizId,
-        );
+      chatRoomId: chatRoomId,
+      text: text,
+      senderId: currentUserId,
+      studentId: widget.studentId,
+      teacherId: widget.teacherId,
+      quizId: widget.quizId,
+    );
 
     _messageController.clear();
     _scrollToBottom();
@@ -119,12 +121,13 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
       appBar: AppBar(
-        title: isLoadingTeacherName
-            ? const Text('Loading...')
-            : Text(
-                'Chat with $teacherName',
-                style: const TextStyle(color: Colors.white),
-              ),
+        title:
+            isLoadingTeacherName
+                ? const Text('Loading...')
+                : Text(
+                  'Chat with $teacherName',
+                  style: const TextStyle(color: Colors.white),
+                ),
         backgroundColor: const Color(0xFF000920),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
@@ -135,7 +138,9 @@ class _ChatScreenState extends State<ChatScreen> {
             child: BlocConsumer<ChatCubit, ChatState>(
               listener: (context, state) {
                 if (state is ChatMessageSent) {
-                  _scrollToBottom();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _scrollToBottom();
+                  });
                 }
                 if (state is ChatError) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -149,9 +154,7 @@ class _ChatScreenState extends State<ChatScreen> {
               builder: (context, state) {
                 if (state is ChatLoading) {
                   return const Center(
-                    child: CircularProgressIndicator(
-                      color: Color(0xFF5AC7C7),
-                    ),
+                    child: CircularProgressIndicator(color: Color(0xFF5AC7C7)),
                   );
                 }
 
@@ -217,10 +220,7 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Text(
               message.text,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 15),
             ),
             const SizedBox(height: 4),
             Text(
@@ -241,9 +241,7 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: const BoxDecoration(
         color: Color(0xFF000920),
-        border: Border(
-          top: BorderSide(color: Color(0xFF2A2D3E), width: 1),
-        ),
+        border: Border(top: BorderSide(color: Color(0xFF2A2D3E), width: 1)),
       ),
       child: SafeArea(
         child: Row(
@@ -288,7 +286,9 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  String _formatTimestamp(Timestamp timestamp) {
+ String _formatTimestamp(dynamic timestamp) {
+  if (timestamp == null) return '';
+  if (timestamp is Timestamp) {
     final dateTime = timestamp.toDate();
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -300,4 +300,7 @@ class _ChatScreenState extends State<ChatScreen> {
       return DateFormat('MMM dd, HH:mm').format(dateTime);
     }
   }
+  return ''; // fallback لو مش Timestamp
+}
+
 }

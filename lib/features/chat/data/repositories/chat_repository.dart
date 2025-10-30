@@ -17,7 +17,7 @@ class ChatRepository {
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
-          .map((doc) => MessageModel.fromFirestore(doc.data()))
+          .map((doc) => MessageModel.fromDocument(doc))
           .toList();
     });
   }

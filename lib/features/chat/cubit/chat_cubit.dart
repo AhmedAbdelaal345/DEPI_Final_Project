@@ -14,14 +14,16 @@ class ChatCubit extends Cubit<ChatState> {
     emit(ChatLoading());
 
     _messageSubscription?.cancel();
-    _messageSubscription = _chatRepository.getMessages(chatRoomId).listen(
-      (messages) {
-        emit(ChatLoaded(messages));
-      },
-      onError: (error) {
-        emit(ChatError('Failed to load messages: ${error.toString()}'));
-      },
-    );
+    _messageSubscription = _chatRepository
+        .getMessages(chatRoomId)
+        .listen(
+          (messages) {
+            emit(ChatLoaded(messages));
+          },
+          onError: (error) {
+            emit(ChatError('Failed to load messages: ${error.toString()}'));
+          },
+        );
   }
 
   // Send a message
@@ -44,7 +46,6 @@ class ChatCubit extends Cubit<ChatState> {
         teacherId: teacherId,
         quizId: quizId,
       );
-      emit(ChatMessageSent());
     } catch (e) {
       emit(ChatError('Failed to send message: ${e.toString()}'));
     }
@@ -78,4 +79,3 @@ class ChatCubit extends Cubit<ChatState> {
     return super.close();
   }
 }
-
