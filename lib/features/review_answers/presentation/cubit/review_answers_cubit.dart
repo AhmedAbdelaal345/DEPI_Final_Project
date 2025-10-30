@@ -16,9 +16,9 @@ class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {
 
   // Method to set quiz results
   void setQuizResults(
-    List<ReviewQuestion> correctAnswers,
-    List<ReviewQuestion> wrongAnswers,
-  ) {
+      List<ReviewQuestion> correctAnswers,
+      List<ReviewQuestion> wrongAnswers,
+      ) {
     _correctAnswers = correctAnswers;
     _wrongAnswers = wrongAnswers;
   }
@@ -90,12 +90,12 @@ class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {
       emit(ReviewAnswersLoading());
 
       final resultDoc =
-          await FirebaseFirestore.instance
-              .collection(AppConstants.studentCollection)
-              .doc(studentId)
-              .collection(AppConstants.quizzessmall)
-              .doc(quizId)
-              .get();
+      await FirebaseFirestore.instance
+          .collection(AppConstants.studentCollection)
+          .doc(studentId)
+          .collection(AppConstants.quizzessmall)
+          .doc(quizId)
+          .get();
 
       // 🔹 Check if no results found
       if (!resultDoc.exists) {

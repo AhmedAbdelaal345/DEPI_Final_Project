@@ -135,6 +135,10 @@
   "featureWillGetSoon": "سيتم توفير الخاصية قريباً",
   "logOut": "تسجيل الخروج",
   "logOutDetails": "اضغط هنا لتسجيل الخروج",
+  "logoutSuccessful": "تم تسجيل الخروج بنجاح",
+  "logoutConfirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "cancel": "إلغاء",
+  "confirm": "تأكيد",
   "deleteAccount": "حذف الحساب",
   "deleteAccountDetails": "حذف حسابك"
 }

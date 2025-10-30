@@ -14,7 +14,6 @@ import '../../cubit/profile_cubit.dart';
 import '../../cubit/profile_state.dart';
 import '../../data/repositories/profile_repository.dart';
 import 'pro_features_screen.dart';
-// import '../../../../core/widgets/custom_app_bar.dart';
 
 class ProfileScreenWithFirebase extends StatelessWidget {
   const ProfileScreenWithFirebase({super.key});

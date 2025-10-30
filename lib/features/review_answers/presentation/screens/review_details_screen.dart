@@ -73,14 +73,14 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
       endDrawer: AppDrawer1(
         onItemTapped: (index) async {
           final isTeacher =
-              await BlocProvider.of<LoginCubit>(context).isTeacher();
+          await BlocProvider.of<LoginCubit>(context).isTeacher();
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder:
                   (context) =>
-                      WrapperPage(initialIndex: index, isTeacher: isTeacher),
+                  WrapperPage(initialIndex: index, isTeacher: isTeacher),
             ),
-            (Route<dynamic> route) => false,
+                (Route<dynamic> route) => false,
           );
         },
       ),
@@ -110,7 +110,7 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
             }
 
             final ReviewQuestion currentQuestion =
-                state.questions[_currentIndex];
+            state.questions[_currentIndex];
 
             return Padding(
               padding: EdgeInsets.fromLTRB(

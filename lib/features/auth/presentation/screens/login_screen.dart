@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
+import 'package:depi_final_project/core/services/auth_service.dart';
 import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
 import 'package:depi_final_project/features/auth/presentation/screens/forgotPasswordPage.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
@@ -27,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _authService = AuthService();
 
   @override
   void dispose() {
@@ -45,6 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (studentDoc.exists) {
         print('User is a Student');
+        // Save login state
+        await _authService.saveLoginState(userId: uid, userType: 'student');
         // Navigate to student home page
         Navigator.pushReplacement(
           context,
@@ -58,7 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (teacherDoc.exists) {
         print('User is a Teacher');
-        Navigator.push(
+        // Save login state
+        await _authService.saveLoginState(userId: uid, userType: 'teacher');
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const WrapperTeacherPage()),
         );
