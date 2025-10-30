@@ -88,7 +88,8 @@ class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {
   }) async {
     try {
       emit(ReviewAnswersLoading());
-
+ _correctAnswers.clear();
+    _wrongAnswers.clear();
       final resultDoc =
       await FirebaseFirestore.instance
           .collection(AppConstants.studentCollection)
@@ -117,10 +118,12 @@ class ReviewAnswersCubit extends Cubit<ReviewAnswersState> {
         return;
       }
 
-      for (var answerData in answersData) {
+for (var i = 0; i < answersData.length; i++) {
+    final answerData = answersData[i];
+
         final question = ReviewQuestion(
           teacherId: answerData['teacherId'] ?? '',
-          id: answerData['id'] ?? '',
+          id:  i.toString() ,
           questionText: answerData['question'] ?? '',
           options: List<String>.from(answerData['options'] ?? []),
           correctAnswerIndex: answerData['correctAnswerIndex'] ?? 0,
