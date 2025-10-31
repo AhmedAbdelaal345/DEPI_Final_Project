@@ -322,97 +322,99 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
             borderRadius: BorderRadius.circular(screenWidth * 0.03),
             border: Border.all(color: const Color(0xff4FB3B7), width: 2),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Question ${index + 1}",
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Question ${index + 1}",
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.04,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: screenHeight * 0.01),
-              containerField(context, "Q${index + 1}: $questionText"),
-              SizedBox(height: screenHeight * 0.015),
-              Text(
-                "Enter options and select correct answer",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: screenWidth * 0.035,
+                  ],
                 ),
-              ),
-              SizedBox(height: screenHeight * 0.01),
-              Column(
-                children: List.generate(options.length, (i) {
-                  bool isCorrect = options[i] == correctAnswer;
-                  bool isSelected = i == selectedIndex;
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: screenHeight * 0.008,
-                    ),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            width: screenWidth * 0.06,
-                            height: screenWidth * 0.06,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: const Color(0xff4FB3B7),
-                                width: 2,
+                SizedBox(height: screenHeight * 0.01),
+                containerField(context, "Q${index + 1}: $questionText"),
+                SizedBox(height: screenHeight * 0.015),
+                Text(
+                  "Enter options and select correct answer",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: screenWidth * 0.035,
+                  ),
+                ),
+                SizedBox(height: screenHeight * 0.01),
+                Column(
+                  children: List.generate(options.length, (i) {
+                    bool isCorrect = options[i] == correctAnswer;
+                    bool isSelected = i == selectedIndex;
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenHeight * 0.008,
+                      ),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              width: screenWidth * 0.06,
+                              height: screenWidth * 0.06,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color(0xff4FB3B7),
+                                  width: 2,
+                                ),
                               ),
-                            ),
-                            child: Center(
-                              child: Container(
-                                width: screenWidth * 0.03,
-                                height: screenWidth * 0.03,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color:
-                                      isCorrect
-                                          ? const Color(0xff4FB3B7)
-                                          : Colors.transparent,
+                              child: Center(
+                                child: Container(
+                                  width: screenWidth * 0.03,
+                                  height: screenWidth * 0.03,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color:
+                                        isCorrect
+                                            ? const Color(0xff4FB3B7)
+                                            : Colors.transparent,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: screenWidth * 0.03),
-                        Expanded(
-                          child: TextFormField(
-                            readOnly: true,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.035,
-                            ),
-                            decoration: InputDecoration(
-                              hint: Text(" ${options[i]}"),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xff4FB3B7),
-                                ),
+                          SizedBox(width: screenWidth * 0.03),
+                          Expanded(
+                            child: TextFormField(
+                              readOnly: true,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: screenWidth * 0.035,
                               ),
-                              border: InputBorder.none,
-                              hintStyle: const TextStyle(color: Colors.white54),
+                              decoration: InputDecoration(
+                                hint: Text(" ${options[i]}"),
+                                enabledBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xff4FB3B7),
+                                  ),
+                                ),
+                                border: InputBorder.none,
+                                hintStyle: const TextStyle(color: Colors.white54),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ],
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
         );
       },

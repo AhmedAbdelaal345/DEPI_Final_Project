@@ -12,6 +12,7 @@ import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class BeforeQuizScreen extends StatelessWidget {
   BeforeQuizScreen({super.key, this.quizId, this.teacherId});
+
   final String? quizId;
   final String? teacherId;
   static final String id = "/details";
@@ -49,7 +50,7 @@ class BeforeQuizScreen extends StatelessWidget {
             final title = quizData["title"] ?? "Quiz";
             final questions = quizData["question_count"]?.toString() ?? "N/A";
             final timeLimit = quizData["duration"]?.toString() ?? "N/A";
-            final creator = quizData[AppConstants.name] ?? "Unknown";
+            final creator = quizData[AppConstants.teacherId] ?? "Unknown";
 
             return SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: sx(context, 16)),
@@ -106,10 +107,10 @@ class BeforeQuizScreen extends StatelessWidget {
                   // Beautiful Journey Start Button
                   QuizJourneyStartButton(
                     onTap: () {
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                         context,
                         QuizPage.id,
-                        arguments: [quizId, teacherId, timeLimit],
+                        arguments: [quizId, teacherId, timeLimit,title],
                         // 👈 كده نمرر الـ quizId لصفحة الكويز
                       );
                     },
