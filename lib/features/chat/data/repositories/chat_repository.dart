@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import '../models/message_model.dart';
 
 class ChatRepository {
@@ -6,13 +7,13 @@ class ChatRepository {
 
   // Get chat room reference
   DocumentReference _getChatRoomRef(String chatRoomId) {
-    return _firestore.collection('chat_rooms').doc(chatRoomId);
+    return _firestore.collection(AppConstants.chatRoom).doc(chatRoomId);
   }
 
   // Listen to messages in real-time
   Stream<List<MessageModel>> getMessages(String chatRoomId) {
     return _getChatRoomRef(chatRoomId)
-        .collection('messages')
+        .collection(AppConstants.messagesCollection)
         .orderBy('timestamp', descending: false)
         .snapshots()
         .map((snapshot) {
@@ -42,7 +43,7 @@ class ChatRepository {
     };
 
     // Add message to sub-collection
-    await chatRoomRef.collection('messages').add(message);
+    await chatRoomRef.collection(AppConstants.messagesCollection).add(message);
 
     // Update chat room metadata (create if doesn't exist)
     await chatRoomRef.set({

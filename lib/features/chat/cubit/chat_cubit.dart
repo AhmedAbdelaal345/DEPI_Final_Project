@@ -9,7 +9,6 @@ class ChatCubit extends Cubit<ChatState> {
 
   ChatCubit(this._chatRepository) : super(ChatInitial());
 
-  // Fetch messages in real-time
   void fetchMessages(String chatRoomId) {
     emit(ChatLoading());
 
@@ -26,7 +25,6 @@ class ChatCubit extends Cubit<ChatState> {
         );
   }
 
-  // Send a message
   Future<void> sendMessage({
     required String chatRoomId,
     required String text,

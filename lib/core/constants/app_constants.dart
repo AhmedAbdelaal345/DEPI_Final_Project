@@ -32,6 +32,8 @@ abstract class AppConstants {
   static final String name = "name";
   static final String teacherName = "teacherName";
   static final String studentAnswer = "studentAnswer";
+  static final String chatRoom = 'chat_rooms';
+  static final String messagesCollection = 'messages';
 
   // static final RegExp phoneRegExp = RegExp(r'^\d{1,14}$');
   

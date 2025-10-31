@@ -1,5 +1,7 @@
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
+import 'package:depi_final_project/features/chat/presentation/screens/chat_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -114,7 +116,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final width = size.width;
+    final width = size.width; 
     final height = size.height;
 
     return Scaffold(
@@ -381,42 +383,82 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     );
   }
 
-  Widget _buildStudentRow(dynamic student, double width, double height) {
-    return Container(
-      padding: EdgeInsets.all(width * 0.04),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.blue.withValues(alpha: 0.3))),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              student.name,
-              style: TextStyle(color: Colors.white, fontSize: width * 0.035),
+ Widget _buildStudentRow(dynamic student, double width, double height) {
+  return Container(
+    padding: EdgeInsets.all(width * 0.04),
+    decoration: BoxDecoration(
+      border: Border(bottom: BorderSide(color: Colors.blue.withOpacity(0.3))),
+    ),
+    child: Row(
+      children: [
+        // Student Name
+        Expanded(
+          flex: 2,
+          child: Text(
+            student.name,
+            style: TextStyle(color: Colors.white, fontSize: width * 0.035),
+          ),
+        ),
+
+        // Score
+        Expanded(
+          flex: 1,
+          child: Text(
+            '${student.score.toStringAsFixed(1)}%',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontSize: width * 0.035),
+          ),
+        ),
+
+        // Status
+        Expanded(
+          flex: 1,
+          child: Text(
+            student.status,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: student.status == 'Pass' ? Colors.green : Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: width * 0.035,
             ),
           ),
-          Expanded(
-            child: Text(
-              '${student.score.toStringAsFixed(1)}%',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white, fontSize: width * 0.035),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              student.status,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: student.status == 'Pass' ? Colors.green : Colors.red,
-                fontWeight: FontWeight.bold,
-                fontSize: width * 0.035,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+
+        IconButton(
+          icon: const Icon(Icons.chat_bubble_outline, color: Color(0xff4FB3B7)),
+          onPressed: () async {
+            final teacherId = FirebaseAuth.instance.currentUser!.uid;
+
+            final cubit = context.read<CreateQuizCubit>();
+            final quizIds = await cubit.getQuiz(widget.uid, selectedQuiz!);
+
+            if (quizIds.isNotEmpty) {
+              final quizId = quizIds.first;
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatScreen(
+                    quizId: quizId,
+                    studentId: student.name, 
+                    teacherId: teacherId,
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Quiz ID not found for this chat"),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+        ),
+      ],
+    ),
+  );
+}
 
   Widget drawer(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;

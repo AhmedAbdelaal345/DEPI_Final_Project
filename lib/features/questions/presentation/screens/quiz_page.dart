@@ -68,7 +68,6 @@ class _QuizPageState extends State<QuizPage> {
   int? get timeLeft => _timeLeft;
 
   @override
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/chat/presentation/screens/chat_screen.dart';
 import 'package:depi_final_project/features/review_answers/presentation/cubit/review_answers_cubit.dart';
 import 'package:depi_final_project/features/review_answers/presentation/cubit/review_answers_state.dart';
@@ -12,14 +14,12 @@ class StudentReviewSelectionScreen extends StatefulWidget {
   final String quizId;
   final String studentId;
   final String quizTitle;
-  final String teacherId;
 
   const StudentReviewSelectionScreen({
     super.key,
     required this.quizId,
     required this.studentId,
     required this.quizTitle,
-    required this.teacherId,
   });
 
   @override
@@ -225,14 +225,22 @@ class _StudentReviewSelectionScreenState
                   text: "Chat With Teacher",
                   onPressed:
                       hasAnswers
-                          ? () {
+                          ? () async {
+                            final doc =
+                                await FirebaseFirestore.instance
+                                    .collection(AppConstants.quizzesCollection)
+                                    .doc(widget.quizId)
+                                    .get();
+                            final String teacherId =
+                                doc.data()![AppConstants.teacherId];
+                            print(teacherId);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder:
                                     (context) => ChatScreen(
                                       quizId: widget.quizId,
                                       studentId: widget.studentId,
-                                      teacherId: widget.teacherId,
+                                      teacherId: teacherId,
                                     ),
                               ),
                             );

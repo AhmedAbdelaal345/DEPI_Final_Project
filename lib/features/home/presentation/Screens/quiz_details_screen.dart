@@ -341,7 +341,6 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
                                       quizId: widget.quizData[AppConstants.id]!,
                                       studentId: studentUid,
                                       quizTitle: widget.subject,
-                                      teacherId: teacherId,
                                     ),
                               ),
                             );

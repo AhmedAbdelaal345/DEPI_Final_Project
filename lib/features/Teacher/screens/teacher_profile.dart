@@ -91,8 +91,10 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                   SizedBox(height: 60 * heightRatio),
                   CircleAvatar(
                     radius: 60 * widthRatio,
-                    backgroundImage:
-                        const AssetImage('assets/profile_image.jpg'),
+                    backgroundImage: const AssetImage(
+                      'assets/profile_image.jpg',
+                    ),
+                    onBackgroundImageError: (_, __) {},
                   ),
                   SizedBox(height: 10 * heightRatio),
                   Text(
