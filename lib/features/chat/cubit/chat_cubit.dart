@@ -9,35 +9,30 @@ class ChatCubit extends Cubit<ChatState> {
 
   ChatCubit(this._chatRepository) : super(ChatInitial());
 
-  void fetchMessages(String chatRoomId) {
+  void fetchMessages(String quizId) {
     emit(ChatLoading());
-
     _messageSubscription?.cancel();
-    _messageSubscription = _chatRepository
-        .getMessages(chatRoomId)
-        .listen(
-          (messages) {
-            emit(ChatLoaded(messages));
-          },
-          onError: (error) {
-            emit(ChatError('Failed to load messages: ${error.toString()}'));
-          },
-        );
+    _messageSubscription = _chatRepository.getMessages(quizId).listen(
+      (messages) {
+        emit(ChatLoaded(messages));
+      },
+      onError: (error) {
+        emit(ChatError('Failed to load messages: ${error.toString()}'));
+      },
+    );
   }
 
   Future<void> sendMessage({
-    required String chatRoomId,
+    required String quizId,
     required String text,
     required String senderId,
     required String studentId,
     required String teacherId,
-    required String quizId,
   }) async {
     if (text.trim().isEmpty) return;
 
     try {
       await _chatRepository.sendMessage(
-        chatRoomId: chatRoomId,
         text: text.trim(),
         senderId: senderId,
         studentId: studentId,
@@ -51,16 +46,14 @@ class ChatCubit extends Cubit<ChatState> {
 
   // Initialize chat room if it doesn't exist
   Future<void> initializeChatRoom({
-    required String chatRoomId,
     required String studentId,
     required String teacherId,
     required String quizId,
   }) async {
     try {
-      final exists = await _chatRepository.chatRoomExists(chatRoomId);
+      final exists = await _chatRepository.chatRoomExists(quizId);
       if (!exists) {
         await _chatRepository.createChatRoom(
-          chatRoomId: chatRoomId,
           studentId: studentId,
           teacherId: teacherId,
           quizId: quizId,

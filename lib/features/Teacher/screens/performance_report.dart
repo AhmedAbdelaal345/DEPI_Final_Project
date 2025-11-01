@@ -58,27 +58,25 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
           double totalScore = 0;
           int passedStudents = 0;
 
-          final students =
-              studentsData.map((data) {
-                // Use percentage (0-100). Prefer value provided by cubit; fallback to compute from score/total.
-                final double scorePercentage = (
-                  (data['averageScore'] ??
-                      (((data['total'] ?? 0) == 0)
-                          ? 0.0
-                          : ((data['score'] ?? 0) / (data['total'] ?? 1) * 100)))
-                ).toDouble();
-                final status = data['status'] ?? 'Fail';
+          final  students = studentsData.map((data) {
+  final double scorePercentage = (
+    (data['averageScore'] ??
+        (((data['total'] ?? 0) == 0)
+            ? 0.0
+            : ((data['score'] ?? 0) / (data['total'] ?? 1) * 100)))
+  ).toDouble();
+  final status = data['status'] ?? 'Fail';
 
-                totalScore += scorePercentage;
-                if (status == 'Pass') passedStudents++;
+  totalScore += scorePercentage;
+  if (status == 'Pass') passedStudents++;
 
-                return (
-                  name: data['studentName'] ?? 'Unknown',
-                  score: scorePercentage,
-                  status: status,
-                );
-              }).toList();
-
+  return (
+    id: data['studentId'] ?? '', // ⚠️ IMPORTANT: Add student UID
+    name: data['studentName'] ?? 'Unknown',
+    score: scorePercentage,
+    status: status,
+  );
+}).toList();
           if (mounted) {
             setState(() {
               quizStudents = students;
@@ -388,7 +386,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     );
   }
 
- Widget _buildStudentRow(dynamic student, double width, double height) {
+Widget _buildStudentRow(dynamic student, double width, double height) {
   return Container(
     padding: EdgeInsets.all(width * 0.04),
     decoration: BoxDecoration(
@@ -440,12 +438,17 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
             if (quizIds.isNotEmpty) {
               final quizId = quizIds.first;
 
+              // ⚠️ CRITICAL: You need to get the actual studentId (UID) here
+              // This depends on your data structure. You need to modify getStudentsForQuiz
+              // to return the student's UID, not just their name
+              final studentId = student.id; // Add this field to your student data
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ChatScreen(
                     quizId: quizId,
-                    studentId: student.name, 
+                    studentId: studentId, // Use actual UID
                     teacherId: teacherId,
                   ),
                 ),
@@ -464,7 +467,6 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     ),
   );
 }
-
   Widget drawer(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;

@@ -30,8 +30,9 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  late String chatRoomId;
   late String currentUserId;
+    late String chatRoomId;
+
   String teacherName = 'Teacher';
   bool isLoadingTeacherName = true;
 
@@ -39,7 +40,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    chatRoomId = '${widget.studentId}_${widget.teacherId}_${widget.quizId}';
     _fetchTeacherName();
     _initializeChat();
   }
@@ -73,12 +73,11 @@ class _ChatScreenState extends State<ChatScreen> {
   void _initializeChat() {
     final cubit = context.read<ChatCubit>();
     cubit.initializeChatRoom(
-      chatRoomId: chatRoomId,
       studentId: widget.studentId,
       teacherId: widget.teacherId,
       quizId: widget.quizId,
     );
-    cubit.fetchMessages(chatRoomId);
+    cubit.fetchMessages(widget.quizId); // Use quizId instead of chatRoomId
   }
 
   void _sendMessage() {
@@ -86,12 +85,11 @@ class _ChatScreenState extends State<ChatScreen> {
     if (text.isEmpty) return;
 
     context.read<ChatCubit>().sendMessage(
-      chatRoomId: chatRoomId,
+      quizId: widget.quizId, // Use quizId
       text: text,
       senderId: currentUserId,
       studentId: widget.studentId,
       teacherId: widget.teacherId,
-      quizId: widget.quizId,
     );
 
     _messageController.clear();
@@ -304,21 +302,20 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
- String _formatTimestamp(dynamic timestamp) {
-  if (timestamp == null) return '';
-  if (timestamp is Timestamp) {
-    final dateTime = timestamp.toDate();
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
+  String _formatTimestamp(dynamic timestamp) {
+    if (timestamp == null) return '';
+    if (timestamp is Timestamp) {
+      final dateTime = timestamp.toDate();
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
-    if (messageDate == today) {
-      return DateFormat('HH:mm').format(dateTime);
-    } else {
-      return DateFormat('MMM dd, HH:mm').format(dateTime);
+      if (messageDate == today) {
+        return DateFormat('HH:mm').format(dateTime);
+      } else {
+        return DateFormat('MMM dd, HH:mm').format(dateTime);
+      }
     }
+    return ''; // fallback لو مش Timestamp
   }
-  return ''; // fallback لو مش Timestamp
-}
-
 }
