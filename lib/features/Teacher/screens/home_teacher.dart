@@ -9,7 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class Hometeacher extends StatefulWidget {
-  const Hometeacher({super.key});
+  final Function(String)? onTeacherNameLoaded;
+  final String? initialTeacherName;
+
+  const Hometeacher({super.key, this.onTeacherNameLoaded, this.initialTeacherName});
 
   @override
   State<Hometeacher> createState() => _HometeacherState();
@@ -17,19 +20,38 @@ class Hometeacher extends StatefulWidget {
 
 class _HometeacherState extends State<Hometeacher> {
   String? name;
+
   @override
   void initState() {
     super.initState();
-    final credintial = FirebaseAuth.instance.currentUser;
-    if (credintial != null) {
-      context.read<CreateQuizCubit>().getquizzes(credintial.uid);
+    // Use initial name if provided
+    name = widget.initialTeacherName;
+
+    final credential = FirebaseAuth.instance.currentUser;
+    if (credential != null) {
+      context.read<CreateQuizCubit>().getquizzes(credential.uid);
+      // Load the name from Firebase and update
+      _loadTeacherName(credential.uid);
+    }
+  }
+
+  Future<void> _loadTeacherName(String uid) async {
+    final loadedName = await context.read<CreateQuizCubit>().getname(uid);
+    if (mounted) {
+      setState(() {
+        name = loadedName ?? FirebaseAuth.instance.currentUser?.displayName ?? "Teacher";
+      });
+      // Notify the parent widget
+      if (widget.onTeacherNameLoaded != null) {
+        widget.onTeacherNameLoaded!(name!);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final credintial = FirebaseAuth.instance.currentUser;
+    final credential = FirebaseAuth.instance.currentUser;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -44,56 +66,44 @@ class _HometeacherState extends State<Hometeacher> {
               children: [
                 TitleBar(title: l10n.home),
                 SizedBox(height: screenHeight * 0.06),
-                FutureBuilder<String?>(
-                  future: context.read<CreateQuizCubit>().getname(
-                    credintial!.uid,
+                Text(
+                  l10n.welcomeBack(name ?? "Teacher"),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                    fontSize: screenWidth * 0.06,
                   ),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text("Loading...");
-                    }
-                    if (snapshot.hasError) {
-                      return const Text("Error loading name");
-                    }
-                    name = snapshot.data ?? "Unknown";
-                    return Text(
-                      l10n.welcomeBack(name!),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: screenWidth * 0.06,
-                      ),
-                    );
-                  },
                 ),
                 SizedBox(height: screenHeight * 0.06),
                 GestureDetector(
                   onTap: () async {
                     final cubit = context.read<CreateQuizCubit>();
-                    final teacherId =
-                        await FirebaseAuth.instance.currentUser!.uid;
+                    final user = FirebaseAuth.instance.currentUser;
+                    final teacherId = user?.uid ?? '';
 
-                    final subject =
-                        await cubit.getsubject(credintial.uid) ?? "unknow";
-                    final quizid = await cubit.getSixRandomNumbers();
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (_) => BlocProvider.value(
-                              value: cubit,
-                              child: Createnewquiz(
-                                teacherId: teacherId,
-                                subject: subject,
-                                quizId: quizid,
-                                uid: credintial.uid,
-                                teacherName: name ?? "Unknown",
-                              ),
+                    if (credential != null) {
+                      final subject = await cubit.getsubject(credential.uid) ?? "unknow";
+                      final quizid = await cubit.getSixRandomNumbers();
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider.value(
+                            value: cubit,
+                            child: Createnewquiz(
+                              teacherId: teacherId,
+                              subject: subject,
+                              quizId: quizid,
+                              uid: credential.uid,
+                              teacherName: name ?? "Unknown",
                             ),
-                      ),
-                    );
-                    if (result == true && mounted) {
-                      await cubit.getquizzes(credintial.uid);
+                          ),
+                        ),
+                      );
+                      if (result == true && mounted) {
+                        await cubit.getquizzes(credential.uid);
+                        // Refresh the teacher name in case it changed
+                        await _loadTeacherName(credential.uid);
+                      }
                     }
                   },
                   child: container(context, 0.15, 0.9, l10n.createNewQuiz),
@@ -105,19 +115,20 @@ class _HometeacherState extends State<Hometeacher> {
                     GestureDetector(
                       onTap: () async {
                         final cubit = context.read<CreateQuizCubit>();
-                        await cubit.getquizzes(credintial!.uid);
+                        if (credential != null) {
+                          await cubit.getquizzes(credential.uid);
 
-                        if (mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => BlocProvider.value(
-                                    value: cubit,
-                                    child: Recentquizzes(),
-                                  ),
-                            ),
-                          );
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                  value: cubit,
+                                  child: Recentquizzes(),
+                                ),
+                              ),
+                            );
+                          }
                         }
                       },
                       child: container(context, .2, .4, "Recent\n Quizzes"),
@@ -125,22 +136,23 @@ class _HometeacherState extends State<Hometeacher> {
                     GestureDetector(
                       onTap: () async {
                         final cubit = context.read<CreateQuizCubit>();
-                        await cubit.getquizzes(credintial!.uid);
-                        final title = await cubit.gettitle(credintial.uid);
-                        if (mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) => BlocProvider.value(
-                                    value: cubit,
-                                    child: PerformanceReportScreen(
-                                      uid: credintial.uid,
-                                      quizTitles: title,
-                                    ),
+                        if (credential != null) {
+                          await cubit.getquizzes(credential.uid);
+                          final title = await cubit.gettitle(credential.uid);
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                  value: cubit,
+                                  child: PerformanceReportScreen(
+                                    uid: credential.uid,
+                                    quizTitles: title,
                                   ),
-                            ),
-                          );
+                                ),
+                              ),
+                            );
+                          }
                         }
                       },
                       child: container(context, .2, .4, "Performance Report"),
@@ -168,7 +180,7 @@ class _HometeacherState extends State<Hometeacher> {
       height: screenHeight * heightFactor,
       width: screenWidth * widthFactor,
       decoration: BoxDecoration(
-        color: Color(0xff1877F2).withOpacity(0.11),
+        color: Color(0xff1877F2).withValues(alpha: 0.11),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: const Color(0xff4FB3B7), width: 2),
       ),
