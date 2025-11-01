@@ -70,7 +70,7 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
         ],
       ),
       // ADDED THE DRAWER HERE
-      endDrawer: AppDrawer1(
+      endDrawer: AppDrawer(
         onItemTapped: (index) async {
           final isTeacher =
           await BlocProvider.of<LoginCubit>(context).isTeacher();

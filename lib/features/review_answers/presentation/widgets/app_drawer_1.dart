@@ -4,9 +4,9 @@ import '../../../../core/constants/color_app.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
 
-class AppDrawer1 extends StatelessWidget {
+class AppDrawer extends StatelessWidget {
   final Function(int) onItemTapped;
-  const AppDrawer1({super.key, required this.onItemTapped});
+  const AppDrawer({super.key, required this.onItemTapped});
 
   @override
   Widget build(BuildContext context) {

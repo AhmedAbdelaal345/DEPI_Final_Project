@@ -44,17 +44,20 @@ class TitleBar extends StatelessWidget {
             ),
           ),
           SizedBox(width: sx(context, 10)),
-          Text(
-            title,
-            style: GoogleFonts.irishGrover(
-              fontSize: sx(context, 32),
-              fontWeight: FontWeight.w400,
-              color: ColorApp.whiteColor,
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                title,
+                style: GoogleFonts.irishGrover(
+                  fontSize: sx(context, 32),
+                  fontWeight: FontWeight.w400,
+                  color: ColorApp.whiteColor,
+                ),
+              ),
             ),
-
           ),
           SizedBox(width: sx(context, 100)),
-
         ],
       ),
     );

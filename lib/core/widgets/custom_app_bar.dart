@@ -30,12 +30,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: onBackPressed ?? () => Navigator.pop(context),
             )
           : null,
-      title: Text(
-        title,
-        style: GoogleFonts.irishGrover(
-          fontSize: sx(context, 32),
-          fontWeight: FontWeight.w400,
-          color: ColorApp.whiteColor,
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          title,
+          style: GoogleFonts.irishGrover(
+            fontSize: 28,
+            fontWeight: FontWeight.w400,
+            color: ColorApp.whiteColor,
+          ),
         ),
       ),
       centerTitle: true,
@@ -46,4 +49,3 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-

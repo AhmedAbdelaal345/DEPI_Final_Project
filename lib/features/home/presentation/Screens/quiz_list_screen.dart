@@ -3,10 +3,12 @@ import 'package:depi_final_project/features/home/presentation/Screens/home_scree
 import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/quiz_details_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/quiz_card.dart';
 import 'package:depi_final_project/features/review_answers/presentation/widgets/app_drawer_1.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class QuizListScreen extends StatelessWidget {
   final String subject;
@@ -25,15 +27,33 @@ class QuizListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      endDrawer: AppDrawer1(
-        onItemTapped: (index) {
-          Navigator.pop(context); 
+      endDrawer: AppDrawer(
+        onItemTapped:  (index) {
+          Navigator.pop(context);
           if (index == 0) {
-            Navigator.pushReplacementNamed(context, HomeScreen.id);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 0),
+              ),
+                  (Route<dynamic> route) => false,
+            );
           } else if (index == 1) {
-            Navigator.pushNamed(context, ProfileScreen.id);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 1),
+              ),
+                  (Route<dynamic> route) => false,
+            );
           } else if (index == 2) {
-            Navigator.pushNamed(context, SettingScreen.id);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 3),
+              ),
+                  (Route<dynamic> route) => false,
+            );
           }
         },
       ),
@@ -44,7 +64,17 @@ class QuizListScreen extends StatelessWidget {
           icon: const Icon(Icons.chevron_left, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(subject, style: const TextStyle(color: Colors.white)),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            subject,
+            style: GoogleFonts.irishGrover(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
+          ),
+        ),
         centerTitle: true,
       ),
       body: Padding(

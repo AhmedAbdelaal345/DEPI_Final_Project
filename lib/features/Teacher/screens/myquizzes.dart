@@ -4,6 +4,7 @@ import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCu
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Myquizzes extends StatelessWidget {
   @override
@@ -13,14 +14,20 @@ class Myquizzes extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          "My Quizzes",
-          style: TextStyle(
-            fontFamily: 'Judson',
-            fontSize: screenWidth * 0.065,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "My Quizzes",
+            style: GoogleFonts.irishGrover(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
           ),
+        ),
+        backgroundColor: Colors.transparent,
+        leading: const Image(
+          image: AssetImage('assets/images/brain_logo.png'),
         ),
         centerTitle: true,
       ),

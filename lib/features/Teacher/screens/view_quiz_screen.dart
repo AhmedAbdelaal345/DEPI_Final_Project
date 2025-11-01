@@ -1,5 +1,6 @@
 import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ViewQuizScreen extends StatefulWidget {
   final String title;
@@ -31,7 +32,19 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
 
     return Scaffold(
       endDrawer: drawer(context),
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          'View Quiz',
+          style: GoogleFonts.irishGrover(
+            textStyle: TextStyle(
+              fontSize: screenWidth * 0.07,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        backgroundColor: const Color(0xff061438),
+        elevation: 0,
+      ),
       body: SafeArea(
         top: true,
         child: SingleChildScrollView(

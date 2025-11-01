@@ -4,6 +4,7 @@ import 'package:depi_final_project/features/chat/presentation/screens/chat_scree
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PerformanceReportScreen extends StatefulWidget {
   final List<String> quizTitles;
@@ -130,14 +131,18 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          'Performance Report',
-          style: TextStyle(
-            fontFamily: 'Judson',
-            color: Colors.white,
-            fontSize: width * 0.065,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'Performance Report',
+            style: GoogleFonts.irishGrover(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
           ),
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(width * 0.05),

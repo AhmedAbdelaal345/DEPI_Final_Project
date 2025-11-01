@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:depi_final_project/features/Teacher/screens/view_quiz_screen.dart';
 import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
@@ -15,14 +16,20 @@ class Recentquizzes extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       endDrawer:drawer(context) ,
-      appBar: AppBar(title: Text("Recent Quizzes",style: TextStyle(
-            fontFamily: 'Judson',
-            fontSize: screenWidth * 0.065,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
+      appBar: AppBar(
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "Recent Quizzes",
+            style: GoogleFonts.irishGrover(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
           ),
-      
-      )),
+        ),
+        centerTitle: true,
+      ),
       body: BlocBuilder<CreateQuizCubit, CreateQuizState>(
         builder: (context, state) {
           if (state is GetQuiz) {

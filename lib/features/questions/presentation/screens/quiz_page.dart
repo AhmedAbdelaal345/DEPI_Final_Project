@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key, this.quizId, this.teacherId, this.name});
@@ -318,16 +319,19 @@ class _QuizPageState extends State<QuizPage> {
     return Scaffold(
       // backgroundColor: ColorApp.backgroundColor,
       appBar: AppBar(
-
-        title: Center(
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
           child: Text(
             _quizName ?? l10n.quizId(_currentQuizId ?? "Unknown"),
-            style: const TextStyle(fontSize: 20),
+            style: GoogleFonts.irishGrover(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
           ),
         ),
-        // backgroundColor: Colors.transparent,
+        centerTitle: true,
         shadowColor: Colors.transparent,
-        // foregroundColor: ColorApp.whiteColor,
         automaticallyImplyLeading: false,
       ),
       body: BlocConsumer<QuizCubit, QuizState>(

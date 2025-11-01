@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/Quiz/presentation/Screens/before_quiz_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/student_review_selection.dart';
+import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/features/review_answers/presentation/widgets/app_drawer_1.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/icons/icon_park_outline.dart';
 import 'package:iconify_flutter/icons/lucide.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
@@ -164,18 +170,54 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      endDrawer: const AppDrawer(),
+      endDrawer: AppDrawer(
+        onItemTapped: (index) {
+          Navigator.pop(context);
+          if (index == 0) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 0),
+              ),
+                  (Route<dynamic> route) => false,
+            );
+          } else if (index == 1) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 1),
+              ),
+                  (Route<dynamic> route) => false,
+            );
+          } else if (index == 2) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 3),
+              ),
+                  (Route<dynamic> route) => false,
+            );
+          }
+        },
+      ),
       appBar: AppBar(
-        backgroundColor: AppColors.bg,
-        elevation: 0,
+        automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.chevron_left, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          "${widget.quizData["title"]} Quiz",
-          style: const TextStyle(color: Colors.white, fontSize: 20),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "${widget.quizData["title"]} Quiz",
+            style: GoogleFonts.irishGrover(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
+          ),
         ),
+
         centerTitle: true,
       ),
       body:

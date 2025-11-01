@@ -51,9 +51,16 @@ class _StudentReviewSelectionScreenState
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          'Review Your Answers',
-          style: TextStyle(color: Colors.white),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'Review Your Answers',
+            style: GoogleFonts.irishGrover(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
+          ),
         ),
         centerTitle: true,
       ),

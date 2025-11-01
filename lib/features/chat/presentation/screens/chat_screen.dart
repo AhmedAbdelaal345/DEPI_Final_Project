@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../cubit/chat_cubit.dart';
 import '../../cubit/chat_state.dart';
 import '../../data/models/message_model.dart';
@@ -121,16 +122,33 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
       appBar: AppBar(
-        title:
-            isLoadingTeacherName
-                ? const Text('Loading...')
-                : Text(
-                  'Chat with $teacherName',
-                  style: const TextStyle(color: Colors.white),
+        title: isLoadingTeacherName
+            ? FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Loading...',
+                  style: GoogleFonts.irishGrover(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
                 ),
+              )
+            : FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Chat with $teacherName',
+                  style: GoogleFonts.irishGrover(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
         backgroundColor: const Color(0xFF000920),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
+        centerTitle: true,
       ),
       body: Column(
         children: [

@@ -57,7 +57,7 @@ class _WrapperPageState extends State<WrapperPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
-      drawer: AppDrawer1(
+      drawer: AppDrawer(
         onItemTapped: (index) {
 
           _onPageChanged(index); // غير الصفحة

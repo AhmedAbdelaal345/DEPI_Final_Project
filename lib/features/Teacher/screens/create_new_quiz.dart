@@ -4,6 +4,7 @@ import 'package:depi_final_project/features/Teacher/screens/quizcreatesuccesfull
 import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Createnewquiz extends StatefulWidget {
   final String teacherId;
@@ -55,12 +56,15 @@ class _CreatenewquizState extends State<Createnewquiz> {
       appBar: AppBar(
         backgroundColor: const Color(0xff000920),
         centerTitle: true,
-        title: Text(
-          "Create New Quiz",
-          style: TextStyle(
-            fontSize: screenWidth * 0.05,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "Create New Quiz",
+            style: GoogleFonts.irishGrover(
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
