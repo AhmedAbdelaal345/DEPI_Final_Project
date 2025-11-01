@@ -6,33 +6,32 @@ class ChatRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Get chat room reference
-  DocumentReference _getChatRoomRef(String chatRoomId) {
-    return _firestore.collection(AppConstants.chatRoom).doc(chatRoomId);
+  DocumentReference _getChatRoomRef(String quizId) {
+    return _firestore.collection(AppConstants.chatRoom).doc(quizId);
   }
 
   // Listen to messages in real-time
-  Stream<List<MessageModel>> getMessages(String chatRoomId) {
-    return _getChatRoomRef(chatRoomId)
+  Stream<List<MessageModel>> getMessages(String quizId) {
+    return _getChatRoomRef(quizId)
         .collection(AppConstants.messagesCollection)
         .orderBy('timestamp', descending: false)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => MessageModel.fromDocument(doc))
-          .toList();
-    });
+          return snapshot.docs
+              .map((doc) => MessageModel.fromDocument(doc))
+              .toList();
+        });
   }
 
   // Send a new message
   Future<void> sendMessage({
-    required String chatRoomId,
+    required String quizId,
     required String text,
     required String senderId,
     required String studentId,
     required String teacherId,
-    required String quizId,
   }) async {
-    final chatRoomRef = _getChatRoomRef(chatRoomId);
+    final chatRoomRef = _getChatRoomRef(quizId);
     final timestamp = FieldValue.serverTimestamp();
 
     // Create the message
@@ -57,19 +56,18 @@ class ChatRepository {
   }
 
   // Check if chat room exists
-  Future<bool> chatRoomExists(String chatRoomId) async {
-    final doc = await _getChatRoomRef(chatRoomId).get();
+  Future<bool> chatRoomExists(String quizId) async {
+    final doc = await _getChatRoomRef(quizId).get();
     return doc.exists;
   }
 
   // Create initial chat room
   Future<void> createChatRoom({
-    required String chatRoomId,
     required String studentId,
     required String teacherId,
     required String quizId,
   }) async {
-    await _getChatRoomRef(chatRoomId).set({
+    await _getChatRoomRef(quizId).set({
       'studentId': studentId,
       'teacherId': teacherId,
       'quizId': quizId,
@@ -79,4 +77,3 @@ class ChatRepository {
     });
   }
 }
-
