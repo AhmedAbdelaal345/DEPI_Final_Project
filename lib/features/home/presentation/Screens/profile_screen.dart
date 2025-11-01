@@ -1,6 +1,7 @@
 import 'package:depi_final_project/core/constants/appbar.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_state.dart';
+import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,13 +9,16 @@ import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
-static const String id = '/profile-screen';
+
+  static const String id = '/profile-screen';
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   User? user;
+  String? teacherName;
 
   @override
   void initState() {
@@ -28,9 +32,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final user = FirebaseAuth.instance.currentUser;
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
 
 
     const designWidth = 390.0;
@@ -48,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (state is LoadingState) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is EmptyState) {
-            return  SingleChildScrollView(
+            return SingleChildScrollView(
               child: Column(
                 children: [
                   SizedBox(height: 60 * heightRatio),
@@ -60,13 +71,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onBackgroundImageError: (_, __) {},
                   ),
                   SizedBox(height: 10 * heightRatio),
-                  Text(
-                    user?.displayName ?? "User",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22 * widthRatio,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  FutureBuilder<String?>(
+                    future: context.read<CreateQuizCubit>().getname(user!.uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text(
+                          "Loading...",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Text(
+                          user?.displayName ?? "User",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22 * widthRatio,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                      
+                      // Handle the case where we get "Teacher" or null
+                      String displayName;
+                      if (snapshot.data != null && 
+                          snapshot.data!.isNotEmpty && 
+                          snapshot.data != "Teacher") {
+                        displayName = snapshot.data!;
+                      } else if (user?.displayName != null && 
+                                 user!.displayName!.isNotEmpty) {
+                        displayName = user!.displayName!;
+                      } else {
+                        displayName = "User";
+                      }
+                      
+                      return Text(
+                        l10n.welcomeBack(displayName),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22 * widthRatio,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    },
                   ),
                   Text(
                     user?.email ?? "",
@@ -85,7 +136,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _buildStatCard(
                           icon: Icons.list,
                           label: "All Quizzes Taken",
-                          value: "0", // ✅ من Firestore
+                          value: "0",
+                          // ✅ من Firestore
                           widthRatio: widthRatio,
                           heightRatio: heightRatio,
                         ),
@@ -112,7 +164,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             );
-
           } else if (state is ErrorState) {
             return Center(
               child: Text(
@@ -123,7 +174,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           } else if (state is LoadedState) {
             final subjects = state.groupedQuizzes;
             final totalSubjects = subjects.keys.length;
-            final totalQuizzes = state.totalQuizzes; // ✅ العدد الحقيقي من Firestore
+            final totalQuizzes = state
+                .totalQuizzes; // ✅ العدد الحقيقي من Firestore
 
             // حساب متوسط النتيجة (اختياري)
             List<int> allScores = [];
@@ -137,7 +189,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
             int averageScore = allScores.isEmpty
                 ? 0
-                : (allScores.reduce((a, b) => a + b) / allScores.length).round();
+                : (allScores.reduce((a, b) => a + b) / allScores.length)
+                .round();
 
             return SingleChildScrollView(
               child: Column(
@@ -151,13 +204,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onBackgroundImageError: (_, __) {},
                   ),
                   SizedBox(height: 10 * heightRatio),
-                  Text(
-                    user?.displayName ?? "User",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22 * widthRatio,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  FutureBuilder<String?>(
+                    future: context.read<CreateQuizCubit>().getname(user!.uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text(
+                          "Loading...",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Text(
+                          user?.displayName ?? "User",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22 * widthRatio,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                      // Handle the case where we get "Teacher" or null
+                      String displayName;
+                      if (snapshot.data != null && 
+                          snapshot.data!.isNotEmpty && 
+                          snapshot.data != "Teacher") {
+                        displayName = snapshot.data!;
+                      } else if (user?.displayName != null && 
+                                 user!.displayName!.isNotEmpty) {
+                        displayName = user!.displayName!;
+                      } else {
+                        displayName = "User";
+                      }
+                      
+                      return Text(
+                        l10n.welcomeBack(displayName),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22 * widthRatio,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    },
                   ),
                   Text(
                     user?.email ?? "",
@@ -176,7 +268,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _buildStatCard(
                           icon: Icons.list,
                           label: "All Quizzes Taken",
-                          value: totalQuizzes.toString(), // ✅ من Firestore
+                          value: totalQuizzes.toString(),
+                          // ✅ من Firestore
                           widthRatio: widthRatio,
                           heightRatio: heightRatio,
                         ),
@@ -210,6 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
   Widget _buildStatCard({
     required IconData icon,
     required String label,

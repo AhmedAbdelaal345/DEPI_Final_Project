@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class TeacherProfileScreen extends StatefulWidget {
-  const TeacherProfileScreen({super.key});
+  final String? teacherName;
+  
+  const TeacherProfileScreen({super.key, this.teacherName});
 
   @override
   State<TeacherProfileScreen> createState() => _TeacherProfileScreenState();
@@ -98,7 +100,7 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                   ),
                   SizedBox(height: 10 * heightRatio),
                   Text(
-                    user?.displayName ?? "Teacher",
+                    widget.teacherName ?? user?.displayName ?? "Teacher",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22 * widthRatio,
