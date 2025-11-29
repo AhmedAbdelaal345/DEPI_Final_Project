@@ -1,3 +1,4 @@
+// features/questions/presentation/screens/quiz_page.dart
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -382,15 +383,12 @@ class _QuizPageState extends State<QuizPage> {
                           horizontal: 12,
                           vertical: 4,
                         ),
-                        decoration: BoxDecoration(
-                          color:
-                              _timeLeft != null && _timeLeft! <= 10
-                                  ? Colors.red.withValues(alpha: 0.2)
-                                  : ColorApp.primaryButtonColor.withValues(
-                                    alpha: 0.2,
-                                  ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                          decoration: BoxDecoration(
+                            color: _timeLeft != null && _timeLeft! <= 10
+                                ? Colors.red.withOpacity(0.2)
+                                : ColorApp.primaryButtonColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         child: Text(
                           _timeLeft != null ? _formatTime(_timeLeft!) : "00:00",
                           style: TextStyle(
@@ -455,10 +453,10 @@ class _QuizPageState extends State<QuizPage> {
                       child: ElevatedButton(
                         onPressed: () => _submitQuiz(state),
                         style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
+                          backgroundColor: MaterialStatePropertyAll(
                             ColorApp.primaryButtonColor,
                           ),
-                          shape: WidgetStatePropertyAll(
+                          shape: MaterialStatePropertyAll(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -467,7 +465,7 @@ class _QuizPageState extends State<QuizPage> {
                         child: Text(
                           l10n.submitQuiz,
                           style: TextStyle(
-                            color: AppColors.hint,
+                            color: ColorApp.whiteColor,
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
                           ),

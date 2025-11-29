@@ -16,6 +16,8 @@ import 'package:depi_final_project/features/home/presentation/Screens/wrapper_pa
 import 'package:depi_final_project/features/splash/presentation/screens/splash_screen.dart';
 import 'package:depi_final_project/features/auth/presentation/cubit/auth_state.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
+import 'package:depi_final_project/features/home/data/repositories/history_repository.dart';
+import 'package:depi_final_project/core/services/cache_service.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
@@ -130,7 +132,7 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<CreateQuizCubit>(create: (context) => CreateQuizCubit()),
         BlocProvider(create: (context) => ResultCubit()),
-        BlocProvider(create: (context) => HistoryCubit()),
+  BlocProvider(create: (context) => HistoryCubit(HistoryRepository(cacheService: CacheService()))),
         BlocProvider(create: (context) => ChatCubit(ChatRepository())),
       ],
       child: BlocBuilder<LocaleCubit, Locale>(

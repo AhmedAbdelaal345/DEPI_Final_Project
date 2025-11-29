@@ -69,12 +69,12 @@ class _ProfileHeaderState extends State<ProfileHeader>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFFFD700).withValues(alpha: _glowAnimation.value),
+                          color: const Color(0xFFFFD700).withOpacity(_glowAnimation.value),
                           blurRadius: 40,
                           spreadRadius: 15,
                         ),
                         BoxShadow(
-                          color: const Color(0xFFFFA500).withValues(alpha: _glowAnimation.value * 0.5),
+                          color: const Color(0xFFFFA500).withOpacity(_glowAnimation.value * 0.5),
                           blurRadius: 60,
                           spreadRadius: 25,
                         ),
@@ -111,15 +111,15 @@ class _ProfileHeaderState extends State<ProfileHeader>
                   // Outer glow
                   BoxShadow(
                     color: widget.isPro
-                        ? const Color(0xFFFFD700).withValues(alpha: 0.4)
-                        : const Color(0xFF5AC7C7).withValues(alpha: 0.4),
+                        ? const Color(0xFFFFD700).withOpacity(0.4)
+                        : const Color(0xFF5AC7C7).withOpacity(0.4),
                     blurRadius: 20,
                     spreadRadius: 3,
                     offset: const Offset(0, 4),
                   ),
                   // Inner shadow effect
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
+                    color: Colors.black.withOpacity(0.3),
                     blurRadius: 15,
                     spreadRadius: -2,
                     offset: const Offset(0, 8),
@@ -133,8 +133,8 @@ class _ProfileHeaderState extends State<ProfileHeader>
                   gradient: RadialGradient(
                     center: Alignment.topLeft,
                     radius: 1.2,
-                    colors: [
-                      const Color(0xFF2A2D3E).withValues(alpha: 0.8),
+                      colors: [
+                      const Color(0xFF2A2D3E).withOpacity(0.8),
                       const Color(0xFF1A1C2B),
                       const Color(0xFF0D0E17),
                     ],
@@ -143,7 +143,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
                   boxShadow: [
                     // Inner shadow for depth
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.5),
+                      color: Colors.black.withOpacity(0.5),
                       blurRadius: 10,
                       spreadRadius: -5,
                       offset: const Offset(0, 5),
@@ -186,7 +186,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
                         border: Border.all(color: const Color(0xFF000920), width: 2),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFFFD700).withValues(alpha: 0.6),
+                            color: const Color(0xFFFFD700).withOpacity(0.6),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),
@@ -201,7 +201,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
                             size: 16,
                             shadows: [
                               Shadow(
-                                color: Colors.black.withValues(alpha: 0.5),
+                                color: Colors.black.withOpacity(0.5),
                                 blurRadius: 4,
                               ),
                             ],
@@ -240,9 +240,9 @@ class _ProfileHeaderState extends State<ProfileHeader>
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 shadows: widget.isPro
-                    ? [
+                        ? [
                         Shadow(
-                          color: const Color(0xFFFFD700).withValues(alpha: 0.5),
+                          color: const Color(0xFFFFD700).withOpacity(0.5),
                           blurRadius: 10,
                         ),
                       ]

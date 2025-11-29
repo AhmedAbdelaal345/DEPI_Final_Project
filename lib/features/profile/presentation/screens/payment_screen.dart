@@ -268,7 +268,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Text(
           "Secure payment powered by Stripe",
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.6),
+            color: Colors.white.withOpacity(0.6),
             fontSize: 12,
           ),
         ),
@@ -289,7 +289,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF5AC7C7).withValues(alpha: 0.2),
+                color: const Color(0xFF5AC7C7).withOpacity(0.2),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
