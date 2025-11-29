@@ -1,3 +1,4 @@
+// features/auth/presentation/screens/login_screen.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/core/services/auth_service.dart';
@@ -244,6 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         email: _emailController.text,
                                         password: _passwordController.text,
                                       );
+                                  if (!mounted) return;
                                   context.read<LoginCubit>().login(
                                     email: _emailController.text,
                                     password: _passwordController.text,
@@ -253,6 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
 
                                   // Check if user is Student or Teacher
+                                  if (!mounted) return;
                                   await _checkUserTypeAndNavigate(
                                     credential.user?.uid,
                                   );

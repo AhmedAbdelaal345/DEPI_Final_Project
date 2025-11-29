@@ -1,13 +1,27 @@
+// features/auth/presentation/screens/forgot_password_page.dart
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
-class ForgotPasswordPage extends StatelessWidget {
+class ForgotPasswordPage extends StatefulWidget {
   ForgotPasswordPage({super.key});
+
   @override
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+}
+
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formkey = GlobalKey();
     final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -139,7 +153,7 @@ class ForgotPasswordPage extends StatelessWidget {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: _emailController.text.trim(),
       );
-
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.resetLinkSent),
@@ -173,6 +187,7 @@ class ForgotPasswordPage extends StatelessWidget {
         timeInSecForIosWeb: 3,
       );
     } catch (e) {
+      if (!mounted) return;
       Fluttertoast.showToast(
         msg: "An unexpected error occurred",
         backgroundColor: ColorApp.errorColor,

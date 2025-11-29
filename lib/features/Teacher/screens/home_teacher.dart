@@ -1,3 +1,4 @@
+// features/Teacher/screens/home_teacher.dart
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/screens/create_new_quiz.dart';
 import 'package:depi_final_project/features/Teacher/screens/performance_report.dart';
@@ -117,18 +118,16 @@ class _HometeacherState extends State<Hometeacher> {
                         final cubit = context.read<CreateQuizCubit>();
                         if (credential != null) {
                           await cubit.getquizzes(credential.uid);
-
-                          if (mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
-                                  value: cubit,
-                                  child: Recentquizzes(),
-                                ),
+                          if (!mounted) return;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: cubit,
+                                child: Recentquizzes(),
                               ),
-                            );
-                          }
+                            ),
+                          );
                         }
                       },
                       child: container(context, .2, .4, "Recent\n Quizzes"),
@@ -139,20 +138,19 @@ class _HometeacherState extends State<Hometeacher> {
                         if (credential != null) {
                           await cubit.getquizzes(credential.uid);
                           final title = await cubit.gettitle(credential.uid);
-                          if (mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
-                                  value: cubit,
-                                  child: PerformanceReportScreen(
-                                    uid: credential.uid,
-                                    quizTitles: title,
-                                  ),
+                          if (!mounted) return;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider.value(
+                                value: cubit,
+                                child: PerformanceReportScreen(
+                                  uid: credential.uid,
+                                  quizTitles: title,
                                 ),
                               ),
-                            );
-                          }
+                            ),
+                          );
                         }
                       },
                       child: container(context, .2, .4, "Performance Report"),
@@ -180,7 +178,7 @@ class _HometeacherState extends State<Hometeacher> {
       height: screenHeight * heightFactor,
       width: screenWidth * widthFactor,
       decoration: BoxDecoration(
-        color: Color(0xff1877F2).withValues(alpha: 0.11),
+  color: Color(0xff1877F2).withOpacity(0.11),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: const Color(0xff4FB3B7), width: 2),
       ),
