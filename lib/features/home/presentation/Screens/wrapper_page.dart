@@ -4,7 +4,7 @@ import 'package:depi_final_project/features/profile/presentation/screens/profile
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
-import '../../../review_answers/presentation/widgets/app_drawer_1.dart';
+import 'package:depi_final_project/core/widgets/app_drawer.dart';
 import 'quiz_history_screen.dart';
 
 class WrapperPage extends StatefulWidget {
