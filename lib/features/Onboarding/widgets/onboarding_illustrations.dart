@@ -1,4 +1,3 @@
-// features/Onboarding/widgets/onboarding_illustrations.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../models/onboard_page_model.dart';
@@ -41,10 +40,10 @@ class OnboardingIllustrations extends StatelessWidget {
             width: 287,
             height: 317.48,
             // decoration: BoxDecoration(
-            //   color: const Color(0xFF2B8B87).withOpacity(0.10),
+            //   color: const Color(0xFF2B8B87).withValues(alpha: 0.10),
             //   borderRadius: BorderRadius.circular(110),
             //   border: Border.all(
-            //     color: const Color(0xFF2B8B87).withOpacity(0.28),
+            //     color: const Color(0xFF2B8B87).withValues(alpha: 0.28),
             //     width: 2,
             //   ),
             // ),

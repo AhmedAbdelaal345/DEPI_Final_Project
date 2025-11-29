@@ -50,7 +50,7 @@ class PaymentTextField extends StatelessWidget {
           style: const TextStyle(color: Colors.white, fontSize: 16),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
             prefixIcon: Icon(icon, color: const Color(0xFF5AC7C7)),
             counterText: "",
             filled: true,
