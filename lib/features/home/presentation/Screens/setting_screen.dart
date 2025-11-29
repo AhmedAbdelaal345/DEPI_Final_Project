@@ -6,8 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:depi_final_project/features/home/cubit/locale_cubit.dart';
+import 'package:depi_final_project/core/widgets/ui_components.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -39,12 +39,7 @@ static const String id='/setting-screen';
             title: l10n.darkMode,
             subtitle: l10n.toggleTheme,
             onTap: () {
-              Fluttertoast.showToast(
-                msg: l10n.featureWillGetSoon,
-                backgroundColor: AppColors.white,
-                textColor: AppColors.hint,
-                fontSize: 16,
-              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.featureWillGetSoon)));
             },
           ),
           _buildSettingsTile(
@@ -91,19 +86,9 @@ static const String id='/setting-screen';
               final shouldLogout = await _showLogoutDialog(context);
               if (shouldLogout == true) {
                 try {
-                  // Use AuthService to clear login state
                   await AuthService().signOut();
-
-                  // Show success message
-                  Fluttertoast.showToast(
-                    msg: l10n.logoutSuccessful,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                    fontSize: 16,
-                  );
-
-                  // Navigate to login screen
                   if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.logoutSuccessful), backgroundColor: Colors.green));
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -111,12 +96,7 @@ static const String id='/setting-screen';
                     );
                   }
                 } catch (e) {
-                  Fluttertoast.showToast(
-                    msg: 'Error logging out: $e',
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16,
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error logging out: $e'), backgroundColor: Colors.red));
                 }
               }
             },
@@ -136,84 +116,25 @@ static const String id='/setting-screen';
 
   Future<bool?> _showLogoutDialog(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF2C2F48),
-          title: Text(
-            l10n.logOut,
-            style: const TextStyle(color: Colors.white),
-          ),
-          content: Text(
-            l10n.logoutConfirmation,
-            style: TextStyle(color: Colors.grey.shade400),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text(
-                l10n.cancel,
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF5AC7C7),
-              ),
-              child: Text(
-                l10n.confirm,
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        );
-      },
+    return AppDialog.show<bool>(
+      context,
+      title: l10n.logOut,
+      content: Text(l10n.logoutConfirmation, style: TextStyle(color: Colors.grey.shade400)),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey))),
+        ElevatedButton(onPressed: () => Navigator.of(context).pop(true), style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF5AC7C7)), child: Text(l10n.confirm, style: const TextStyle(color: Colors.white)))
+      ],
     );
   }
 
   void _showLanguageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF2C2F48),
-          title: const Text(
-            'Choose Language',
-            style: TextStyle(color: Colors.white),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text(
-                  'English',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  context.read<LocaleCubit>().changeLanguage(
-                    const Locale('en'),
-                  );
-                  Navigator.of(dialogContext).pop();
-                },
-              ),
-              ListTile(
-                title: const Text(
-                  'العربية',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  context.read<LocaleCubit>().changeLanguage(
-                    const Locale('ar'),
-                  );
-                  Navigator.of(dialogContext).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
+    AppDialog.show<void>(
+      context,
+      title: 'Choose Language',
+      content: Column(mainAxisSize: MainAxisSize.min, children: [
+        ListTile(title: const Text('English', style: TextStyle(color: Colors.white)), onTap: () { context.read<LocaleCubit>().changeLanguage(const Locale('en')); Navigator.of(context).pop(); }),
+        ListTile(title: const Text('العربية', style: TextStyle(color: Colors.white)), onTap: () { context.read<LocaleCubit>().changeLanguage(const Locale('ar')); Navigator.of(context).pop(); }),
+      ]),
     );
   }
 
@@ -310,30 +231,14 @@ Future<void> _deleteUserAccount(BuildContext context) async {
       );
     }
 
-    Fluttertoast.showToast(
-      msg: 'Account deleted successfully',
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-    );
+    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Account deleted successfully'), backgroundColor: Colors.green));
   } on FirebaseAuthException catch (e) {
     if (e.code == 'requires-recent-login') {
-      Fluttertoast.showToast(
-        msg: 'Please login again to delete your account',
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please login again to delete your account'), backgroundColor: Colors.red));
     } else {
-      Fluttertoast.showToast(
-        msg: 'Error deleting account: ${e.message}',
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error deleting account: ${e.message}'), backgroundColor: Colors.red));
     }
   } catch (e) {
-    Fluttertoast.showToast(
-      msg: 'Error: $e',
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-    );
+    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
   }
 }

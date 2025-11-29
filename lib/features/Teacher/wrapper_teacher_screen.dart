@@ -90,8 +90,7 @@ class _WrapperPageState extends State<WrapperTeacherPage> {
               return Icon(
                 icon,
                 size: isSelected ? 35 : 28,
-                color:
-                    isSelected ? Colors.white : Colors.white.withValues(alpha: 0.7),
+                color: isSelected ? Colors.white : const Color(0xB3FFFFFF),
               );
             }).toList(),
         onTap: (index) {
