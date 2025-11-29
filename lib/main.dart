@@ -1,3 +1,4 @@
+// main.dart
 import 'dart:developer';
 import 'dart:ui';
 import 'package:depi_final_project/features/Onboarding/widgets/last_page_buttons.dart';
@@ -12,6 +13,8 @@ import 'package:depi_final_project/features/chat/data/repositories/chat_reposito
 import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
+import 'package:depi_final_project/features/splash/presentation/screens/splash_screen.dart';
+import 'package:depi_final_project/features/auth/presentation/cubit/auth_state.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cubit.dart';
@@ -153,9 +156,16 @@ class _MyAppState extends State<MyApp> {
                 if (snapshot.data == true) {
                   return const UpdatePage();
                 }
-                return BlocBuilder<AuthCubit, Widget>(
+                return BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, state) {
-                    return state;
+                    if (state is AuthAuthenticated) {
+                      return const WrapperPage();
+                    }
+                    if (state is AuthUnauthenticated) {
+                      return const SplashScreen();
+                    }
+                    // default fallback while auth initializes
+                    return const Scaffold(body: Center(child: CircularProgressIndicator()));
                   },
                 );
               },

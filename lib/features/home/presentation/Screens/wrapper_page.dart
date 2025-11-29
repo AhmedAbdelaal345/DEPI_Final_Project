@@ -1,3 +1,4 @@
+// features/home/presentation/Screens/wrapper_page.dart
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart' ;
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class WrapperPage extends StatefulWidget {
 class _WrapperPageState extends State<WrapperPage> {
   int _currentIndex = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  final Map<int, Widget> _cache = {};
 
   @override
   void initState() {
@@ -25,12 +27,16 @@ class _WrapperPageState extends State<WrapperPage> {
     _currentIndex = widget.initialIndex;
   }
 
-  List<Widget> get _screens => [
-    const HomeScreen(),
-  const  ProfileScreenWithFirebase(),
-    const QuizHistoryScreen(),
-    SettingScreen(),
+  final List<WidgetBuilder> _builders = [
+    (ctx) => const HomeScreen(),
+    (ctx) => const ProfileScreenWithFirebase(),
+    (ctx) => const QuizHistoryScreen(),
+    (ctx) => const SettingScreen(),
   ];
+
+  Widget _screenForIndex(BuildContext ctx, int index) {
+    return _cache[index] ??= _builders[index](ctx);
+  }
 
   final List<IconData> _icons = const [
     Icons.home,
@@ -39,12 +45,7 @@ class _WrapperPageState extends State<WrapperPage> {
     Icons.settings,
   ];
 
-  final List<String> _titles = const [
-    'Home',
-    'Profile',
-    'Quiz History',
-    'Settings',
-  ];
+  // page titles (unused variable removed to avoid lint)
 
   // دالة لتغيير الصفحة وتحديث الحالة
   void _onPageChanged(int index) {
@@ -69,7 +70,7 @@ class _WrapperPageState extends State<WrapperPage> {
       ),
 
       // Add SafeArea to prevent overflow issues
-      body: SafeArea(child: _screens[_currentIndex]),
+  body: SafeArea(child: _screenForIndex(context, _currentIndex)),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
         backgroundColor: const Color(0xFF000920),

@@ -1,22 +1,35 @@
+// features/auth/presentation/cubit/auth_cubit.dart
+import 'dart:async';
 import 'dart:developer';
 
-import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
-import 'package:depi_final_project/features/splash/presentation/screens/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AuthCubit extends Cubit<Widget> {
-  AuthCubit() : super(Container());
+import 'auth_state.dart';
+
+class AuthCubit extends Cubit<AuthState> {
+  StreamSubscription<User?>? _sub;
+
+  AuthCubit() : super(AuthInitial());
+
   void userHaveLogin() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    _sub = FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        emit((SplashScreen()));
+        emit(AuthUnauthenticated());
         log("User is currently signed out!");
       } else {
-        emit(WrapperPage());
+        emit(AuthAuthenticated());
         log("User is currently signed In!");
       }
+    }, onError: (e) {
+      log('Auth listener error: $e');
+      emit(AuthUnauthenticated());
     });
+  }
+
+  @override
+  Future<void> close() {
+    _sub?.cancel();
+    return super.close();
   }
 }
