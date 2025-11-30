@@ -1,10 +1,10 @@
+// chat_screen.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../cubit/chat_cubit.dart';
 import '../../cubit/chat_state.dart';
 import '../../data/models/message_model.dart';
@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late String currentUserId;
-    late String chatRoomId;
+  late String chatRoomId;
 
   String teacherName = 'Teacher';
   bool isLoadingTeacherName = true;
@@ -70,14 +70,20 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _initializeChat() {
+  // إنشاء chatRoomId فريد لكل quiz + student
+  void _initializeChat() async {
+    chatRoomId = '${widget.quizId}_${widget.studentId}';
+
     final cubit = context.read<ChatCubit>();
-    cubit.initializeChatRoom(
+    // إنشاء الغرفة إذا مش موجودة ثم الاشتراك بالمسجات
+    await cubit.initializeChatRoom(
       studentId: widget.studentId,
       teacherId: widget.teacherId,
       quizId: widget.quizId,
+      chatRoomId: chatRoomId,
     );
-    cubit.fetchMessages(widget.quizId); // Use quizId instead of chatRoomId
+
+    cubit.fetchMessages(chatRoomId); // الآن نمرر chatRoomId
   }
 
   void _sendMessage() {
@@ -85,11 +91,12 @@ class _ChatScreenState extends State<ChatScreen> {
     if (text.isEmpty) return;
 
     context.read<ChatCubit>().sendMessage(
-      quizId: widget.quizId, // Use quizId
+      chatRoomId: chatRoomId, // استخدم chatRoomId
       text: text,
       senderId: currentUserId,
       studentId: widget.studentId,
       teacherId: widget.teacherId,
+      quizId: widget.quizId,
     );
 
     _messageController.clear();
@@ -120,33 +127,16 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1C2B),
       appBar: AppBar(
-        title: isLoadingTeacherName
-            ? FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  'Loading...',
-                  style: GoogleFonts.irishGrover(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                ),
-              )
-            : FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
+        title:
+            isLoadingTeacherName
+                ? const Text('Loading...')
+                : Text(
                   'Chat with $teacherName',
-                  style: GoogleFonts.irishGrover(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
+                  style: const TextStyle(color: Colors.white),
                 ),
-              ),
         backgroundColor: const Color(0xFF000920),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
-        centerTitle: true,
       ),
       body: Column(
         children: [

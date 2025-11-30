@@ -1,5 +1,8 @@
+// performance_report_screen.dart
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
-import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
+import 'package:depi_final_project/features/Teacher/screens/wrapper_teacher_screen.dart';
+import 'package:depi_final_project/features/chat/cubit/chat_cubit.dart';
+import 'package:depi_final_project/features/chat/data/repositories/chat_repository.dart';
 import 'package:depi_final_project/features/chat/presentation/screens/chat_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +25,7 @@ class PerformanceReportScreen extends StatefulWidget {
 }
 
 class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
-  List<dynamic> quizStudents = [];
+  List<Map<String, dynamic>> quizStudents = [];
   String? selectedQuiz;
   bool isLoading = false;
   double averageScore = 0.0;
@@ -43,65 +46,85 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     setState(() {
       isLoading = true;
       quizStudents = [];
+      averageScore = 0.0;
+      passRate = 0.0;
     });
 
     try {
       final cubit = context.read<CreateQuizCubit>();
-
       final quizIds = await cubit.getQuiz(widget.uid, quizTitle);
 
-      if (quizIds.isNotEmpty) {
-        final quizId = quizIds.first;
-        final studentsData = await cubit.getStudentsForQuiz(quizId);
-
-        if (studentsData.isNotEmpty) {
-          double totalScore = 0;
-          int passedStudents = 0;
-
-          final  students = studentsData.map((data) {
-  final double scorePercentage = (
-    (data['averageScore'] ??
-        (((data['total'] ?? 0) == 0)
-            ? 0.0
-            : ((data['score'] ?? 0) / (data['total'] ?? 1) * 100)))
-  ).toDouble();
-  final status = data['status'] ?? 'Fail';
-
-  totalScore += scorePercentage;
-  if (status == 'Pass') passedStudents++;
-
-  return (
-    id: data['studentId'] ?? '', // ⚠️ IMPORTANT: Add student UID
-    name: data['studentName'] ?? 'Unknown',
-    score: scorePercentage,
-    status: status,
-  );
-}).toList();
-          if (mounted) {
-            setState(() {
-              quizStudents = students;
-              averageScore =
-                  students.isNotEmpty ? totalScore / students.length : 0.0;
-              passRate =
-                  students.isNotEmpty
-                      ? (passedStudents / students.length) * 100
-                      : 0.0;
-              isLoading = false;
-            });
-          }
-        } else {
-          if (mounted) {
-            setState(() {
-              isLoading = false;
-            });
-          }
-        }
-      } else {
+      if (quizIds.isEmpty) {
         if (mounted) {
           setState(() {
             isLoading = false;
           });
         }
+        return;
+      }
+
+      final quizId = quizIds.first;
+      final studentsData = await cubit.getStudentsForQuiz(quizId);
+
+      if (studentsData.isEmpty) {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+        return;
+      }
+
+      double totalScore = 0;
+      int passedStudents = 0;
+
+      // Normalize studentsData -> ensure each element is Map with required fields
+      final students = <Map<String, dynamic>>[];
+
+      for (final raw in studentsData) {
+        // raw should be a Map<String, dynamic> coming from cubit
+        final Map<String, dynamic> data = Map<String, dynamic>.from(raw);
+
+        // Derive score percentage:
+        double scorePercentage = 0.0;
+        if (data.containsKey('averageScore') && data['averageScore'] != null) {
+          final val = data['averageScore'];
+          scorePercentage = (val is num) ? val.toDouble() : double.tryParse(val.toString()) ?? 0.0;
+        } else {
+          // fallback to (score / total) * 100
+          final score = (data['score'] is num) ? (data['score'] as num).toDouble() : double.tryParse(data['score']?.toString() ?? '0') ?? 0.0;
+          final total = (data['total'] is num) ? (data['total'] as num).toDouble() : double.tryParse(data['total']?.toString() ?? '1') ?? 1.0;
+          if (total == 0) {
+            scorePercentage = 0.0;
+          } else {
+            scorePercentage = (score / total) * 100.0;
+          }
+        }
+
+        final status = (data['status']?.toString() ?? 'Fail');
+
+        // Ensure we have studentId and studentName
+        final studentId = data['studentId']?.toString() ?? data['uid']?.toString() ?? '';
+        final studentName = data['studentName']?.toString() ?? data['name']?.toString() ?? 'Unknown';
+
+        totalScore += scorePercentage;
+        if (status.toLowerCase() == 'pass') passedStudents++;
+
+        students.add({
+          'id': studentId,
+          'name': studentName,
+          'score': scorePercentage,
+          'status': status,
+        });
+      }
+
+      if (mounted) {
+        setState(() {
+          quizStudents = students;
+          averageScore = students.isNotEmpty ? totalScore / students.length : 0.0;
+          passRate = students.isNotEmpty ? (passedStudents / students.length) * 100 : 0.0;
+          isLoading = false;
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -109,18 +132,21 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
           isLoading = false;
         });
       }
+      debugPrint('Error loading quiz data: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load quiz data: $e')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final width = size.width; 
+    final width = size.width;
     final height = size.height;
 
     return Scaffold(
       endDrawer: drawer(context),
-
       backgroundColor: const Color(0xFF0A1628),
       appBar: AppBar(
         backgroundColor: const Color(0xFF0A1628),
@@ -149,7 +175,6 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
           children: [
             buildQuizSelector(widget.quizTitles, width),
             SizedBox(height: height * 0.03),
-
             if (isLoading)
               Center(
                 child: Padding(
@@ -208,17 +233,12 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                 color: const Color(0xff4FB3B7),
                 size: width * 0.06,
               ),
-              padding: EdgeInsets.symmetric(
-                horizontal: width * 0.04,
-                vertical: width * 0.03,
-              ),
-              items:
-                  quizzes.map((String title) {
-                    return DropdownMenuItem<String>(
-                      value: title,
-                      child: Text(title),
-                    );
-                  }).toList(),
+              items: quizzes.map((String title) {
+                return DropdownMenuItem<String>(
+                  value: title,
+                  child: Text(title),
+                );
+              }).toList(),
               onChanged: (quiz) {
                 if (quiz != null && quiz != selectedQuiz) {
                   setState(() {
@@ -236,14 +256,12 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
 
   Widget buildStatsCards(double width, double height) {
     return Container(
-      // Remove fixed height to avoid overflow on small screens
       padding: EdgeInsets.all(width * 0.05),
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xff4FB3B7), width: 2),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Row(
             children: [
@@ -295,7 +313,6 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     return Container(
       width: width,
       height: height * 0.15,
-      // Remove fixed height to allow content to dictate size
       padding: EdgeInsets.all(width * 0.02),
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xff4FB3B7), width: 3),
@@ -344,6 +361,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
             child: Row(
               children: [
                 Expanded(
+                  flex: 3,
                   child: Text(
                     'Student',
                     style: TextStyle(
@@ -354,6 +372,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                   ),
                 ),
                 Expanded(
+                  flex: 2,
                   child: Text(
                     'Score',
                     textAlign: TextAlign.center,
@@ -365,6 +384,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                   ),
                 ),
                 Expanded(
+                  flex: 2,
                   child: Text(
                     'Status',
                     textAlign: TextAlign.center,
@@ -375,6 +395,8 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(width: 8),
+                SizedBox(width: width * 0.06), // space for chat icon column
               ],
             ),
           ),
@@ -386,87 +408,104 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     );
   }
 
-Widget _buildStudentRow(dynamic student, double width, double height) {
-  return Container(
-    padding: EdgeInsets.all(width * 0.04),
-    decoration: BoxDecoration(
-      border: Border(bottom: BorderSide(color: Colors.blue.withOpacity(0.3))),
-    ),
-    child: Row(
-      children: [
-        // Student Name
-        Expanded(
-          flex: 2,
-          child: Text(
-            student.name,
-            style: TextStyle(color: Colors.white, fontSize: width * 0.035),
-          ),
-        ),
+  Widget _buildStudentRow(Map<String, dynamic> student, double width, double height) {
+    final studentName = student['name']?.toString() ?? 'Unknown';
+    final studentScore = (student['score'] is num) ? (student['score'] as num).toDouble() : double.tryParse(student['score']?.toString() ?? '0') ?? 0.0;
+    final studentStatus = student['status']?.toString() ?? 'Fail';
+    final studentId = student['id']?.toString() ?? '';
 
-        // Score
-        Expanded(
-          flex: 1,
-          child: Text(
-            '${student.score.toStringAsFixed(1)}%',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: width * 0.035),
-          ),
-        ),
-
-        // Status
-        Expanded(
-          flex: 1,
-          child: Text(
-            student.status,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: student.status == 'Pass' ? Colors.green : Colors.red,
-              fontWeight: FontWeight.bold,
-              fontSize: width * 0.035,
+    return Container(
+      padding: EdgeInsets.all(width * 0.04),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.blue.withOpacity(0.3))),
+      ),
+      child: Row(
+        children: [
+          // Student Name
+          Expanded(
+            flex: 3,
+            child: Text(
+              studentName,
+              style: TextStyle(color: Colors.white, fontSize: width * 0.035),
             ),
           ),
-        ),
 
-        IconButton(
-          icon: const Icon(Icons.chat_bubble_outline, color: Color(0xff4FB3B7)),
-          onPressed: () async {
-            final teacherId = FirebaseAuth.instance.currentUser!.uid;
+          // Score
+          Expanded(
+            flex: 2,
+            child: Text(
+              '${studentScore.toStringAsFixed(1)}%',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: width * 0.035),
+            ),
+          ),
 
-            final cubit = context.read<CreateQuizCubit>();
-            final quizIds = await cubit.getQuiz(widget.uid, selectedQuiz!);
+          // Status
+          Expanded(
+            flex: 2,
+            child: Text(
+              studentStatus,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: studentStatus.toLowerCase() == 'pass' ? Colors.green : Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: width * 0.035,
+              ),
+            ),
+          ),
 
-            if (quizIds.isNotEmpty) {
+          // Chat button (teacher -> student)
+          IconButton(
+            icon: const Icon(Icons.chat_bubble_outline, color: Color(0xff4FB3B7)),
+            onPressed: () async {
+              if (selectedQuiz == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('No quiz selected'), backgroundColor: Colors.red),
+                );
+                return;
+              }
+
+              final cubit = context.read<CreateQuizCubit>();
+              final quizIds = await cubit.getQuiz(widget.uid, selectedQuiz!);
+
+              if (quizIds.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Quiz ID not found for this chat"), backgroundColor: Colors.red),
+                );
+                return;
+              }
+
               final quizId = quizIds.first;
+              final teacherId = FirebaseAuth.instance.currentUser!.uid;
 
-              // ⚠️ CRITICAL: You need to get the actual studentId (UID) here
-              // This depends on your data structure. You need to modify getStudentsForQuiz
-              // to return the student's UID, not just their name
-              final studentId = student.id; // Add this field to your student data
+              if (studentId.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Student ID not available"), backgroundColor: Colors.red),
+                );
+                return;
+              }
 
+              // Navigate to ChatScreen and provide ChatCubit if not provided globally
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChatScreen(
-                    quizId: quizId,
-                    studentId: studentId, // Use actual UID
-                    teacherId: teacherId,
+                  builder: (context) => BlocProvider(
+                    create: (_) => ChatCubit(ChatRepository()),
+                    child: ChatScreen(
+                      quizId: quizId,
+                      studentId: studentId,
+                      teacherId: teacherId,
+                    ),
                   ),
                 ),
               );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Quiz ID not found for this chat"),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-        ),
-      ],
-    ),
-  );
-}
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget drawer(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;

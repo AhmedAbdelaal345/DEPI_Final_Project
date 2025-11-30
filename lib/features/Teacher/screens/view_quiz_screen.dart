@@ -1,4 +1,4 @@
-import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
+import 'package:depi_final_project/features/Teacher/screens/wrapper_teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

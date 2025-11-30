@@ -1,7 +1,7 @@
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
 import 'package:depi_final_project/features/Teacher/screens/quizcreatesuccesfully.dart';
-import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
+import 'package:depi_final_project/features/Teacher/screens/wrapper_teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';

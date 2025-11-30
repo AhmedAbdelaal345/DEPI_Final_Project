@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/Quiz/presentation/Screens/before_quiz_screen.dart';
+import 'package:depi_final_project/features/chat/cubit/chat_cubit.dart';
+import 'package:depi_final_project/features/chat/data/repositories/chat_repository.dart';
+import 'package:depi_final_project/features/chat/presentation/screens/chat_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
@@ -10,6 +13,7 @@ import 'package:depi_final_project/features/home/presentation/widgets/app_consta
 import 'package:depi_final_project/features/review_answers/presentation/widgets/app_drawer_1.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/icons/icon_park_outline.dart';
 import 'package:iconify_flutter/icons/lucide.dart';
@@ -179,7 +183,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
               MaterialPageRoute(
                 builder: (_) => const WrapperPage(initialIndex: 0),
               ),
-                  (Route<dynamic> route) => false,
+              (Route<dynamic> route) => false,
             );
           } else if (index == 1) {
             Navigator.pushAndRemoveUntil(
@@ -187,7 +191,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
               MaterialPageRoute(
                 builder: (_) => const WrapperPage(initialIndex: 1),
               ),
-                  (Route<dynamic> route) => false,
+              (Route<dynamic> route) => false,
             );
           } else if (index == 2) {
             Navigator.pushAndRemoveUntil(
@@ -195,7 +199,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
               MaterialPageRoute(
                 builder: (_) => const WrapperPage(initialIndex: 3),
               ),
-                  (Route<dynamic> route) => false,
+              (Route<dynamic> route) => false,
             );
           }
         },
@@ -298,6 +302,129 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        // New: Chat button
+                        ElevatedButton.icon(
+                          icon: const Icon(
+                            Icons.chat_bubble_outline,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            "Chat with Teacher",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF4FB3B7),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () async {
+                            final String? quizId =
+                                widget.quizData[AppConstants.id];
+                            String? teacherId;
+
+                            // 1) حاول أولاً استخراج teacherId من quizMetadata (لو اتخزن بالفعل)
+                            if (quizMetadata != null &&
+                                quizMetadata!['teacherId'] != null) {
+                              teacherId =
+                                  quizMetadata!['teacherId']?.toString();
+                            }
+
+                            // 2) لو موجود في widget.quizData (نادر لكن نتأكد)
+                            teacherId ??=
+                                widget.quizData[AppConstants.teacherId];
+
+                            final String studentUid =
+                                FirebaseAuth.instance.currentUser!.uid;
+
+                            if (quizId == null || quizId.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Unable to open chat (missing quiz id).',
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
+
+                            // 3) لو مازال مفقود، نجيبه من collection "Quizzes"
+                            if (teacherId == null || teacherId.isEmpty) {
+                              // Show loading dialog
+                              if (!mounted) return;
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder:
+                                    (_) => const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Color(0xFF4FB3B7),
+                                      ),
+                                    ),
+                              );
+
+                              try {
+                                final quizDoc =
+                                    await FirebaseFirestore.instance
+                                        .collection('Quizzes')
+                                        .doc(quizId)
+                                        .get();
+                                if (quizDoc.exists) {
+                                  final data = quizDoc.data();
+                                  teacherId = data?['teacherId']?.toString();
+                                }
+                              } catch (e) {
+                                // optional: print debug
+                                debugPrint(
+                                  'Failed to fetch quiz doc for teacherId: $e',
+                                );
+                              } finally {
+                                if (mounted)
+                                  Navigator.pop(context); // close loading
+                              }
+                            }
+
+                            // 4) لو لسه مفيش teacherId نعرض رسالة خطأ
+                            if (teacherId == null || teacherId.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Unable to open chat (missing teacher id).',
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
+
+                            // 5) جاهز للانتقال — لف ChatScreen بـ BlocProvider (لو عندك ChatCubit موفّر عالميًا احذف BlocProvider)
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => BlocProvider(
+                                      create:
+                                          (_) => ChatCubit(ChatRepository()),
+                                      child: ChatScreen(
+                                        studentId: studentUid,
+                                        teacherId: teacherId!,
+                                        quizId: quizId,
+                                      ),
+                                    ),
+                              ),
+                            );
+                          },
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Resolve Quiz button (existing)
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4FB3B7),
@@ -359,7 +486,10 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 12),
+
+                        // View Answers button (existing)
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4FB3B7),
@@ -371,8 +501,6 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
                           onPressed: () {
                             String studentUid =
                                 FirebaseAuth.instance.currentUser!.uid;
-                            // this for debuge
-                            // print(widget.quizData[AppConstants.id]);
                             final String teacherId =
                                 widget.quizData[AppConstants.teacherId] ?? "";
                             Navigator.pushReplacement(

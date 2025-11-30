@@ -1,3 +1,4 @@
+// chat_repository.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import '../models/message_model.dart';
@@ -5,14 +6,14 @@ import '../models/message_model.dart';
 class ChatRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Get chat room reference
-  DocumentReference _getChatRoomRef(String quizId) {
-    return _firestore.collection(AppConstants.chatRoom).doc(quizId);
+  // الآن كل المراجع تعتمد على chatRoomId (quizId_studentId)
+  DocumentReference _getChatRoomRefById(String chatRoomId) {
+    return _firestore.collection(AppConstants.chatRoom).doc(chatRoomId);
   }
 
-  // Listen to messages in real-time
-  Stream<List<MessageModel>> getMessages(String quizId) {
-    return _getChatRoomRef(quizId)
+  // Listen to messages in real-time using chatRoomId
+  Stream<List<MessageModel>> getMessages(String chatRoomId) {
+    return _getChatRoomRefById(chatRoomId)
         .collection(AppConstants.messagesCollection)
         .orderBy('timestamp', descending: false)
         .snapshots()
@@ -23,18 +24,18 @@ class ChatRepository {
         });
   }
 
-  // Send a new message
+  // Send a new message using chatRoomId
   Future<void> sendMessage({
-    required String quizId,
+    required String chatRoomId,
     required String text,
     required String senderId,
     required String studentId,
     required String teacherId,
+    required String quizId,
   }) async {
-    final chatRoomRef = _getChatRoomRef(quizId);
+    final chatRoomRef = _getChatRoomRefById(chatRoomId);
     final timestamp = FieldValue.serverTimestamp();
 
-    // Create the message
     final message = {
       'senderId': senderId,
       'text': text,
@@ -55,25 +56,27 @@ class ChatRepository {
     }, SetOptions(merge: true));
   }
 
-  // Check if chat room exists
-  Future<bool> chatRoomExists(String quizId) async {
-    final doc = await _getChatRoomRef(quizId).get();
+  // Check if chat room exists by chatRoomId
+  Future<bool> chatRoomExists(String chatRoomId) async {
+    final doc = await _getChatRoomRefById(chatRoomId).get();
     return doc.exists;
   }
 
-  // Create initial chat room
+  // Create initial chat room with chatRoomId
   Future<void> createChatRoom({
     required String studentId,
     required String teacherId,
     required String quizId,
+    required String chatRoomId,
   }) async {
-    await _getChatRoomRef(quizId).set({
+    await _getChatRoomRefById(chatRoomId).set({
       'studentId': studentId,
       'teacherId': teacherId,
       'quizId': quizId,
       'lastMessage': '',
       'lastMessageTimestamp': FieldValue.serverTimestamp(),
       'participants': [studentId, teacherId],
+      'createdAt': FieldValue.serverTimestamp(),
     });
   }
 }

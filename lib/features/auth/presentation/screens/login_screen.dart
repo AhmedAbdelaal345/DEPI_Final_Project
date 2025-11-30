@@ -2,8 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:depi_final_project/core/services/auth_service.dart';
-import 'package:depi_final_project/features/Teacher/wrapper_teacher_screen.dart';
-import 'package:depi_final_project/features/auth/presentation/screens/forgotPasswordPage.dart';
+import 'package:depi_final_project/features/Teacher/screens/wrapper_teacher_screen.dart';
+import 'package:depi_final_project/features/auth/presentation/screens/forgot_password_page.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

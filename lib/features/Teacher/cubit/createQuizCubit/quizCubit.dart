@@ -445,69 +445,85 @@ class CreateQuizCubit extends Cubit<CreateQuizState> {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getStudentsForQuiz(String quizId) async {
+    Future<List<Map<String, dynamic>>> getStudentsForQuiz(String quizId) async {
     final firestore = FirebaseFirestore.instance;
-    List<Map<String, dynamic>> results = [];
+    final results = <Map<String, dynamic>>[];
 
     try {
       final studentsSnapshot =
           await firestore.collection(AppConstants.studentCollection).get();
 
       for (var studentDoc in studentsSnapshot.docs) {
-        final studentData = studentDoc.data();
+        try {
+          final studentData = studentDoc.data();
+          final quizDoc = await studentDoc.reference
+              .collection(AppConstants.quizzessmall)
+              .doc(quizId)
+              .get();
 
-        final questionDoc =
-            await studentDoc.reference
-                .collection(AppConstants.quizzessmall)
-                .doc(quizId)
-                .get();
+          if (!quizDoc.exists) continue;
 
-        if (questionDoc.exists) {
-          final quizData = questionDoc.data();
+          final quizData = quizDoc.data() ?? <String, dynamic>{};
 
-          // score may be stored as fraction (0..1) OR as raw count
-          final num rawScore = (quizData?[AppConstants.score] ?? 0) as num;
-          final double scoreVal = rawScore.toDouble();
-          final int total =
-              ((quizData?[AppConstants.total] ?? 0) as num).toInt();
-          final String status =
-              (quizData?[AppConstants.status] ?? 'Pending') as String;
+          // read raw values (robust to types)
+          final num rawScoreNum = (quizData[AppConstants.score] ?? 0) as num;
+          final double rawScore = rawScoreNum.toDouble();
+          final num rawTotalNum = (quizData[AppConstants.total] ?? 0) as num;
+          final int total = rawTotalNum.toInt();
 
-          // // compute percentage robustly
-          // double percent;
-          // if (total > 1) {
-          //   // if score looks like a fraction (<=1), multiply by 100; otherwise divide by total
-          //   percent =
-          //       scoreVal <= 1.0
-          //           ? (scoreVal * 100.0)
-          //           : ((scoreVal / total) * 100.0);
-          // } else {
-          //   // total missing or 1: treat score as fraction if <=1
-          //   percent = scoreVal <= 1.0 ? (scoreVal * 100.0) : scoreVal;
-          // }
-          final accuracy =
-              ((quizData?[AppConstants.accuracy] ?? 0) as num).toDouble();
+          // accuracy might already be stored as 0..100 percent
+          double accuracy = 0.0;
+          final accVal = quizData[AppConstants.accuracy];
+          if (accVal != null) {
+            if (accVal is num) accuracy = accVal.toDouble();
+            else accuracy = double.tryParse(accVal.toString()) ?? 0.0;
+          } else {
+            // fallback: compute percentage from score / total
+            if (total > 0) {
+              // handle case where score is fraction (0..1) or count
+              if (rawScore <= 1.0) {
+                accuracy = rawScore * 100.0;
+              } else {
+                accuracy = (rawScore / total) * 100.0;
+              }
+            } else {
+              // if total missing, treat rawScore as percentage if >1
+              accuracy = (rawScore <= 1.0) ? rawScore * 100.0 : rawScore;
+            }
+          }
 
+          final String status = (quizData[AppConstants.status] ?? 'Pending').toString();
+
+          // best-effort student name
+          final String studentName =
+              (studentData['fullName'] ?? studentData['name'] ?? 'Unknown').toString();
+
+          // Add both studentId and id keys for compatibility
           results.add({
-            'studentName': studentData['fullName'] ?? 'Unknown Student',
-            'email': studentData['email'] ?? 'No Email',
-            'score': scoreVal,
+            'studentId': studentDoc.id,
+            'id': studentDoc.id, // keep for older code expecting student.id
+            'studentName': studentName,
+            'email': studentData['email'] ?? '',
+            'score': rawScore,
             'total': total,
             'status': status,
-            'averageScore': accuracy, // percentage 0..100
+            'averageScore': accuracy, // percent 0..100
           });
+        } catch (inner) {
+          debugPrint('Error processing student ${studentDoc.id}: $inner');
         }
       }
-      int passCount = results.where((r) => r['status'] == 'Pass').length;
-      double passRate =
-          results.isEmpty ? 0 : (passCount / results.length) * 100;
-      results =
-          results.map((r) {
-            r['passRate'] = passRate;
-            return r;
-          }).toList();
+
+      // optional: attach passRate to each record (as you did before)
+      final int passCount = results.where((r) => (r['status']?.toString().toLowerCase() == 'pass')).length;
+      final double passRate = results.isEmpty ? 0.0 : (passCount / results.length) * 100.0;
+      for (var r in results) {
+        r['passRate'] = passRate;
+      }
+
       return results;
     } catch (e) {
+      debugPrint('getStudentsForQuiz error: $e');
       return [];
     }
   }
