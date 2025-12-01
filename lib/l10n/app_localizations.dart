@@ -895,6 +895,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Success is the sum of small efforts repeated day in and day out.'**
   String get phase;
+
+  /// No description provided for @teacherProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher Profile'**
+  String get teacherProfile;
 }
 
 class _AppLocalizationsDelegate

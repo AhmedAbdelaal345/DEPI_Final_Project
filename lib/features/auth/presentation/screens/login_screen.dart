@@ -6,6 +6,7 @@ import 'package:depi_final_project/features/Teacher/screens/wrapper_teacher_scre
 import 'package:depi_final_project/features/auth/presentation/screens/forgot_password_page.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,6 +31,31 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _authService = AuthService();
+  // save FCM token into Firestore under given collection ('Student' or 'teacher')
+  Future<void> _saveFcmToken(String uid, String collectionName) async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      if (token == null) return;
+      await FirebaseFirestore.instance.collection(collectionName).doc(uid).set({
+        'fcmToken': token,
+      }, SetOptions(merge: true));
+      print('Saved FCM token for $uid in $collectionName -> $token');
+    } catch (e) {
+      print('Failed to save FCM token: $e');
+    }
+  }
+
+  // listen to token refresh and update Firestore when it changes
+  void _listenToTokenRefresh(String uid, String collectionName) {
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(uid)
+          .set({'fcmToken': newToken}, SetOptions(merge: true))
+          .then((_) => print('Updated FCM token for $uid'))
+          .catchError((e) => print('Failed to update FCM token: $e'));
+    });
+  }
 
   @override
   void dispose() {
@@ -38,19 +64,27 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  void initState() {
+    super.initState();
+    FirebaseMessaging.instance.requestPermission();
+  }
+
   Future<void> _checkUserTypeAndNavigate(String? uid) async {
     if (uid == null) return;
 
     try {
-      // Check if user exists in Student collection
+      // Check Student
       DocumentSnapshot studentDoc =
           await FirebaseFirestore.instance.collection('Student').doc(uid).get();
 
       if (studentDoc.exists) {
         print('User is a Student');
-        // Save login state
         await _authService.saveLoginState(userId: uid, userType: 'student');
-        // Navigate to student home page
+
+        // Save FCM token and listen for refresh
+        await _saveFcmToken(uid, 'Student');
+        _listenToTokenRefresh(uid, 'Student');
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const WrapperPage()),
@@ -58,13 +92,18 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
+      // Check teacher
       DocumentSnapshot teacherDoc =
           await FirebaseFirestore.instance.collection('teacher').doc(uid).get();
 
       if (teacherDoc.exists) {
         print('User is a Teacher');
-        // Save login state
         await _authService.saveLoginState(userId: uid, userType: 'teacher');
+
+        // Save FCM token and listen for refresh
+        await _saveFcmToken(uid, 'teacher');
+        _listenToTokenRefresh(uid, 'teacher');
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const WrapperTeacherPage()),
@@ -72,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      // If user not found in either collection
+      // Not found
       Fluttertoast.showToast(
         msg: "User data not found. Please contact support.",
         toastLength: Toast.LENGTH_SHORT,
@@ -316,6 +355,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                             ),
+
                           // SizedBox(height: screenHeight * 0.05),
                           // DividerWithText(text: l10n.orLoginWith),
                           // SizedBox(height: screenHeight * 0.05),
@@ -323,7 +363,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           // SocialLoginButtons(),
 
                           // SizedBox(height: screenHeight * 0.04),
-
                           TextButton(
                             onPressed: () {
                               Navigator.pop(context);

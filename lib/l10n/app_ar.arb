@@ -140,5 +140,6 @@
   "cancel": "إلغاء",
   "confirm": "تأكيد",
   "deleteAccount": "حذف الحساب",
-  "deleteAccountDetails": "حذف حسابك"
+  "deleteAccountDetails": "حذف حسابك",
+  "teacherProfile":"الصفحة الشخصية للمعلم"
 }

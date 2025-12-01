@@ -23,9 +23,7 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HistoryCubit>(
-      context,
-    ).getQuizzesForStudent(FirebaseAuth.instance.currentUser!.uid);
+    
   }
 
   @override

@@ -1,4 +1,4 @@
-// main.dart
+// main.dart (edited)
 import 'dart:developer';
 import 'dart:ui';
 import 'package:depi_final_project/features/Onboarding/widgets/last_page_buttons.dart';
@@ -30,17 +30,70 @@ import 'package:depi_final_project/firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:depi_final_project/features/home/cubit/locale_cubit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> _showLocalNotification(RemoteMessage message) async {
+  final notification = message.notification;
+  if (notification == null) return;
+
+  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    'chat_channel',
+    'Chat Messages',
+    channelDescription: 'Channel for chat message notifications',
+    importance: Importance.max,
+    priority: Priority.high,
+    playSound: true,
+  );
+
+  const NotificationDetails platformDetails =
+      NotificationDetails(android: androidDetails);
+
+  await flutterLocalNotificationsPlugin.show(
+    message.hashCode,
+    notification.title ?? 'New message',
+    notification.body ?? '',
+    platformDetails,
+    payload: message.data['chatRoomId'] ?? '',
+  );
+}
+
+// helper used from background handler (must initialize plugin before using)
+Future<void> _showLocalNotificationFromBackground(RemoteMessage message) async {
+  const AndroidInitializationSettings initSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initSettings =
+      InitializationSettings(android: initSettingsAndroid);
+
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
+  await _showLocalNotification(message);
+}
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // IMPORTANT: initialize Firebase in the background isolate with same options
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await _showLocalNotificationFromBackground(message);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // ---- INITIALIZE FIREBASE FIRST (before any FirebaseMessaging.instance calls) ----
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Status bar settings
   SystemChrome.setSystemUIOverlayStyle(
@@ -51,8 +104,32 @@ void main() async {
     ),
   );
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // Crashlytics
+  // Initialize flutter_local_notifications (foreground notifications)
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (payload) {
+      debugPrint('Notification payload: $payload');
+    },
+  );
+
+  // Register the background message handler AFTER Firebase.initializeApp()
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Now it's safe to access FirebaseMessaging.instance
+  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  debugPrint('FCM permission: ${settings.authorizationStatus}');
+
+  // Crashlytics setup (after Firebase initialized)
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack);
@@ -75,6 +152,7 @@ void main() async {
 
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -202,7 +280,6 @@ class _MyAppState extends State<MyApp> {
 
             routes: {
               WrapperPage.id: (context) => WrapperPage(),
-              ProfileScreen.id: (context) => ProfileScreen(),
               SettingScreen.id: (context) => SettingScreen(),
               SelectUserPage.id: (context) => SelectUserPage(),
               QuizPage.id: (context) => QuizPage(),

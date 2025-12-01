@@ -156,5 +156,6 @@
 "deleteAccount":"Delete Account",
 "deleteAccountDetails":"Delete Your Account",
 "enterTeacherCode":"Enter Teacher Code",
-"phase":"Success is the sum of small efforts repeated day in and day out."
+"phase":"Success is the sum of small efforts repeated day in and day out.",
+"teacherProfile":"Teacher Profile"
 }

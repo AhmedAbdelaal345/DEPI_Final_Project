@@ -429,4 +429,7 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get phase =>
       'النجاح هو مجموع الجهود الصغيرة التي تتكرر يوماً بعد يوم.';
+
+  @override
+  String get teacherProfile => 'الصفحة الشخصية للمعلم';
 }
