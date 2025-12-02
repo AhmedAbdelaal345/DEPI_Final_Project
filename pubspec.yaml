@@ -56,6 +56,11 @@ dependencies:
   package_info_plus: ^9.0.0
   shared_preferences: ^2.2.2
 dev_dependencies:
+flutter_test:  
+  bloc_test: ^9.1.0
+  mockito: ^5.4.0
+  integration_test:
+    sdk: flutter
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^5.0.0
   flutter_native_splash: ^2.4.0

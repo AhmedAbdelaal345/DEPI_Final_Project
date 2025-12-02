@@ -1,6 +1,6 @@
 import 'package:depi_final_project/features/Teacher/screens/home_teacher.dart';
-import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
-import 'package:depi_final_project/features/auth/presentation/cubit/register_details_cubit.dart';
+import 'package:depi_final_project/features/auth/cubit/login_cubit.dart';
+import 'package:depi_final_project/features/auth/cubit/register_details_cubit.dart';
 import 'package:depi_final_project/features/auth/presentation/widgets/social_icon_button.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:flutter/material.dart';

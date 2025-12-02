@@ -1,4 +1,4 @@
-import 'package:depi_final_project/features/auth/presentation/cubit/login_cubit.dart';
+import 'package:depi_final_project/features/auth/cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../home/presentation/Screens/wrapper_page.dart';

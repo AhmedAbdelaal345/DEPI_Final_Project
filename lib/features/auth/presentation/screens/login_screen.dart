@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../cubit/login_cubit.dart';
-import '../cubit/login_state.dart';
+import '../../cubit/login_cubit.dart';
+import '../../cubit/login_state.dart';
 import '../widgets/auth_header.dart';
 import '../widgets/custom_auth_button.dart';
 import '../widgets/custom_text_field.dart';
