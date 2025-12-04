@@ -1,36 +1,33 @@
 # Testing Guide
 
 ## Overview
-This project includes comprehensive testing: unit tests, widget tests, and integration tests.
+This project includes comprehensive testing: unit tests, widget tests, and integration tests. Our testing strategy ensures code quality, prevents regressions, and validates user flows.
 
-## Running Tests
+## Quick Start
 
-### All Tests
+### Run All Tests
 ```bash
 flutter test
 ```
 
-### Unit Tests Only
+### Run Specific Test Types
 ```bash
+# Unit tests only
 flutter test test/unit
-```
 
-### Widget Tests Only
-```bash
+# Widget tests only
 flutter test test/widget
-```
 
-### Integration Tests
-```bash
+# Integration tests
 flutter test integration_test
 ```
 
-### With Coverage
+### Generate Code Coverage
 ```bash
 flutter test --coverage
 ```
 
-## Generate Mocks
+### Generate Mocks
 Before running tests that use mocks, generate them:
 ```bash
 flutter pub run build_runner build --delete-conflicting-outputs
@@ -39,25 +36,99 @@ flutter pub run build_runner build --delete-conflicting-outputs
 ## Test Structure
 
 ### Unit Tests (`test/unit/`)
-- **cubits/**: Tests for BLoC cubits
-  - `auth_cubit_test.dart` - Authentication state management
-  - `profile_cubit_test.dart` - User profile management
-  - `quiz_cubit_test.dart` - Quiz state management
+Unit tests verify individual components in isolation.
+
+#### Cubits (`test/unit/cubits/`)
+- **`auth_cubit_test.dart`** - Authentication state management
+  - Tests initial state
+  - Validates login flow
+  - Tests error handling
+  
+- **`login_cubit_test.dart`** - Login-specific state management
+  - Email/password validation
+  - Remember me functionality
+  - Google sign-in flow
+  
+- **`profile_cubit_test.dart`** - User profile management
+  - Profile loading states
+  - Profile update operations
+  
+- **`quiz_cubit_test.dart`** - Quiz state management
+  - Quiz loading and submission
+  - Answer tracking
+  - Score calculation
+
+#### Repositories (`test/unit/repositories/`)
+- **`profile_repository_test.dart`** - Profile data operations
+  - User profile CRUD operations
+  - Pro subscription management
+  - Quiz statistics aggregation
 
 ### Widget Tests (`test/widget/`)
-- **screens/**: Tests for full screens
-  - `home_screen_test.dart` - Home screen UI
-  - `quiz_history_screen_test.dart` - Quiz history display
-- **widgets/**: Tests for reusable components
-  - `stat_card_test.dart` - Statistics card component
+Widget tests verify UI components and user interactions.
+
+#### Screens (`test/widget/screens/`)
+- **`home_screen_test.dart`** - Home screen UI
+  - Quiz code input validation
+  - Join button functionality
+  - Loading states
+  - Error messages
+  
+- **`login_screen_test.dart`** - Login screen UI
+  - Form validation
+  - Email/password input
+  - Error display
+  - Navigation links
+  
+- **`quiz_history_screen_test.dart`** - Quiz history display
+  - History list rendering
+  - Empty state handling
+  - Quiz item interactions
+  
+- **`wrapper_page_test.dart`** - Main navigation wrapper
+  - Bottom navigation
+  - Screen switching
+  - Drawer functionality
+  - BLoC provider setup
+
+#### Widgets (`test/widget/widgets/`)
+- **`profile_header_test.dart`** - Profile header component
+  - User information display
+  - PRO badge visibility
+  - Animation behavior
+  
+- **`stat_card_test.dart`** - Statistics card component
+  - Data display
+  - Icon rendering
+  - Layout structure
 
 ### Integration Tests (`integration_test/`)
-- `complete_quiz_flow_test.dart` - End-to-end quiz flow
-- `profile_flow_test.dart` - Profile and navigation flow
+Integration tests verify complete user flows and app behavior.
+
+- **`complete_quiz_flow_test.dart`** - End-to-end quiz flow
+  - Login to quiz completion
+  - Answer submission
+  - Results display
+  
+- **`profile_flow_test.dart`** - Profile and navigation flow
+  - Profile viewing
+  - Settings navigation
+  - Data persistence
+  
+- **`app_flow_test.dart`** - General app flows
+  - Authentication flow
+  - Navigation between screens
+  - User interactions
+  - Error handling
+  - App lifecycle
 
 ### Test Utilities (`test/test_utils/`)
-- `pump_app.dart` - Helper to wrap widgets with providers
-- `test_data.dart` - Sample test data
+Shared utilities for testing.
+
+- **`firebase_mocks.dart`** - Firebase mocking setup
+- **`firebase_test_setup.dart`** - Firebase test configuration
+- **`pump_app.dart`** - Widget testing helpers
+- **`test_data.dart`** - Sample test data
 
 ## Writing New Tests
 

@@ -42,8 +42,10 @@ void main() {
         ),
       );
 
-      // Verify icon widget is present
-      expect(find.byType(Icon), findsOneWidget);
+      // Verify Iconify widget is present (StatCard uses Iconify, not Icon)
+      expect(find.byType(StatCard), findsOneWidget);
+      expect(find.text('Score'), findsOneWidget);
+      expect(find.text('95%'), findsOneWidget);
     });
 
     testWidgets('handles long values correctly', (WidgetTester tester) async {
