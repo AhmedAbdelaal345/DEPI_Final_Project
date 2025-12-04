@@ -120,6 +120,15 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                       if (value == null || value.isEmpty) {
                                         return "This Field required";
                                       }
+                                      // Check if the value is a valid integer
+                                      final intValue = int.tryParse(value.trim());
+                                      if (intValue == null) {
+                                        return "Please enter a valid integer";
+                                      }
+                                      // Optional: Check if the value is positive
+                                      if (intValue <= 0) {
+                                        return "Duration must be greater than 0";
+                                      }
                                       return null;
                                     },
                                     keyboardType: TextInputType.number,
