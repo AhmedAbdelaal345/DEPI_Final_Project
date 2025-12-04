@@ -10,6 +10,8 @@ import 'package:depi_final_project/features/auth/presentation/screens/login_scre
 import 'package:depi_final_project/features/auth/presentation/screens/update_page.dart';
 import 'package:depi_final_project/features/chat/cubit/chat_cubit.dart';
 import 'package:depi_final_project/features/chat/data/repositories/chat_repository.dart';
+import 'package:depi_final_project/features/profile/cubit/profile_cubit.dart';
+import 'package:depi_final_project/features/profile/data/repositories/profile_repository.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
@@ -212,6 +214,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => ResultCubit()),
   BlocProvider(create: (context) => HistoryCubit(HistoryRepository(cacheService: CacheService()))),
         BlocProvider(create: (context) => ChatCubit(ChatRepository())),
+        BlocProvider(create: (context) => ProfileCubit(ProfileRepository())),
       ],
       child: BlocBuilder<LocaleCubit, Locale>(
         builder: (context, locale) {

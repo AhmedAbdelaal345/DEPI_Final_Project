@@ -44,28 +44,28 @@ dependencies:
   flutter_local_notifications: ^19.5.0
   flutter_localizations:
     sdk: flutter
-  flutter_secure_storage: ^8.0.0
+  flutter_secure_storage: ^10.0.0-beta.5
   flutter_svg: ^2.0.10+1
-  fluttertoast: ^8.2.12
+  fluttertoast: ^9.0.0
   google_fonts: ^6.3.1
-  google_sign_in: ^6.1.0
+  google_sign_in: ^7.2.0
   iconify_flutter: ^0.0.5
   intl: ^0.20.2
   introduction_screen: null
-  local_auth: ^2.1.6
+  local_auth: ^3.0.0
   package_info_plus: ^9.0.0
   shared_preferences: ^2.2.2
 dev_dependencies:
-flutter_test:  
-  bloc_test: ^9.1.0
+  flutter_test:
+    sdk: flutter
+  bloc_test: ^10.0.0
   mockito: ^5.4.0
+  build_runner: ^2.4.0
   integration_test:
     sdk: flutter
   flutter_launcher_icons: ^0.14.4
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   flutter_native_splash: ^2.4.0
-  flutter_test:
-    sdk: flutter
 flutter_icons:
   android: true
   ios: true

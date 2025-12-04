@@ -20,17 +20,7 @@ class ProfileScreenWithFirebase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        final cubit = ProfileCubit(ProfileRepository());
-        final userId = FirebaseAuth.instance.currentUser?.uid;
-        if (userId != null) {
-          cubit.streamUserProfile(userId); // Real-time updates
-        }
-        return cubit;
-      },
-      child: const _ProfileScreenContent(),
-    );
+    return const _ProfileScreenContent();
   }
 }
 

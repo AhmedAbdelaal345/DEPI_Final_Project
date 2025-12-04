@@ -23,7 +23,10 @@ class _QuizHistoryScreenState extends State<QuizHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      context.read<HistoryCubit>().getQuizzesForStudent(userId);
+    }
   }
 
   @override

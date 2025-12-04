@@ -29,7 +29,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final List<OnboardPageModel> pages = OnboardingConstants.getPages(context);
 
     final int indicatorIndex =
-    (_current <= pages.length - 2) ? _current : (pages.length - 2);
+    (_current <= pages.length - 3) ? _current : (pages.length - 3);
     final int indicatorsCount = (pages.length - 1).clamp(0, pages.length);
 
     return Scaffold(

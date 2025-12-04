@@ -2,6 +2,7 @@
 import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/profile/presentation/screens/profile_screen_with_firebase.dart';
+import 'package:depi_final_project/features/profile/cubit/profile_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,7 @@ class _WrapperPageState extends State<WrapperPage> {
     if (userId != null) {
       Future.microtask(() {
         context.read<HistoryCubit>().getQuizzesForStudent(userId);
+        context.read<ProfileCubit>().streamUserProfile(userId);
       });
     }
 
@@ -93,6 +95,10 @@ class _WrapperPageState extends State<WrapperPage> {
   ];
 
   Widget _screenForIndex(BuildContext ctx, int index) {
+    // Don't cache QuizHistoryScreen (index 2) so it always fetches fresh data
+    if (index == 2) {
+      return _builders[index](ctx);
+    }
     return _cache[index] ??= _builders[index](ctx);
   }
 

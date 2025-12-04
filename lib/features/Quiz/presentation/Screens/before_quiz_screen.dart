@@ -50,7 +50,7 @@ class BeforeQuizScreen extends StatelessWidget {
             final title = quizData["title"] ?? "Quiz";
             final questions = quizData["question_count"]?.toString() ?? "N/A";
             final timeLimit = quizData["duration"]?.toString() ?? "N/A";
-            final creator = quizData[AppConstants.teacherId] ?? "Unknown";
+            final creator = quizData[AppConstants.teacherName] ?? "Unknown";
 
             return SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: sx(context, 16)),

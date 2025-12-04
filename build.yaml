@@ -1,0 +1,14 @@
+# Generate mocks for testing
+# Run this file to generate mock classes
+
+include: package:flutter_lints/flutter.yaml
+
+targets:
+  $default:
+    builders:
+      mockito:
+        options:
+          # Generate mocks for these classes
+          generate_for:
+            - test/unit/cubits/profile_cubit_test.dart
+            - test/widget/screens/quiz_history_screen_test.dart

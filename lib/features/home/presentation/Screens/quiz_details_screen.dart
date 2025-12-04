@@ -59,7 +59,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
       }
 
       final quizId =
-          widget.quizData[AppConstants.id] ?? widget.quizData[AppConstants.id];
+          widget.quizData[AppConstants.id] ;
 
       // ✅ Use the correct collection name
       final studentDoc =
@@ -73,7 +73,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
               .get(); // Fetch quiz metadata from Quizzes/{quizId}
       final quizDoc =
           await FirebaseFirestore.instance
-              .collection('Quizzes')
+              .collection(AppConstants.quizzesCollection)
               .doc(quizId)
               .get();
 
