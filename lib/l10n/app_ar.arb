@@ -13,6 +13,8 @@
   "enterQuizTitle": "أدخل عنوان الاختبار",
   "durationInMinutes": "المدة (بالدقائق)",
   "thisFieldRequired": "هذا الحقل مطلوب",
+  "pleaseEnterValidInteger": "من فضلك أدخل رقم صحيح",
+  "durationMustBePositive": "يجب أن تكون المدة أكبر من 0",
   "quizCode": "رمز الاختبار",
   "create": "إنشاء",
   "questionNumber": "السؤال رقم {number}",
@@ -22,6 +24,7 @@
   "myQuizzes": "اختباراتي",
   "noQuestionsAvailable": "لا توجد أسئلة متاحة",
   "quizId": "رمز الاختبار: {id}",
+  "setting": "الإعدادات",
 
   "onboarding1Title": "أهلاً بك في كويزلي!",
   "onboarding1Desc": "اختبر، وتتبع تقدمك\nفي أي وقت، ومن أي مكان",

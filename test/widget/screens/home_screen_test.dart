@@ -1,5 +1,4 @@
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
-import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

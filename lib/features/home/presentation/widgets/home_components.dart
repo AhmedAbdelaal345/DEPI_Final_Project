@@ -1,11 +1,12 @@
 // features/home/presentation/widgets/home_components.dart
 import 'package:flutter/material.dart';
-import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:depi_final_project/core/widgets/shared_components.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/input_field.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/primary_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:depi_final_project/core/utils/ui_utils.dart';
 
 class MotivationalText extends StatelessWidget {
   final String text;

@@ -13,6 +13,8 @@
   "enterQuizTitle": "Enter Quiz title",
   "durationInMinutes": "Duration (Min)",
   "thisFieldRequired": "This Field is required",
+  "pleaseEnterValidInteger": "Please enter a valid integer",
+  "durationMustBePositive": "Duration must be greater than 0",
   "quizCode": "Quiz Code",
   "create": "Create",
   "questionNumber": "Question {number}",
@@ -22,6 +24,7 @@
   "myQuizzes": "My Quizzes",
   "noQuestionsAvailable": "No Questions Available",
   "quizId": "Quiz ID: {id}",
+  "setting": "Setting",
 
 
 
@@ -40,7 +43,7 @@
   "enterYourEmail": "Enter your email",
   "enterYourPassword": "Enter your password",
   "forgotPassword": "Forgot password",
-  "forgotPasswordMessage": "Don’t worry! Enter your email address and we’ll send you a verification code.",
+  "forgotPasswordMessage": "Don't worry! Enter your email address and we'll send you a verification code.",
   "rememberThisDevice": "Remember this device",
   "orLoginWith": " OR Login with ",
   "dontHaveAnAccount": "Don't have an account? ",
@@ -75,7 +78,6 @@
   "pleaseEnterYourSubject": "Please enter your Subject",
   "errorWeakPassword": "The password provided is too weak.",
   "errorEmailInUse": "The account already exists for that email.",
-  "alreadyHaveAnAccount": "Already have an account? ",
   "registrationSuccessful": "Registration Successful!",
 
   "home": "Home",
@@ -122,8 +124,6 @@
 
 
 
-
-
   "quizCompleted": "Quiz Completed!",
   "yourPerformanceSummary": "Your Performance Summary",
   "score": "Score",
@@ -131,7 +131,6 @@
   "correct": "Correct",
   "wrong": "Wrong",
   "reviewAnswers": "Review Answers",
-  "backToHome": "Back to Home",
   "excellentWork": "Excellent work! 🎉",
   "goodJob": "Good job! 👍",
   "notBadKeepPracticing": "Not bad, keep practicing! 📚",
@@ -157,5 +156,30 @@
 "deleteAccountDetails":"Delete Your Account",
 "enterTeacherCode":"Enter Teacher Code",
 "phase":"Success is the sum of small efforts repeated day in and day out.",
-"teacherProfile":"Teacher Profile"
+"teacherProfile":"Teacher Profile",
+
+"noQuizHistoryYet": "No quiz history yet",
+"startTakingQuizzesToSeeProgress": "Start taking quizzes to see your progress!",
+"retry": "Retry",
+"quizzesCount": "{count} Quizzes",
+"noQuizzesYetForSubject": "No quizzes yet for this subject",
+"completedOn": "Completed on",
+"userNotAuthenticated": "User not authenticated",
+"quizDetailsNotFound": "Quiz details not found",
+"errorLoadingQuizDetails": "Error loading quiz details",
+"errorDeletingQuizResult": "Error deleting quiz result",
+"chatWithTeacher": "Chat with Teacher",
+"unableToOpenChatMissingQuizId": "Unable to open chat: Missing Quiz ID",
+"unableToOpenChatMissingTeacherId": "Unable to open chat: Missing Teacher ID",
+"resolveQuiz": "Resolve Quiz",
+"resolveQuizConfirmation": "Are you sure you want to resolve this quiz?",
+"yesResolve": "Yes, Resolve",
+"errorLoggingOut": "Error logging out",
+"chooseLanguage": "Choose Language",
+"deleteAccountConfirmation": "Are you sure you want to delete your account? This action cannot be undone.",
+"delete": "Delete",
+"accountDeletedSuccessfully": "Account deleted successfully",
+"pleaseLoginAgainToDelete": "Please login again to delete your account",
+"errorDeletingAccount": "Error deleting account",
+"error": "Error"
 }

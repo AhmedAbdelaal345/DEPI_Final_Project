@@ -1,5 +1,7 @@
 // features/profile/presentation/widgets/profile_header.dart
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 
 class ProfileHeader extends StatefulWidget {
   final String userName;
@@ -135,7 +137,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
                     radius: 1.2,
                     colors: [
                       const Color(0xFF2A2D3E).withValues(alpha: 0.8),
-                      const Color(0xFF1A1C2B),
+                      AppColors.cardBackground,
                       const Color(0xFF0D0E17),
                     ],
                     stops: const [0.0, 0.5, 1.0],
@@ -183,7 +185,7 @@ class _ProfileHeaderState extends State<ProfileHeader>
                           ],
                         ),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFF000920), width: 2),
+                        border: Border.all(color: AppColors.primaryBackground, width: 2),
                         boxShadow: [
                           BoxShadow(
                             color: const Color(0xFFFFD700).withValues(alpha: 0.6),

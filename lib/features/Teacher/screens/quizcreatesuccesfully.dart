@@ -1,3 +1,4 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/Teacher/screens/wrapper_teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,15 +7,20 @@ import 'package:depi_final_project/l10n/app_localizations.dart';
 class QuizCreateSuccessful extends StatelessWidget {
   final String quizId;
   const QuizCreateSuccessful({required this.quizId, super.key});
+  
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       endDrawer: drawer(context),
-      backgroundColor: const Color(0xff000921),
-      appBar: AppBar(backgroundColor: const Color(0xff000921), elevation: 0),
+      backgroundColor: AppColors.primaryBackground,
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryBackground,
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -32,14 +38,14 @@ class QuizCreateSuccessful extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: const Color(0xff07FF11),
+                            color: Colors.green,
                             width: screenWidth * 0.015,
                           ),
                         ),
                         child: Center(
                           child: Icon(
                             Icons.check,
-                            color: const Color(0xff07FF11),
+                            color: Colors.green,
                             size: screenWidth * 0.29,
                           ),
                         ),
@@ -51,14 +57,14 @@ class QuizCreateSuccessful extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: screenWidth * 0.06,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.015),
                     Text(
                       l10n.quizCreatedMessage,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: screenWidth * 0.035,
                       ),
@@ -74,7 +80,7 @@ class QuizCreateSuccessful extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff455A64),
+                  backgroundColor: AppColors.grey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(screenWidth * 0.03),
                   ),
@@ -85,7 +91,7 @@ class QuizCreateSuccessful extends StatelessWidget {
                     Text(
                       quizId,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontSize: screenWidth * 0.06,
                         fontWeight: FontWeight.w700,
                       ),
@@ -97,7 +103,7 @@ class QuizCreateSuccessful extends StatelessWidget {
                           SnackBar(content: Text(l10n.quizCodeCopied)),
                         );
                       },
-                      icon: const Icon(Icons.copy),
+                      icon: Icon(Icons.copy, color: AppColors.white),
                     ),
                   ],
                 ),
@@ -117,7 +123,7 @@ class QuizCreateSuccessful extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff4FB3B7),
+                  backgroundColor: AppColors.primaryTeal,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(screenWidth * 0.05),
                   ),
@@ -125,7 +131,7 @@ class QuizCreateSuccessful extends StatelessWidget {
                 child: Text(
                   l10n.ok,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: AppColors.black,
                     fontSize: screenWidth * 0.06,
                     fontWeight: FontWeight.w700,
                   ),
@@ -141,17 +147,18 @@ class QuizCreateSuccessful extends StatelessWidget {
   Widget drawer(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return Drawer(
-      backgroundColor: const Color(0xff061438),
+      backgroundColor: AppColors.secondaryBackground,
       child: ListView(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: const Color(0xff061438),
+              color: AppColors.secondaryBackground,
               border: Border(
                 bottom: BorderSide(
-                  color: const Color(0xff4FB3B7),
+                  color: AppColors.primaryTeal,
                   width: screenHeight * 0.001,
                 ),
               ),
@@ -161,13 +168,13 @@ class QuizCreateSuccessful extends StatelessWidget {
                 SizedBox(
                   height: screenHeight * 0.08,
                   width: screenHeight * 0.08,
-                  child: Image.asset("assets/images/brain_logo.png"),
+                  child: Image.asset(AppConstants.brainLogo),
                 ),
                 SizedBox(width: screenWidth * 0.02),
                 Text(
-                  "QUIZLY",
+                  l10n.appName,
                   style: TextStyle(
-                    color: const Color(0xff62DDE1),
+                    color: AppColors.secondaryTeal,
                     fontSize: screenWidth * 0.085,
                     fontFamily: "DMSerifDisplay",
                   ),
@@ -181,8 +188,8 @@ class QuizCreateSuccessful extends StatelessWidget {
               MaterialPageRoute(builder: (_) => const WrapperTeacherPage()),
             ),
             context,
-            const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
-            "Home",
+            Icon(Icons.home_outlined, color: AppColors.secondaryTeal),
+            l10n.home,
           ),
           listtitle(
             () => Navigator.push(
@@ -192,8 +199,8 @@ class QuizCreateSuccessful extends StatelessWidget {
               ),
             ),
             context,
-            const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
-            "Profile",
+            Icon(Icons.person_outlined, color: AppColors.secondaryTeal),
+            l10n.profile,
           ),
           listtitle(
             () => Navigator.push(
@@ -203,24 +210,24 @@ class QuizCreateSuccessful extends StatelessWidget {
               ),
             ),
             context,
-            const Icon(Icons.list, color: Color(0xff62DDE1)),
-            "My Quizzes",
+            Icon(Icons.list, color: AppColors.secondaryTeal),
+            l10n.myQuizzes,
           ),
           Container(
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: const Color(0xff4FB3B7),
+                  color: AppColors.primaryTeal,
                   width: screenHeight * 0.001,
                 ),
               ),
             ),
             child: ListTile(
-              leading: const Icon(Icons.settings, color: Color(0xff62DDE1)),
+              leading: Icon(Icons.settings, color: AppColors.secondaryTeal),
               title: Text(
-                "Setting",
+                l10n.setting,
                 style: TextStyle(
-                  color: const Color(0xff62DDE1),
+                  color: AppColors.secondaryTeal,
                   fontSize: screenWidth * 0.06,
                 ),
               ),
@@ -252,7 +259,7 @@ class QuizCreateSuccessful extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xff4FB3B7),
+            color: AppColors.primaryTeal,
             width: screenHeight * 0.001,
           ),
         ),
@@ -266,7 +273,7 @@ class QuizCreateSuccessful extends StatelessWidget {
         title: Text(
           txt,
           style: TextStyle(
-            color: const Color(0xff62DDE1),
+            color: AppColors.secondaryTeal,
             fontSize: screenWidth * 0.06,
           ),
         ),

@@ -3,6 +3,8 @@
 // import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 // import 'package:depi_final_project/features/home/manager/history_cubit/history_state.dart';
 // import 'package:flutter/material.dart';
+// import 'package:depi_final_project/core/constants/app_constants.dart';
+
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:depi_final_project/l10n/app_localizations.dart';
@@ -40,7 +42,7 @@
 //     final heightRatio = screenHeight / 844.0;
 
 //     return Scaffold(
-//       backgroundColor: const Color(0xFF000920),
+//       backgroundColor: const AppColors.primaryBackground,
 //       appBar: CustomAppBar(Title: l10n.profile),
 //       body: BlocBuilder<HistoryCubit, HistoryState>(
 //         builder: (context, state) {

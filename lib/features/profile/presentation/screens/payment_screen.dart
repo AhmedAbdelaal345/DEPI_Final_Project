@@ -1,5 +1,7 @@
 // features/profile/presentation/screens/payment_screen.dart
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,7 +40,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF000920),
+      backgroundColor: AppColors.primaryBackground,
       appBar: const CustomAppBar(
         title: "Payment Details",
       ),
@@ -281,7 +283,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1C2B),
+        backgroundColor: AppColors.cardBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         content: Column(
           mainAxisSize: MainAxisSize.min,

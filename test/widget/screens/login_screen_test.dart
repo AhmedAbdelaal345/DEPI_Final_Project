@@ -74,8 +74,14 @@ void main() {
       await tester.pump();
 
       // Verify the TextFormField has obscureText enabled
-      final textFormField = tester.widget<TextFormField>(textField);
-      expect(textFormField.obscureText, isTrue);
+      final innerTextField = find.descendant(
+  of: textField,
+  matching: find.byType(TextField),
+);
+
+final textFieldWidget = tester.widget<TextField>(innerTextField);
+expect(textFieldWidget.obscureText, isTrue);
+
     });
 
     testWidgets('shows validation error for empty email', (WidgetTester tester) async {

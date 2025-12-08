@@ -53,7 +53,7 @@ class _TeacherProfileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFF000920),
+      backgroundColor: AppColors.primaryBackground,
       appBar: CustomAppBar(Title: l10n.profile), // matches student header
       body: BlocConsumer<TeacherProfileCubit, TeacherProfileState>(
         listener: (context, state) {

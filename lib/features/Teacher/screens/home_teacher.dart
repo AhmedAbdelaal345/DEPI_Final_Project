@@ -1,4 +1,5 @@
 // features/Teacher/screens/home_teacher.dart
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/screens/create_new_quiz.dart';
 import 'package:depi_final_project/features/Teacher/screens/performance_report.dart';
@@ -57,7 +58,7 @@ class _HometeacherState extends State<Hometeacher> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xff000920),
+      backgroundColor: AppColors.primaryBackground,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -70,7 +71,7 @@ class _HometeacherState extends State<Hometeacher> {
                 Text(
                   l10n.welcomeBack(name ?? "Teacher"),
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontWeight: FontWeight.w400,
                     fontSize: screenWidth * 0.06,
                   ),
@@ -130,7 +131,7 @@ class _HometeacherState extends State<Hometeacher> {
                           );
                         }
                       },
-                      child: container(context, .2, .4, "Recent\n Quizzes"),
+                      child: container(context, .2, .4, l10n.recentQuizzes),
                     ),
                     GestureDetector(
                       onTap: () async {
@@ -153,7 +154,7 @@ class _HometeacherState extends State<Hometeacher> {
                           );
                         }
                       },
-                      child: container(context, .2, .4, "Performance Report"),
+                      child: container(context, .2, .4, l10n.performanceReport),
                     ),
                   ],
                 ),
@@ -178,16 +179,19 @@ class _HometeacherState extends State<Hometeacher> {
       height: screenHeight * heightFactor,
       width: screenWidth * widthFactor,
       decoration: BoxDecoration(
-  color: Color(0xff1877F2).withOpacity(0.11),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: const Color(0xff4FB3B7), width: 2),
+        color: AppColors.tealWithOpacity,
+        borderRadius: AppBorderRadius.mediumBorderRadius,
+        border: Border.all(
+          color: AppColors.primaryTeal,
+          width: AppDimensions.borderWidth,
+        ),
       ),
       child: Center(
         child: Text(
           txt,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: const Color(0xffFFFFFF),
+            color: AppColors.white,
             fontWeight: FontWeight.w700,
             fontSize: screenWidth * 0.05,
           ),

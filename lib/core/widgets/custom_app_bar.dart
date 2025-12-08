@@ -1,6 +1,6 @@
 // core/widgets/custom_app_bar.dart
 import 'package:depi_final_project/core/constants/color_app.dart';
-import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

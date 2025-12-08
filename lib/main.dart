@@ -20,7 +20,7 @@ import 'package:depi_final_project/features/auth/cubit/auth_state.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/features/home/data/repositories/history_repository.dart';
 import 'package:depi_final_project/core/services/cache_service.dart';
-import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/quiz_page.dart';

@@ -1,5 +1,7 @@
 // features/profile/presentation/widgets/payment_card_preview.dart
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 
 class PaymentCardPreview extends StatelessWidget {
   final String cardNumber;
@@ -20,14 +22,14 @@ class PaymentCardPreview extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF4FB3B7), Color(0xFF2C7A7E)],
+          colors: [AppColors.primaryTeal, Color(0xFF2C7A7E)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF4FB3B7).withValues(alpha: 0.3),
+            color: AppColors.primaryTeal.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

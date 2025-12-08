@@ -5,29 +5,32 @@ import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizSt
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class Myquizzes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context);
+    
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            "My Quizzes",
+            l10n.myQuizzes,
             style: GoogleFonts.irishGrover(
-              fontSize: 28,
+              fontSize: AppFontSizes.xxl,
               fontWeight: FontWeight.w400,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
         ),
         backgroundColor: Colors.transparent,
-        leading: const Image(
-          image: AssetImage('assets/images/brain_logo.png'),
+        leading: Image(
+          image: AssetImage(AppConstants.brainLogo),
         ),
         centerTitle: true,
       ),
@@ -37,7 +40,12 @@ class Myquizzes extends StatelessWidget {
             final quizzes = state.quizList;
             final quizzesid = state.quizzesId;
             if (quizzes.isEmpty) {
-              return Center(child: Text("Not Found Quizzes"));
+              return Center(
+                child: Text(
+                  l10n.noQuestionsAvailable,
+                  style: TextStyle(color: AppColors.white),
+                ),
+              );
             }
 
             return ListView.builder(
@@ -59,9 +67,18 @@ class Myquizzes extends StatelessWidget {
               },
             );
           } else if (state is GetQuizError) {
-            return Center(child: Text("Erorr ${state.message}"));
+            return Center(
+              child: Text(
+                "Error ${state.message}",
+                style: TextStyle(color: AppColors.error),
+              ),
+            );
           }
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primaryTeal,
+            ),
+          );
         },
       ),
     );
@@ -95,14 +112,14 @@ class Myquizzes extends StatelessWidget {
         width: screenWidth * 0.9,
         margin: EdgeInsets.only(top: screenHeight * .02),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: AppBorderRadius.mediumBorderRadius,
           border: Border.all(
-            color: const Color.fromARGB(255, 86, 176, 180),
-            width: 2,
+            color: AppColors.primaryTeal,
+            width: AppDimensions.borderWidth,
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSpacing.md),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -114,27 +131,27 @@ class Myquizzes extends StatelessWidget {
                     txt,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: const Color(0xffFFFFFF),
+                      color: AppColors.white,
                       fontWeight: FontWeight.w700,
                       fontSize: screenWidth * 0.05,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: AppSpacing.xs),
                   Text(
                     "code $quizid",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: const Color(0xffFFFFFF),
+                      color: AppColors.white,
                       fontWeight: FontWeight.w700,
                       fontSize: screenWidth * 0.039,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: AppSpacing.xs),
                   Text(
-                    "Created on ${formattedDate}",
+                    "Created on $formattedDate",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: const Color(0xffFFFFFF),
+                      color: AppColors.white,
                       fontWeight: FontWeight.w400,
                       fontSize: screenWidth * 0.03,
                     ),
@@ -150,14 +167,17 @@ class Myquizzes extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Quiz "$txt" deleted successfully'),
-                        backgroundColor: Colors.green,
+                        backgroundColor: AppColors.success,
                         duration: Duration(seconds: 2),
                         behavior: SnackBarBehavior.floating,
                       ),
                     );
                   }
                 },
-                icon: Icon(Icons.delete, color: Color(0xff47969E)),
+                icon: Icon(
+                  Icons.delete,
+                  color: AppColors.primaryTeal,
+                ),
               ),
             ],
           ),

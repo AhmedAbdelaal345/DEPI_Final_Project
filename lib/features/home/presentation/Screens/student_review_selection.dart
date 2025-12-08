@@ -78,7 +78,7 @@ class _StudentReviewSelectionScreenState
         builder: (context, state) {
           if (state is ReviewAnswersLoading) {
             return Center(
-              child: CircularProgressIndicator(color: const Color(0xFF4FB3B7)),
+              child: CircularProgressIndicator(color: AppColors.primaryTeal),
             );
           }
 

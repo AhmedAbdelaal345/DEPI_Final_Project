@@ -1,14 +1,11 @@
 import 'package:depi_final_project/core/constants/app_constants.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/quiz_details_screen.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
-import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/quiz_card.dart';
 import 'package:depi_final_project/features/review_answers/presentation/widgets/app_drawer_1.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class QuizListScreen extends StatelessWidget {
   final String subject;
@@ -24,39 +21,46 @@ class QuizListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bool isEmpty = quizzes.isEmpty;
 
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.primaryBackground,
       endDrawer: AppDrawer(
         onItemTapped: (index) {
           Navigator.pop(context);
           if (index == 0) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => const WrapperPage(initialIndex: 0)),
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 0),
+              ),
               (Route<dynamic> route) => false,
             );
           } else if (index == 1) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => const WrapperPage(initialIndex: 1)),
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 1),
+              ),
               (Route<dynamic> route) => false,
             );
           } else if (index == 2) {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => const WrapperPage(initialIndex: 3)),
+              MaterialPageRoute(
+                builder: (_) => const WrapperPage(initialIndex: 3),
+              ),
               (Route<dynamic> route) => false,
             );
           }
         },
       ),
       appBar: AppBar(
-        backgroundColor: AppColors.bg,
+        backgroundColor: AppColors.primaryBackground,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.chevron_left, color: Colors.white),
+          icon: Icon(Icons.chevron_left, color: AppColors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: FittedBox(
@@ -64,25 +68,28 @@ class QuizListScreen extends StatelessWidget {
           child: Text(
             subject,
             style: GoogleFonts.irishGrover(
-              fontSize: 28,
+              fontSize: AppFontSizes.xxl,
               fontWeight: FontWeight.w400,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(AppSpacing.md),
         child: Column(
           children: [
-            // Simple header: subject + average text (no icons)
+            // Header with subject and average score
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              padding: EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: AppSpacing.sm,
+              ),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F1220),
-                borderRadius: BorderRadius.circular(12),
+                color: AppColors.cardBackground,
+                borderRadius: AppBorderRadius.mediumBorderRadius,
               ),
               child: Row(
                 children: [
@@ -92,22 +99,27 @@ class QuizListScreen extends StatelessWidget {
                       children: [
                         Text(
                           subject,
-                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: AppFontSizes.md,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
-                          'Average score • $score',
-                          style: TextStyle(color: Colors.white.withOpacity(0.75), fontSize: 13),
+                          '${l10n.averageScore} • $score', // TODO: Add to .arb
+                          style: TextStyle(
+                            color: AppColors.white54,
+                            fontSize: AppFontSizes.sm,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  // kept empty space on purpose — no extra icons
                 ],
               ),
             ),
-
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
 
             // Content list or empty state
             Expanded(
@@ -116,21 +128,30 @@ class QuizListScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.list_alt_outlined, size: 64, color: Colors.white24),
-                          const SizedBox(height: 12),
-                          Text('No quizzes yet for this subject', style: TextStyle(color: Colors.white.withOpacity(0.8))),
+                          Icon(
+                            Icons.list_alt_outlined,
+                            size: 64,
+                            color: AppColors.white.withOpacity(0.24),
+                          ),
+                          SizedBox(height: AppSpacing.sm),
+                          Text(
+                            l10n.noQuizzesYetForSubject, // TODO: Add to .arb
+                            style: TextStyle(
+                              color: AppColors.white54,
+                            ),
+                          ),
                         ],
                       ),
                     )
                   : ListView.separated(
                       itemCount: quizzes.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      separatorBuilder: (_, __) => SizedBox(height: AppSpacing.sm),
                       itemBuilder: (context, index) {
                         final quiz = quizzes[index];
-                        final title = quiz[AppConstants.title] ?? quiz['title'] ?? 'Quiz';
-                        final id = quiz[AppConstants.id] ?? quiz['id'] ?? '0';
+                        final title = quiz[AppConstants.title] ?? 'Quiz';
+                        final id = quiz[AppConstants.id] ?? '0';
                         final date = quiz['date'] ?? '';
-                        final qScore = quiz[AppConstants.score] ?? quiz['score'] ?? '0%';
+                        final qScore = quiz[AppConstants.score] ?? '0%';
 
                         return GestureDetector(
                           onTap: () {
@@ -147,7 +168,7 @@ class QuizListScreen extends StatelessWidget {
                           child: QuizCard(
                             title: title,
                             id: id,
-                            subtitle: "Completed on $date",
+                            subtitle: "${l10n.completedOn} $date",
                             score: qScore,
                           ),
                         );

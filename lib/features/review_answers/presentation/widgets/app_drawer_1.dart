@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/color_app.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
@@ -15,13 +17,13 @@ class AppDrawer extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     return Drawer(
       width: screenWidth*0.6,
-      backgroundColor: const Color(0xff061438), // لون الخلفية للقائمة
+      backgroundColor: AppColors.secondaryBackground, // لون الخلفية للقائمة
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: Color(0xff061438), // يمكنك تغييره إذا أردت لونًا مختلفًا للهيدر
+              color: AppColors.secondaryBackground, // يمكنك تغييره إذا أردت لونًا مختلفًا للهيدر
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +51,7 @@ class AppDrawer extends StatelessWidget {
 
 
 
-          const Divider(color: Color(0xff4FB3B7)),
+          const Divider(color: AppColors.primaryTeal),
           _buildDrawerItem(
             icon: Icons.home_outlined,
             text: l10n.home,
@@ -58,7 +60,7 @@ class AppDrawer extends StatelessWidget {
               onItemTapped(0); // استدعي الدالة بالـ index الصحيح
             },
           ),
-          const Divider(color: Color(0xff4FB3B7)),
+          const Divider(color: AppColors.primaryTeal),
           _buildDrawerItem(
             icon: Icons.person_outline,
             text: l10n.profile,
@@ -67,7 +69,7 @@ class AppDrawer extends StatelessWidget {
               onItemTapped(1);
             },
           ),
-          const Divider(color: Color(0xff4FB3B7)),
+          const Divider(color: AppColors.primaryTeal),
           _buildDrawerItem(
             icon: Icons.history_edu_outlined,
             text: l10n.profile,
@@ -76,7 +78,7 @@ class AppDrawer extends StatelessWidget {
               onItemTapped(2);
             },
           ),
-          const Divider(color: Color(0xff4FB3B7)),
+          const Divider(color: AppColors.primaryTeal),
           _buildDrawerItem(
             icon: Icons.settings_outlined,
             text: l10n.settings,
@@ -94,11 +96,11 @@ class AppDrawer extends StatelessWidget {
   Widget _buildDrawerItem({required IconData icon, required String text, required VoidCallback onTap}) {
     return ListTile(
       minLeadingWidth: 0,
-      leading: Icon(icon, color: Color(0xff4FB3B7), size: 24,),
+      leading: Icon(icon, color: AppColors.primaryTeal, size: 24,),
       title: Text(text, style: GoogleFonts.judson(
         fontSize: 20,
         fontWeight: FontWeight.w400,
-        color: Color(0xff4FB3B7),
+        color: AppColors.primaryTeal,
       ),),
       onTap: onTap,
     );

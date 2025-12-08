@@ -1,7 +1,7 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/color_app.dart';
-import '../../../home/presentation/widgets/app_constants.dart';
 import '../model/review_question.dart';
 
 class AnswerOption extends StatelessWidget {

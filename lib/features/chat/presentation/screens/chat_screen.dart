@@ -125,7 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1C2B),
+      backgroundColor: AppColors.cardBackground,
       appBar: AppBar(
         title:
             isLoadingTeacherName
@@ -134,7 +134,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   'Chat with $teacherName',
                   style: const TextStyle(color: Colors.white),
                 ),
-        backgroundColor: const Color(0xFF000920),
+        backgroundColor: AppColors.primaryBackground,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
@@ -246,7 +246,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: const BoxDecoration(
-        color: Color(0xFF000920),
+        color: AppColors.primaryBackground,
         border: Border(top: BorderSide(color: Color(0xFF2A2D3E), width: 1)),
       ),
       child: SafeArea(

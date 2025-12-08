@@ -48,6 +48,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thisFieldRequired => 'This Field is required';
 
   @override
+  String get pleaseEnterValidInteger => 'Please enter a valid integer';
+
+  @override
+  String get durationMustBePositive => 'Duration must be greater than 0';
+
+  @override
   String get quizCode => 'Quiz Code';
 
   @override
@@ -78,6 +84,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String quizId(Object id) {
     return 'Quiz ID: $id';
   }
+
+  @override
+  String get setting => 'Setting';
 
   @override
   String get onboarding1Title => 'Welcome to QUIZLY !';
@@ -126,7 +135,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get forgotPasswordMessage =>
-      'Don’t worry! Enter your email address and we’ll send you a verification code.';
+      'Don\'t worry! Enter your email address and we\'ll send you a verification code.';
 
   @override
   String get rememberThisDevice => 'Remember this device';
@@ -434,4 +443,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get teacherProfile => 'Teacher Profile';
+
+  @override
+  String get noQuizHistoryYet => 'No quiz history yet';
+
+  @override
+  String get startTakingQuizzesToSeeProgress =>
+      'Start taking quizzes to see your progress!';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String quizzesCount(Object count) {
+    return '$count Quizzes';
+  }
+
+  @override
+  String get noQuizzesYetForSubject => 'No quizzes yet for this subject';
+
+  @override
+  String get completedOn => 'Completed on';
+
+  @override
+  String get userNotAuthenticated => 'User not authenticated';
+
+  @override
+  String get quizDetailsNotFound => 'Quiz details not found';
+
+  @override
+  String get errorLoadingQuizDetails => 'Error loading quiz details';
+
+  @override
+  String get errorDeletingQuizResult => 'Error deleting quiz result';
+
+  @override
+  String get chatWithTeacher => 'Chat with Teacher';
+
+  @override
+  String get unableToOpenChatMissingQuizId =>
+      'Unable to open chat: Missing Quiz ID';
+
+  @override
+  String get unableToOpenChatMissingTeacherId =>
+      'Unable to open chat: Missing Teacher ID';
+
+  @override
+  String get resolveQuiz => 'Resolve Quiz';
+
+  @override
+  String get resolveQuizConfirmation =>
+      'Are you sure you want to resolve this quiz?';
+
+  @override
+  String get yesResolve => 'Yes, Resolve';
+
+  @override
+  String get errorLoggingOut => 'Error logging out';
+
+  @override
+  String get chooseLanguage => 'Choose Language';
+
+  @override
+  String get deleteAccountConfirmation =>
+      'Are you sure you want to delete your account? This action cannot be undone.';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get accountDeletedSuccessfully => 'Account deleted successfully';
+
+  @override
+  String get pleaseLoginAgainToDelete =>
+      'Please login again to delete your account';
+
+  @override
+  String get errorDeletingAccount => 'Error deleting account';
+
+  @override
+  String get error => 'Error';
 }

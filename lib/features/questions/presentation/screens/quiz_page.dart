@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/core/constants/color_app.dart';
-import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/quiz_state.dart';
 import 'package:depi_final_project/features/questions/presentation/screens/result_page.dart';
@@ -467,7 +467,7 @@ class _QuizPageState extends State<QuizPage> {
                         child: Text(
                           l10n.submitQuiz,
                           style: TextStyle(
-                            color: AppColors.hint,
+                            color: AppColors.hintText,
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
                           ),

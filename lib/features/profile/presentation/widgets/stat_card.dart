@@ -1,5 +1,7 @@
 // features/profile/presentation/widgets/stat_card.dart
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:iconify_flutter/iconify_flutter.dart';
 
 class StatCard extends StatelessWidget {
@@ -20,7 +22,7 @@ class StatCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF000920),
+        color: AppColors.primaryBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFF5AC7C7)),
       ),

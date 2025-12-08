@@ -1,7 +1,7 @@
 import 'package:depi_final_project/core/constants/color_app.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'app_constants.dart';
+import 'package:depi_final_project/core/utils/ui_utils.dart';
 
 class TitleBar extends StatelessWidget {
   const TitleBar({super.key, required this.title, this.showLogo = true});

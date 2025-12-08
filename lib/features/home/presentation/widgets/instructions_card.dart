@@ -1,6 +1,7 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'app_constants.dart';
+import 'package:depi_final_project/core/utils/ui_utils.dart';
 
 class InstructionsCard extends StatelessWidget {
   const InstructionsCard({super.key, required this.bullets});

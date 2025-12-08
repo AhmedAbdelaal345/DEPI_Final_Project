@@ -1,5 +1,7 @@
 // lib/features/review_answers/presentation/widgets/navigation_buttons.dart
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import '../../../../core/constants/color_app.dart';
 
 class NavigationButtons extends StatelessWidget {
@@ -27,7 +29,7 @@ class NavigationButtons extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: canGoBack ? const Color(0xff4FB3B7) : const Color(0xff4FB3B7).withOpacity(0.4),
+              color: canGoBack ? AppColors.primaryTeal : AppColors.primaryTeal.withOpacity(0.4),
             ),
             child: Icon(
               Icons.fast_rewind,
@@ -42,7 +44,7 @@ class NavigationButtons extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: canGoForward ? const Color(0xff4FB3B7) : const Color(0xff4FB3B7).withOpacity(0.4),
+              color: canGoForward ? AppColors.primaryTeal : AppColors.primaryTeal.withOpacity(0.4),
             ),
             child: Icon(
               Icons.fast_forward,

@@ -1,5 +1,7 @@
 // features/profile/presentation/widgets/payment_text_field.dart
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:flutter/services.dart';
 
 class PaymentTextField extends StatelessWidget {
@@ -54,7 +56,7 @@ class PaymentTextField extends StatelessWidget {
             prefixIcon: Icon(icon, color: const Color(0xFF5AC7C7)),
             counterText: "",
             filled: true,
-            fillColor: const Color(0xFF1A1C2B),
+            fillColor: AppColors.cardBackground,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xFF5AC7C7)),

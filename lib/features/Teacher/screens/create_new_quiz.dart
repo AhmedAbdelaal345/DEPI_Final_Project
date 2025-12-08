@@ -1,3 +1,4 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizCubit.dart';
 import 'package:depi_final_project/features/Teacher/cubit/createQuizCubit/quizState.dart';
 import 'package:depi_final_project/features/Teacher/screens/quizcreatesuccesfully.dart';
@@ -5,6 +6,7 @@ import 'package:depi_final_project/features/Teacher/screens/wrapper_teacher_scre
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class Createnewquiz extends StatefulWidget {
   final String teacherId;
@@ -42,6 +44,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final cubit = context.read<CreateQuizCubit>();
+    final l10n = AppLocalizations.of(context)!;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (cubit.state.questions.isEmpty) {
@@ -50,20 +53,20 @@ class _CreatenewquizState extends State<Createnewquiz> {
     });
 
     return Scaffold(
-      backgroundColor: const Color(0xff000920),
+      backgroundColor: AppColors.primaryBackground,
       resizeToAvoidBottomInset: true,
       endDrawer: drawer(context),
       appBar: AppBar(
-        backgroundColor: const Color(0xff000920),
+        backgroundColor: AppColors.primaryBackground,
         centerTitle: true,
         title: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            "Create New Quiz",
+            l10n.createNewQuiz,
             style: GoogleFonts.irishGrover(
-              fontSize: 28,
+              fontSize: AppFontSizes.xxl,
               fontWeight: FontWeight.w400,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
         ),
@@ -78,7 +81,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
                   horizontal: screenWidth * 0.05,
                   vertical: screenHeight * 0.01,
                 ),
-                child: containerField(context, quizTitle, "Enter Quiz title"),
+                child: containerField(context, quizTitle, l10n.enterQuizTitle),
               ),
               Expanded(
                 child: BlocBuilder<CreateQuizCubit, CreateQuizState>(
@@ -107,51 +110,51 @@ class _CreatenewquizState extends State<Createnewquiz> {
                             children: [
                               Expanded(
                                 child: ListTile(
-                                  title: const Text(
-                                    "Duration (Min)",
+                                  title: Text(
+                                    l10n.durationInMinutes,
                                     style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
+                                      fontSize: AppFontSizes.lg,
+                                      color: AppColors.white,
                                     ),
                                   ),
                                   subtitle: TextFormField(
                                     controller: durationController,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return "This Field required";
+                                        return l10n.thisFieldRequired;
                                       }
                                       // Check if the value is a valid integer
                                       final intValue = int.tryParse(value.trim());
                                       if (intValue == null) {
-                                        return "Please enter a valid integer";
+                                        return l10n.pleaseEnterValidInteger;
                                       }
                                       // Optional: Check if the value is positive
                                       if (intValue <= 0) {
-                                        return "Duration must be greater than 0";
+                                        return l10n.durationMustBePositive;
                                       }
                                       return null;
                                     },
                                     keyboardType: TextInputType.number,
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(color: AppColors.white),
                                     decoration: InputDecoration(
-                                      hintStyle: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white54,
+                                      hintStyle: TextStyle(
+                                        fontSize: AppFontSizes.lg,
+                                        color: AppColors.white54,
                                       ),
                                       filled: true,
-                                      fillColor: const Color(0xff000920),
+                                      fillColor: AppColors.primaryBackground,
                                       enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                          color: Color(0x1877F21C),
-                                          width: 2,
+                                        borderRadius: AppBorderRadius.mediumBorderRadius,
+                                        borderSide: BorderSide(
+                                          color: AppColors.tealWithOpacity,
+                                          width: AppDimensions.borderWidth,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                          color: Color(0xff1ABC9C),
-                                          width: 2,
+                                        borderRadius: AppBorderRadius.mediumBorderRadius,
+                                        borderSide: BorderSide(
+                                          color: AppColors.lightTeal,
+                                          width: AppDimensions.borderWidth,
                                         ),
                                       ),
                                       contentPadding:
@@ -163,31 +166,31 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 20),
+                              SizedBox(width: AppSpacing.lg),
                               Expanded(
                                 child: ListTile(
-                                  title: const Text(
-                                    "Quiz Code",
+                                  title: Text(
+                                    l10n.quizCode,
                                     style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
+                                      fontSize: AppFontSizes.lg,
+                                      color: AppColors.white,
                                     ),
                                   ),
                                   subtitle: Container(
-                                    height: 60,
+                                    height: AppDimensions.buttonHeight,
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 26,
                                       vertical: 18,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xff455A64),
-                                      borderRadius: BorderRadius.circular(15),
+                                      color: AppColors.grey,
+                                      borderRadius: AppBorderRadius.mediumBorderRadius,
                                     ),
                                     child: Text(
                                       widget.quizId,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        fontSize: AppFontSizes.lg,
+                                        color: AppColors.white,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -196,7 +199,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: AppSpacing.lg),
                           BlocConsumer<CreateQuizCubit, CreateQuizState>(
                             listener: (context, state) {
                               if (state is CreateQuizSaved) {
@@ -224,9 +227,9 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                     screenWidth * 0.9,
                                     screenHeight * 0.06,
                                   ),
-                                  backgroundColor: const Color(0xff4FB3B7),
+                                  backgroundColor: AppColors.primaryTeal,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: AppBorderRadius.largeBorderRadius,
                                   ),
                                 ),
                                 onPressed:
@@ -248,13 +251,13 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                         },
                                 child:
                                     state is CreateQuizLoading
-                                        ? const CircularProgressIndicator(
-                                          color: Color(0xff4FB3B7),
+                                        ? CircularProgressIndicator(
+                                          color: AppColors.primaryTeal,
                                         )
                                         : Text(
-                                          "Create",
+                                          l10n.create,
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            color: AppColors.black,
                                             fontSize: screenWidth * 0.06,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -283,25 +286,29 @@ class _CreatenewquizState extends State<Createnewquiz> {
   ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       height: screenHeight * 0.08,
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
       decoration: BoxDecoration(
-        color: const Color(0xff1A1C2B),
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(screenWidth * 0.03),
-        border: Border.all(color: const Color(0xff4FB3B7), width: 2),
+        border: Border.all(
+          color: AppColors.primaryTeal,
+          width: AppDimensions.borderWidth,
+        ),
       ),
       child: TextFormField(
         controller: controller,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return "This Field required";
+            return l10n.thisFieldRequired;
           }
           return null;
         },
         style: TextStyle(
-          color: Colors.white,
+          color: AppColors.white,
           fontWeight: FontWeight.w700,
           fontSize: screenWidth * 0.038,
         ),
@@ -309,7 +316,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
           border: InputBorder.none,
           hintText: hint,
           hintStyle: TextStyle(
-            color: Colors.white54,
+            color: AppColors.white54,
             fontWeight: FontWeight.w700,
             fontSize: screenWidth * 0.038,
           ),
@@ -328,6 +335,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
   ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
     int selectedIndex = -1;
 
     return StatefulBuilder(
@@ -336,9 +344,12 @@ class _CreatenewquizState extends State<Createnewquiz> {
           padding: EdgeInsets.all(screenWidth * 0.04),
           margin: EdgeInsets.symmetric(vertical: screenHeight * 0.015),
           decoration: BoxDecoration(
-            color: const Color(0xff000920),
+            color: AppColors.primaryBackground,
             borderRadius: BorderRadius.circular(screenWidth * 0.03),
-            border: Border.all(color: const Color(0xff4FB3B7), width: 2),
+            border: Border.all(
+              color: AppColors.primaryTeal,
+              width: AppDimensions.borderWidth,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -348,29 +359,29 @@ class _CreatenewquizState extends State<Createnewquiz> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Question ${index + 1}",
+                    l10n.questionNumber(index + 1),
                     style: TextStyle(
                       fontSize: screenWidth * 0.04,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: AppColors.white,
                     ),
                   ),
                   TextButton(
                     onPressed: () => cubit.addqeustion(),
                     child: Text(
-                      "Add Question",
+                      l10n.addQuestion,
                       style: TextStyle(fontSize: screenWidth * 0.035),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: screenHeight * 0.01),
-              containerField(context, questionController, "Enter Question"),
+              containerField(context, questionController, l10n.enterQuestion),
               SizedBox(height: screenHeight * 0.015),
               Text(
-                "Enter options and select correct answer",
+                l10n.enterOptionsAndSelectCorrect,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: screenWidth * 0.035,
                 ),
               ),
@@ -397,8 +408,8 @@ class _CreatenewquizState extends State<Createnewquiz> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: const Color(0xff4FB3B7),
-                                width: 2,
+                                color: AppColors.primaryTeal,
+                                width: AppDimensions.borderWidth,
                               ),
                             ),
                             child: Center(
@@ -409,7 +420,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
                                   shape: BoxShape.circle,
                                   color:
                                       isSelected
-                                          ? const Color(0xff4FB3B7)
+                                          ? AppColors.primaryTeal
                                           : Colors.transparent,
                                 ),
                               ),
@@ -422,22 +433,22 @@ class _CreatenewquizState extends State<Createnewquiz> {
                             controller: optionControllers[i],
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "This Field required";
+                                return l10n.thisFieldRequired;
                               }
                               return null;
                             },
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.white,
                               fontSize: screenWidth * 0.035,
                             ),
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0xff4FB3B7),
+                                  color: AppColors.primaryTeal,
                                 ),
                               ),
                               border: InputBorder.none,
-                              hintStyle: TextStyle(color: Colors.white54),
+                              hintStyle: TextStyle(color: AppColors.white54),
                             ),
                           ),
                         ),
@@ -456,17 +467,18 @@ class _CreatenewquizState extends State<Createnewquiz> {
   Widget drawer(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return Drawer(
-      backgroundColor: const Color(0xff061438),
+      backgroundColor: AppColors.secondaryBackground,
       child: ListView(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: const Color(0xff061438),
+              color: AppColors.secondaryBackground,
               border: Border(
                 bottom: BorderSide(
-                  color: const Color(0xff4FB3B7),
+                  color: AppColors.primaryTeal,
                   width: screenHeight * 0.001,
                 ),
               ),
@@ -476,13 +488,13 @@ class _CreatenewquizState extends State<Createnewquiz> {
                 SizedBox(
                   height: screenHeight * 0.08,
                   width: screenHeight * 0.08,
-                  child: Image.asset("assets/images/brain_logo.png"),
+                  child: Image.asset(AppConstants.brainLogo),
                 ),
                 SizedBox(width: screenWidth * 0.02),
                 Text(
-                  "QUIZLY",
+                  l10n.appName,
                   style: TextStyle(
-                    color: const Color(0xff62DDE1),
+                    color: AppColors.secondaryTeal,
                     fontSize: screenWidth * 0.085,
                     fontFamily: "DMSerifDisplay",
                   ),
@@ -498,8 +510,8 @@ class _CreatenewquizState extends State<Createnewquiz> {
               ),
             ),
             context,
-            const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
-            "Home",
+            Icon(Icons.home_outlined, color: AppColors.secondaryTeal),
+            l10n.home,
           ),
           listtitle(
             () => Navigator.push(
@@ -509,8 +521,8 @@ class _CreatenewquizState extends State<Createnewquiz> {
               ),
             ),
             context,
-            const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
-            "Profile",
+            Icon(Icons.person_outlined, color: AppColors.secondaryTeal),
+            l10n.profile,
           ),
           listtitle(
             () => Navigator.push(
@@ -520,24 +532,24 @@ class _CreatenewquizState extends State<Createnewquiz> {
               ),
             ),
             context,
-            const Icon(Icons.list, color: Color(0xff62DDE1)),
-            "My Quizzes",
+            Icon(Icons.list, color: AppColors.secondaryTeal),
+            l10n.myQuizzes,
           ),
           Container(
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: const Color(0xff4FB3B7),
+                  color: AppColors.primaryTeal,
                   width: screenHeight * 0.001,
                 ),
               ),
             ),
             child: ListTile(
-              leading: const Icon(Icons.settings, color: Color(0xff62DDE1)),
+              leading: Icon(Icons.settings, color: AppColors.secondaryTeal),
               title: Text(
-                "Setting",
+                l10n.setting,
                 style: TextStyle(
-                  color: const Color(0xff62DDE1),
+                  color: AppColors.secondaryTeal,
                   fontSize: screenWidth * 0.06,
                 ),
               ),
@@ -569,7 +581,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xff4FB3B7),
+            color: AppColors.primaryTeal,
             width: screenHeight * 0.001,
           ),
         ),
@@ -583,7 +595,7 @@ class _CreatenewquizState extends State<Createnewquiz> {
         title: Text(
           txt,
           style: TextStyle(
-            color: const Color(0xff62DDE1),
+            color: AppColors.secondaryTeal,
             fontSize: screenWidth * 0.06,
           ),
         ),

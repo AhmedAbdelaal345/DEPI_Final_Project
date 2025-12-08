@@ -7,7 +7,7 @@ import '../widgets/quiz_info_card.dart';
 import '../widgets/quiz_instructions_card.dart';
 import '../widgets/quiz_journey_start_button.dart';
 import '../widgets/quiz_title_bar.dart';
-import '../../../home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/core/utils/ui_utils.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class BeforeQuizScreen extends StatelessWidget {
@@ -28,7 +28,7 @@ class BeforeQuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.primaryBackground,
       body: SafeArea(
         child: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
           future: _getQuizData(),

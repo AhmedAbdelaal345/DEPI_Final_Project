@@ -1,5 +1,5 @@
 import 'package:depi_final_project/core/constants/app_constants.dart';
-import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class UpdatePage extends StatelessWidget {

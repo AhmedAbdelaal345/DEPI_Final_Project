@@ -170,6 +170,18 @@ abstract class AppLocalizations {
   /// **'This Field is required'**
   String get thisFieldRequired;
 
+  /// No description provided for @pleaseEnterValidInteger.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid integer'**
+  String get pleaseEnterValidInteger;
+
+  /// No description provided for @durationMustBePositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration must be greater than 0'**
+  String get durationMustBePositive;
+
   /// No description provided for @quizCode.
   ///
   /// In en, this message translates to:
@@ -223,6 +235,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quiz ID: {id}'**
   String quizId(Object id);
+
+  /// No description provided for @setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Setting'**
+  String get setting;
 
   /// No description provided for @onboarding1Title.
   ///
@@ -311,7 +329,7 @@ abstract class AppLocalizations {
   /// No description provided for @forgotPasswordMessage.
   ///
   /// In en, this message translates to:
-  /// **'Don’t worry! Enter your email address and we’ll send you a verification code.'**
+  /// **'Don\'t worry! Enter your email address and we\'ll send you a verification code.'**
   String get forgotPasswordMessage;
 
   /// No description provided for @rememberThisDevice.
@@ -901,6 +919,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Teacher Profile'**
   String get teacherProfile;
+
+  /// No description provided for @noQuizHistoryYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No quiz history yet'**
+  String get noQuizHistoryYet;
+
+  /// No description provided for @startTakingQuizzesToSeeProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Start taking quizzes to see your progress!'**
+  String get startTakingQuizzesToSeeProgress;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @quizzesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Quizzes'**
+  String quizzesCount(Object count);
+
+  /// No description provided for @noQuizzesYetForSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'No quizzes yet for this subject'**
+  String get noQuizzesYetForSubject;
+
+  /// No description provided for @completedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed on'**
+  String get completedOn;
+
+  /// No description provided for @userNotAuthenticated.
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated'**
+  String get userNotAuthenticated;
+
+  /// No description provided for @quizDetailsNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz details not found'**
+  String get quizDetailsNotFound;
+
+  /// No description provided for @errorLoadingQuizDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading quiz details'**
+  String get errorLoadingQuizDetails;
+
+  /// No description provided for @errorDeletingQuizResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting quiz result'**
+  String get errorDeletingQuizResult;
+
+  /// No description provided for @chatWithTeacher.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with Teacher'**
+  String get chatWithTeacher;
+
+  /// No description provided for @unableToOpenChatMissingQuizId.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to open chat: Missing Quiz ID'**
+  String get unableToOpenChatMissingQuizId;
+
+  /// No description provided for @unableToOpenChatMissingTeacherId.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to open chat: Missing Teacher ID'**
+  String get unableToOpenChatMissingTeacherId;
+
+  /// No description provided for @resolveQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve Quiz'**
+  String get resolveQuiz;
+
+  /// No description provided for @resolveQuizConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to resolve this quiz?'**
+  String get resolveQuizConfirmation;
+
+  /// No description provided for @yesResolve.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Resolve'**
+  String get yesResolve;
+
+  /// No description provided for @errorLoggingOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Error logging out'**
+  String get errorLoggingOut;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Language'**
+  String get chooseLanguage;
+
+  /// No description provided for @deleteAccountConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account? This action cannot be undone.'**
+  String get deleteAccountConfirmation;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @accountDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get accountDeletedSuccessfully;
+
+  /// No description provided for @pleaseLoginAgainToDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Please login again to delete your account'**
+  String get pleaseLoginAgainToDelete;
+
+  /// No description provided for @errorDeletingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting account'**
+  String get errorDeletingAccount;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
 }
 
 class _AppLocalizationsDelegate

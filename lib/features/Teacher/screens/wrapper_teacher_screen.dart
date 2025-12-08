@@ -6,6 +6,8 @@ import 'package:depi_final_project/features/Teacher/screens/teacher_profile.dart
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,7 +54,7 @@ class _WrapperPageState extends State<WrapperTeacherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: const Color(0xFF1A1C2B),
+      // backgroundColor: AppColors.cardBackground,
       body: SafeArea(
         child: IndexedStack(
           index: _currentIndex,
@@ -76,7 +78,7 @@ class _WrapperPageState extends State<WrapperTeacherPage> {
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
         backgroundColor:  Colors.transparent,
-        color: const Color(0xff4FB3B7),
+        color: AppColors.primaryTeal,
         buttonBackgroundColor: const Color(0xFF5AC7C7),
         height: 65,
         index: _currentIndex,

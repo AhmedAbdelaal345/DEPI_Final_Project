@@ -1,5 +1,5 @@
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
-import 'package:depi_final_project/features/home/presentation/widgets/app_constants.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/home/presentation/widgets/primary_button.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
 import 'package:depi_final_project/features/questions/presentation/model/question_model.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../review_answers/presentation/screens/review_selection_screen.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
+import 'package:depi_final_project/core/utils/ui_utils.dart';
 
 class QuizResult {
   final int totalQuestions;

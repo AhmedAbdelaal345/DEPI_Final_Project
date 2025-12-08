@@ -3,6 +3,8 @@ import 'package:depi_final_project/core/constants/appbar.dart';
 import 'package:depi_final_project/features/home/manager/history_cubit/history_cubit.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:iconify_flutter/icons/icon_park_outline.dart';
@@ -31,7 +33,7 @@ class _ProfileScreenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFF000920),
+      backgroundColor: AppColors.primaryBackground,
       appBar: CustomAppBar(Title: l10n.profile),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
@@ -113,7 +115,7 @@ class _ProfileScreenContent extends StatelessWidget {
                       userEmail: profile.email,
                       profileImageUrl:
                           profile.profileImageUrl ??
-                          "assets/images/brain_logo.png",
+                          AppConstants.brainLogo,
                       isPro: profile.isProActive,
                     ),
                     const SizedBox(height: 24),
@@ -168,7 +170,7 @@ class _ProfileScreenContent extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF2C7A7E), Color(0xFF4FB3B7)],
+          colors: [Color(0xFF2C7A7E), AppColors.primaryTeal],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

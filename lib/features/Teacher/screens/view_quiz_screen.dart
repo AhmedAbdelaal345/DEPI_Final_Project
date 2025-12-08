@@ -1,6 +1,8 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:depi_final_project/features/Teacher/screens/wrapper_teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:depi_final_project/l10n/app_localizations.dart';
 
 class ViewQuizScreen extends StatefulWidget {
   final String title;
@@ -24,11 +26,12 @@ class ViewQuizScreen extends StatefulWidget {
 class _ViewQuizScreenState extends State<ViewQuizScreen> {
   int currentPage = 0;
   final PageController pageController = PageController();
+  
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final currentQuestion = widget.questions[currentPage];
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       endDrawer: drawer(context),
@@ -38,11 +41,11 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
           style: GoogleFonts.irishGrover(
             textStyle: TextStyle(
               fontSize: screenWidth * 0.07,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
         ),
-        backgroundColor: const Color(0xff061438),
+        backgroundColor: AppColors.secondaryBackground,
         elevation: 0,
       ),
       body: SafeArea(
@@ -71,7 +74,6 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                       });
                     },
                     itemBuilder: (context, index) {
-                      final question = widget.questions[index];
                       return containerQuestion(
                         context,
                         index,
@@ -90,37 +92,40 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                 children: [
                   Expanded(
                     child: ListTile(
-                      title: const Text(
-                        "Duration (Min)",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      title: Text(
+                        l10n.durationInMinutes,
+                        style: TextStyle(
+                          fontSize: AppFontSizes.lg,
+                          color: AppColors.white,
+                        ),
                       ),
                       subtitle: TextFormField(
                         readOnly: true,
                         keyboardType: TextInputType.number,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColors.white),
                         decoration: InputDecoration(
                           hintText: widget.duration,
-                          hintStyle: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                          hintStyle: TextStyle(
+                            fontSize: AppFontSizes.lg,
+                            color: AppColors.white,
                           ),
                           filled: true,
-                          fillColor: const Color(0xff000920),
+                          fillColor: AppColors.primaryBackground,
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: Color(0x1877F21C),
-                              width: 2,
+                            borderRadius: AppBorderRadius.mediumBorderRadius,
+                            borderSide: BorderSide(
+                              color: AppColors.tealWithOpacity,
+                              width: AppDimensions.borderWidth,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: Color(0xff1ABC9C),
-                              width: 2,
+                            borderRadius: AppBorderRadius.mediumBorderRadius,
+                            borderSide: BorderSide(
+                              color: AppColors.lightTeal,
+                              width: AppDimensions.borderWidth,
                             ),
                           ),
-                          contentPadding: const EdgeInsets.symmetric(
+                          contentPadding: EdgeInsets.symmetric(
                             horizontal: 10,
                             vertical: 12,
                           ),
@@ -128,28 +133,31 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 15),
+                  SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: ListTile(
-                      title: const Text(
-                        "Quiz Code",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      title: Text(
+                        l10n.quizCode,
+                        style: TextStyle(
+                          fontSize: AppFontSizes.lg,
+                          color: AppColors.white,
+                        ),
                       ),
                       subtitle: Container(
-                        height: 60,
-                        padding: const EdgeInsets.symmetric(
+                        height: AppDimensions.buttonHeight,
+                        padding: EdgeInsets.symmetric(
                           horizontal: 26,
                           vertical: 18,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xff455A64),
-                          borderRadius: BorderRadius.circular(15),
+                          color: AppColors.grey,
+                          borderRadius: AppBorderRadius.mediumBorderRadius,
                         ),
                         child: Text(
                           widget.quizzesId,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                          style: TextStyle(
+                            fontSize: AppFontSizes.lg,
+                            color: AppColors.white,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -167,17 +175,17 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                       fixedSize: Size(screenWidth * 0.4, screenHeight * 0.06),
                       backgroundColor:
                           currentPage == 0
-                              ? Color(0xff8DA2ABA8)
-                              : const Color(0xff4FB3B7),
+                              ? AppColors.grey.withOpacity(0.6)
+                              : AppColors.primaryTeal,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: AppBorderRadius.largeBorderRadius,
                       ),
                     ),
                     onPressed:
                         currentPage > 0
                             ? () {
                               pageController.previousPage(
-                                duration: const Duration(milliseconds: 300),
+                                duration: Duration(milliseconds: 300),
                                 curve: Curves.easeInOut,
                               );
                               setState(() {
@@ -188,7 +196,7 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                     child: Text(
                       "Prev",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.black,
                         fontSize: screenWidth * 0.06,
                         fontWeight: FontWeight.bold,
                       ),
@@ -200,17 +208,17 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                       fixedSize: Size(screenWidth * 0.4, screenHeight * 0.06),
                       backgroundColor:
                           currentPage == widget.questions.length - 1
-                              ? Color(0xff8DA2ABA8)
-                              : const Color(0xff4FB3B7),
+                              ? AppColors.grey.withOpacity(0.6)
+                              : AppColors.primaryTeal,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: AppBorderRadius.largeBorderRadius,
                       ),
                     ),
                     onPressed:
                         currentPage < widget.questions.length - 1
                             ? () {
                               pageController.nextPage(
-                                duration: const Duration(milliseconds: 300),
+                                duration: Duration(milliseconds: 300),
                                 curve: Curves.easeInOut,
                               );
                               setState(() {
@@ -221,7 +229,7 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                     child: Text(
                       "Next",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.black,
                         fontSize: screenWidth * 0.06,
                         fontWeight: FontWeight.bold,
                       ),
@@ -241,24 +249,25 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
     double heightFactor,
     double widthFactor,
     String txt1,
-    String CreatedAt,
+    String createdAt,
   ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    
     return Center(
       child: Container(
         height: screenHeight * heightFactor,
         width: screenWidth * 0.9,
         margin: EdgeInsets.only(bottom: screenHeight * .04),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: AppBorderRadius.mediumBorderRadius,
           border: Border.all(
-            color: const Color.fromARGB(255, 86, 176, 180),
-            width: 2,
+            color: AppColors.primaryTeal,
+            width: AppDimensions.borderWidth,
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppSpacing.md),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -266,16 +275,16 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                 txt1,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: const Color(0xffFFFFFF),
+                  color: AppColors.white,
                   fontWeight: FontWeight.w700,
                   fontSize: screenWidth * 0.05,
                 ),
               ),
               Text(
-                "Created on ${CreatedAt}",
+                "Created on $createdAt",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: const Color(0xffFFFFFF),
+                  color: AppColors.white,
                   fontWeight: FontWeight.w400,
                   fontSize: screenWidth * 0.03,
                 ),
@@ -299,14 +308,17 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
       ),
       margin: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
       decoration: BoxDecoration(
-        color: const Color(0xff1A1C2B),
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(screenWidth * 0.03),
-        border: Border.all(color: const Color(0xff4FB3B7), width: 2),
+        border: Border.all(
+          color: AppColors.primaryTeal,
+          width: AppDimensions.borderWidth,
+        ),
       ),
       child: Text(
         text,
         style: TextStyle(
-          color: Colors.white,
+          color: AppColors.white,
           fontSize: screenWidth * 0.038,
           fontWeight: FontWeight.w700,
         ),
@@ -323,7 +335,7 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
   ) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    int selectedIndex = -1;
+    final l10n = AppLocalizations.of(context)!;
 
     return StatefulBuilder(
       builder: (context, setState) {
@@ -331,9 +343,12 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
           padding: EdgeInsets.all(screenWidth * 0.04),
           margin: EdgeInsets.symmetric(vertical: screenHeight * 0.015),
           decoration: BoxDecoration(
-            color: const Color(0xff000920),
+            color: AppColors.primaryBackground,
             borderRadius: BorderRadius.circular(screenWidth * 0.03),
-            border: Border.all(color: const Color(0xff4FB3B7), width: 2),
+            border: Border.all(
+              color: AppColors.primaryTeal,
+              width: AppDimensions.borderWidth,
+            ),
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -344,11 +359,11 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Question ${index + 1}",
+                      l10n.questionNumber(index + 1),
                       style: TextStyle(
                         fontSize: screenWidth * 0.04,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                   ],
@@ -357,9 +372,9 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                 containerField(context, "Q${index + 1}: $questionText"),
                 SizedBox(height: screenHeight * 0.015),
                 Text(
-                  "Enter options and select correct answer",
+                  l10n.enterOptionsAndSelectCorrect,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: screenWidth * 0.035,
                   ),
                 ),
@@ -367,57 +382,43 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                 Column(
                   children: List.generate(options.length, (i) {
                     bool isCorrect = options[i] == correctAnswer;
-                    bool isSelected = i == selectedIndex;
                     return Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: screenHeight * 0.008,
                       ),
                       child: Row(
                         children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              width: screenWidth * 0.06,
-                              height: screenWidth * 0.06,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: const Color(0xff4FB3B7),
-                                  width: 2,
-                                ),
+                          Container(
+                            width: screenWidth * 0.06,
+                            height: screenWidth * 0.06,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.primaryTeal,
+                                width: AppDimensions.borderWidth,
                               ),
-                              child: Center(
-                                child: Container(
-                                  width: screenWidth * 0.03,
-                                  height: screenWidth * 0.03,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color:
-                                        isCorrect
-                                            ? const Color(0xff4FB3B7)
-                                            : Colors.transparent,
-                                  ),
+                            ),
+                            child: Center(
+                              child: Container(
+                                width: screenWidth * 0.03,
+                                height: screenWidth * 0.03,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                      isCorrect
+                                          ? AppColors.primaryTeal
+                                          : Colors.transparent,
                                 ),
                               ),
                             ),
                           ),
                           SizedBox(width: screenWidth * 0.03),
                           Expanded(
-                            child: TextFormField(
-                              readOnly: true,
+                            child: Text(
+                              options[i],
                               style: TextStyle(
-                                color: Colors.white,
+                                color: AppColors.white,
                                 fontSize: screenWidth * 0.035,
-                              ),
-                              decoration: InputDecoration(
-                                hint: Text(" ${options[i]}"),
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xff4FB3B7),
-                                  ),
-                                ),
-                                border: InputBorder.none,
-                                hintStyle: const TextStyle(color: Colors.white54),
                               ),
                             ),
                           ),
@@ -437,17 +438,18 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
   Widget drawer(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return Drawer(
-      backgroundColor: const Color(0xff061438),
+      backgroundColor: AppColors.secondaryBackground,
       child: ListView(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: const Color(0xff061438),
+              color: AppColors.secondaryBackground,
               border: Border(
                 bottom: BorderSide(
-                  color: const Color(0xff4FB3B7),
+                  color: AppColors.primaryTeal,
                   width: screenHeight * 0.001,
                 ),
               ),
@@ -457,13 +459,13 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
                 SizedBox(
                   height: screenHeight * 0.08,
                   width: screenHeight * 0.08,
-                  child: Image.asset("assets/images/brain_logo.png"),
+                  child: Image.asset(AppConstants.brainLogo),
                 ),
                 SizedBox(width: screenWidth * 0.02),
                 Text(
-                  "QUIZLY",
+                  l10n.appName,
                   style: TextStyle(
-                    color: const Color(0xff62DDE1),
+                    color: AppColors.secondaryTeal,
                     fontSize: screenWidth * 0.085,
                     fontFamily: "DMSerifDisplay",
                   ),
@@ -477,8 +479,8 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
               MaterialPageRoute(builder: (_) => const WrapperTeacherPage()),
             ),
             context,
-            const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
-            "Home",
+            Icon(Icons.home_outlined, color: AppColors.secondaryTeal),
+            l10n.home,
           ),
           listtitle(
             () => Navigator.push(
@@ -488,8 +490,8 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
               ),
             ),
             context,
-            const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
-            "Profile",
+            Icon(Icons.person_outlined, color: AppColors.secondaryTeal),
+            l10n.profile,
           ),
           listtitle(
             () => Navigator.push(
@@ -499,24 +501,24 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
               ),
             ),
             context,
-            const Icon(Icons.list, color: Color(0xff62DDE1)),
-            "My Quizzes",
+            Icon(Icons.list, color: AppColors.secondaryTeal),
+            l10n.myQuizzes,
           ),
           Container(
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: const Color(0xff4FB3B7),
+                  color: AppColors.primaryTeal,
                   width: screenHeight * 0.001,
                 ),
               ),
             ),
             child: ListTile(
-              leading: const Icon(Icons.settings, color: Color(0xff62DDE1)),
+              leading: Icon(Icons.settings, color: AppColors.secondaryTeal),
               title: Text(
-                "Setting",
+                l10n.setting,
                 style: TextStyle(
-                  color: const Color(0xff62DDE1),
+                  color: AppColors.secondaryTeal,
                   fontSize: screenWidth * 0.06,
                 ),
               ),
@@ -548,7 +550,7 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xff4FB3B7),
+            color: AppColors.primaryTeal,
             width: screenHeight * 0.001,
           ),
         ),
@@ -562,7 +564,7 @@ class _ViewQuizScreenState extends State<ViewQuizScreen> {
         title: Text(
           txt,
           style: TextStyle(
-            color: const Color(0xff62DDE1),
+            color: AppColors.secondaryTeal,
             fontSize: screenWidth * 0.06,
           ),
         ),

@@ -1,5 +1,7 @@
 // features/profile/presentation/screens/pro_features_screen.dart
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -12,7 +14,7 @@ class ProFeaturesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF000920),
+      backgroundColor: AppColors.primaryBackground,
       appBar: const CustomAppBar(title: "Upgrade to Pro"),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -60,7 +62,7 @@ class ProFeaturesScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Color(0xFF4FB3B7), Color(0xFF84D9D7)],
+            colors: [AppColors.primaryTeal, Color(0xFF84D9D7)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

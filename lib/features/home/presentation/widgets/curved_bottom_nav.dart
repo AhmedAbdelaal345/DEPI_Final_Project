@@ -1,5 +1,6 @@
+import 'package:depi_final_project/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
-import 'app_constants.dart';
+import 'package:depi_final_project/core/utils/ui_utils.dart';
 
 class CurvedBottomNav extends StatelessWidget {
   const CurvedBottomNav({super.key, required this.currentIndex});

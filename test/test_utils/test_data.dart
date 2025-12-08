@@ -1,5 +1,4 @@
 import 'package:depi_final_project/features/profile/data/models/user_profile_model.dart';
-import 'package:depi_final_project/features/home/data/models/quiz_model.dart';
 
 class TestData {
   // Test User Profiles
@@ -7,28 +6,32 @@ class TestData {
     uid: 'test-student-123',
     fullName: 'Test Student',
     email: 'student@test.com',
-    role: 'student',
-    isProActive: false,
-    createdAt: DateTime(2024, 1, 1),
+    isPro: false,
+    quizzesTaken: 0,
+    subjects: 0,
+    averageScore: 0,
   );
 
   static final proStudentProfile = UserProfileModel(
     uid: 'test-pro-student-123',
     fullName: 'Pro Student',
     email: 'pro@test.com',
-    role: 'student',
-    isProActive: true,
+    isPro: true,
+    proSubscriptionDate: DateTime(2024, 1, 1),
     proExpiryDate: DateTime.now().add(const Duration(days: 30)),
-    createdAt: DateTime(2024, 1, 1),
+    quizzesTaken: 10,
+    subjects: 3,
+    averageScore: 85,
   );
 
   static final teacherProfile = UserProfileModel(
     uid: 'test-teacher-123',
     fullName: 'Test Teacher',
     email: 'teacher@test.com',
-    role: 'teacher',
-    isProActive: false,
-    createdAt: DateTime(2024, 1, 1),
+    isPro: false,
+    quizzesTaken: 0,
+    subjects: 0,
+    averageScore: 0,
   );
 
   // Test Quiz Data
@@ -78,11 +81,7 @@ class TestData {
   ];
 
   // Test Answers
-  static final correctAnswers = {
-    0: 'B',
-    1: 'B',
-    2: 'C',
-  };
+  static final correctAnswers = {0: 'B', 1: 'B', 2: 'C'};
 
   static final mixedAnswers = {
     0: 'B', // Correct
@@ -90,9 +89,5 @@ class TestData {
     2: 'C', // Correct
   };
 
-  static final allWrongAnswers = {
-    0: 'A',
-    1: 'A',
-    2: 'A',
-  };
+  static final allWrongAnswers = {0: 'A', 1: 'A', 2: 'A'};
 }

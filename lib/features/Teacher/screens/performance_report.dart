@@ -6,6 +6,8 @@ import 'package:depi_final_project/features/chat/data/repositories/chat_reposito
 import 'package:depi_final_project/features/chat/presentation/screens/chat_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -180,7 +182,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(top: height * 0.05),
                   child: const CircularProgressIndicator(
-                    color: Color(0xff4FB3B7),
+                    color: AppColors.primaryTeal,
                   ),
                 ),
               )
@@ -219,7 +221,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
         SizedBox(height: width * 0.02),
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xff4FB3B7), width: 2),
+            border: Border.all(color: AppColors.primaryTeal, width: 2),
             borderRadius: BorderRadius.circular(20),
           ),
           child: DropdownButtonHideUnderline(
@@ -230,7 +232,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
               style: TextStyle(color: Colors.white, fontSize: width * 0.045),
               icon: Icon(
                 Icons.keyboard_arrow_down,
-                color: const Color(0xff4FB3B7),
+                color: AppColors.primaryTeal,
                 size: width * 0.06,
               ),
               items: quizzes.map((String title) {
@@ -258,7 +260,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     return Container(
       padding: EdgeInsets.all(width * 0.05),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xff4FB3B7), width: 2),
+        border: Border.all(color: AppColors.primaryTeal, width: 2),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -315,7 +317,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
       height: height * 0.15,
       padding: EdgeInsets.all(width * 0.02),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xff4FB3B7), width: 3),
+        border: Border.all(color: AppColors.primaryTeal, width: 3),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
@@ -343,7 +345,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
   Widget buildStudentsTable(double width, double height) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xff4FB3B7), width: 2),
+        border: Border.all(color: AppColors.primaryTeal, width: 2),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -356,7 +358,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                 topLeft: Radius.circular(14),
                 topRight: Radius.circular(14),
               ),
-              border: Border(bottom: BorderSide(color: Color(0xff4FB3B7))),
+              border: Border(bottom: BorderSide(color: AppColors.primaryTeal)),
             ),
             child: Row(
               children: [
@@ -456,7 +458,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
 
           // Chat button (teacher -> student)
           IconButton(
-            icon: const Icon(Icons.chat_bubble_outline, color: Color(0xff4FB3B7)),
+            icon: const Icon(Icons.chat_bubble_outline, color: AppColors.primaryTeal),
             onPressed: () async {
               if (selectedQuiz == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -511,15 +513,15 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Drawer(
-      backgroundColor: const Color(0xff061438),
+      backgroundColor: AppColors.secondaryBackground,
       child: ListView(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: const Color(0xff061438),
+              color: AppColors.secondaryBackground,
               border: Border(
                 bottom: BorderSide(
-                  color: const Color(0xff4FB3B7),
+                  color: AppColors.primaryTeal,
                   width: screenHeight * 0.001,
                 ),
               ),
@@ -529,13 +531,13 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
                 SizedBox(
                   height: screenHeight * 0.08,
                   width: screenHeight * 0.08,
-                  child: Image.asset("assets/images/brain_logo.png"),
+                  child: Image.asset(AppConstants.brainLogo),
                 ),
                 SizedBox(width: screenWidth * 0.02),
                 Text(
                   "QUIZLY",
                   style: TextStyle(
-                    color: const Color(0xff62DDE1),
+                    color: AppColors.secondaryTeal,
                     fontSize: screenWidth * 0.085,
                     fontFamily: "DMSerifDisplay",
                   ),
@@ -549,7 +551,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
               MaterialPageRoute(builder: (_) => const WrapperTeacherPage()),
             ),
             context,
-            const Icon(Icons.home_outlined, color: Color(0xff62DDE1)),
+            const Icon(Icons.home_outlined, color: AppColors.secondaryTeal),
             "Home",
           ),
           listtitle(
@@ -560,7 +562,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
               ),
             ),
             context,
-            const Icon(Icons.person_outlined, color: Color(0xff62DDE1)),
+            const Icon(Icons.person_outlined, color: AppColors.secondaryTeal),
             "Profile",
           ),
           listtitle(
@@ -571,24 +573,24 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
               ),
             ),
             context,
-            const Icon(Icons.list, color: Color(0xff62DDE1)),
+            const Icon(Icons.list, color: AppColors.secondaryTeal),
             "My Quizzes",
           ),
           Container(
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: const Color(0xff4FB3B7),
+                  color: AppColors.primaryTeal,
                   width: screenHeight * 0.001,
                 ),
               ),
             ),
             child: ListTile(
-              leading: const Icon(Icons.settings, color: Color(0xff62DDE1)),
+              leading: const Icon(Icons.settings, color: AppColors.secondaryTeal),
               title: Text(
                 "Setting",
                 style: TextStyle(
-                  color: const Color(0xff62DDE1),
+                  color: AppColors.secondaryTeal,
                   fontSize: screenWidth * 0.06,
                 ),
               ),
@@ -620,7 +622,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xff4FB3B7),
+            color: AppColors.primaryTeal,
             width: screenHeight * 0.001,
           ),
         ),
@@ -634,7 +636,7 @@ class _PerformanceReportScreenState extends State<PerformanceReportScreen> {
         title: Text(
           txt,
           style: TextStyle(
-            color: const Color(0xff62DDE1),
+            color: AppColors.secondaryTeal,
             fontSize: screenWidth * 0.06,
           ),
         ),

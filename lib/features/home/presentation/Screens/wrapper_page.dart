@@ -6,6 +6,8 @@ import 'package:depi_final_project/features/profile/cubit/profile_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:depi_final_project/core/constants/app_constants.dart';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/home_screen.dart';
 import 'package:depi_final_project/core/widgets/app_drawer.dart';
@@ -119,7 +121,7 @@ class _WrapperPageState extends State<WrapperPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1C2B),
+      backgroundColor: AppColors.cardBackground,
       drawer: AppDrawer(
         onItemTapped: (index) {
           _onPageChanged(index); // غير الصفحة
@@ -133,7 +135,7 @@ class _WrapperPageState extends State<WrapperPage> {
       body: SafeArea(child: _screenForIndex(context, _currentIndex)),
       bottomNavigationBar: CurvedNavigationBar(
         key: _bottomNavigationKey,
-        backgroundColor: const Color(0xFF000920),
+        backgroundColor: AppColors.primaryBackground,
         color: const Color(0xFF47969E),
         buttonBackgroundColor: const Color(0xFF5AC7C7),
         height: 65,
