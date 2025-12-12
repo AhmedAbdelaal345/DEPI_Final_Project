@@ -90,4 +90,4 @@ class TestData {
   };
 
   static final allWrongAnswers = {0: 'A', 1: 'A', 2: 'A'};
-}
+ }

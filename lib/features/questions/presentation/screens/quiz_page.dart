@@ -16,7 +16,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_final_project/l10n/app_localizations.dart';
 import 'package:depi_final_project/features/questions/presentation/cubit/result_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:screen_protector/screen_protector.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key, this.quizId, this.teacherId, this.name});
@@ -42,10 +44,34 @@ class _QuizPageState extends State<QuizPage> {
   String? _quizName;
   bool _isInitialized = false;
   bool _isSubmitting = false;
+  Future<void> _configureWindow() async {
+    try {
+      await ScreenProtector.preventScreenshotOn();
+      await ScreenProtector.protectDataLeakageOn(); // Also prevents screen recording on Android
+      Fluttertoast.showToast(
+        msg: "Screen secured from screenshots",
+        backgroundColor: AppColors.error,
+        gravity: ToastGravity.BOTTOM,
+      );
+    } catch (e) {
+      developer.log('Error enabling screen protection: $e');
+    }
+  }
+
+  Future<void> _disableScreenProtection() async {
+    try {
+      await ScreenProtector.preventScreenshotOff();
+      await ScreenProtector.protectDataLeakageOff();
+    } catch (e) {
+      developer.log('Error disabling screen protection: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    //we make it here to prevent user take screenshot from questions page
+    _configureWindow();
   }
 
   Future<void> _fetchTimeLeft() async {
@@ -374,7 +400,10 @@ class _QuizPageState extends State<QuizPage> {
                     children: [
                       Text(
                         'Q${currentQuestionIndex + 1}/${state.questions.length}',
-                        style: TextStyle(color: ColorApp.whiteColor, fontSize: 18),
+                        style: TextStyle(
+                          color: ColorApp.whiteColor,
+                          fontSize: 18,
+                        ),
                       ),
                       const Spacer(),
                       Container(
@@ -488,6 +517,7 @@ class _QuizPageState extends State<QuizPage> {
   void dispose() {
     _timer?.cancel();
     _timer = null;
+    _disableScreenProtection();
     super.dispose();
   }
 }

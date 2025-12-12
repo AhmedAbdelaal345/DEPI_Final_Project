@@ -12,7 +12,6 @@ import 'package:depi_final_project/features/chat/cubit/chat_cubit.dart';
 import 'package:depi_final_project/features/chat/data/repositories/chat_repository.dart';
 import 'package:depi_final_project/features/profile/cubit/profile_cubit.dart';
 import 'package:depi_final_project/features/profile/data/repositories/profile_repository.dart';
-import 'package:depi_final_project/features/home/presentation/Screens/profile_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/setting_screen.dart';
 import 'package:depi_final_project/features/home/presentation/Screens/wrapper_page.dart';
 import 'package:depi_final_project/features/splash/presentation/screens/splash_screen.dart';
@@ -94,7 +93,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ---- INITIALIZE FIREBASE FIRST (before any FirebaseMessaging.instance calls) ----
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Status bar settings
@@ -106,7 +104,6 @@ void main() async {
     ),
   );
 
-  // Initialize flutter_local_notifications (foreground notifications)
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 

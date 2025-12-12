@@ -46,6 +46,8 @@ dependencies:
     sdk: flutter
   flutter_secure_storage: ^10.0.0-beta.5
   flutter_svg: ^2.0.10+1
+  window_manager: ^0.5.1
+  screen_protector: ^1.4.10  # For mobile screenshot prevention
   fluttertoast: ^9.0.0
   google_fonts: ^6.3.1
   google_sign_in: ^7.2.0
@@ -56,16 +58,16 @@ dependencies:
   package_info_plus: ^9.0.0
   shared_preferences: ^2.2.2
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   bloc_test: ^10.0.0
-  mockito: ^5.4.0
   build_runner: ^2.4.0
-  integration_test:
-    sdk: flutter
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_native_splash: ^2.4.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  mockito: ^5.4.0
 flutter_icons:
   android: true
   ios: true
@@ -73,7 +75,7 @@ flutter_icons:
   adaptive_icon_background: "#0B1426" # optional for Android adaptive icon
   adaptive_icon_foreground: "assets/images/brain_logo.png" # optional
 flutter_native_splash:
-  color: "#0A1628"          # Background color
+  color: "#0A1628" # Background color
   image: assets/images/brain_logo.png
   android: true
   ios: true
