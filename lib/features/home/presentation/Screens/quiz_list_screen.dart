@@ -28,32 +28,13 @@ class QuizListScreen extends StatelessWidget {
       backgroundColor: AppColors.primaryBackground,
       endDrawer: AppDrawer(
         onItemTapped: (index) {
-          Navigator.pop(context);
-          if (index == 0) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const WrapperPage(initialIndex: 0),
-              ),
-              (Route<dynamic> route) => false,
-            );
-          } else if (index == 1) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const WrapperPage(initialIndex: 1),
-              ),
-              (Route<dynamic> route) => false,
-            );
-          } else if (index == 2) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const WrapperPage(initialIndex: 3),
-              ),
-              (Route<dynamic> route) => false,
-            );
-          }
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => WrapperPage(initialIndex: index),
+            ),
+            (Route<dynamic> route) => false,
+          );
         },
       ),
       appBar: AppBar(

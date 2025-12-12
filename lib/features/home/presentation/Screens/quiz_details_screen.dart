@@ -41,7 +41,9 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchAllQuizDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchAllQuizDetails();
+    });
   }
 
   Future<void> _fetchAllQuizDetails() async {
@@ -58,6 +60,13 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
       }
 
       final quizId = widget.quizData[AppConstants.id];
+      if (quizId == null || quizId.isEmpty) {
+        setState(() {
+          errorMessage = l10n.quizDetailsNotFound;
+          isLoading = false;
+        });
+        return;
+      }
 
       final studentDoc = await FirebaseFirestore.instance
           .collection(AppConstants.studentCollection)
@@ -89,6 +98,7 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
       }
 
       if (studentDoc.exists) {
+        if (!mounted) return;
         setState(() {
           studentQuizDetails = studentDoc.data();
           quizMetadata = quizDoc.exists ? quizDoc.data() : null;
@@ -96,12 +106,14 @@ class _QuizDetailsScreenState extends State<QuizDetailsScreen> {
           isLoading = false;
         });
       } else {
+        if (!mounted) return;
         setState(() {
           errorMessage = l10n.quizDetailsNotFound; // Using localization
           isLoading = false;
         });
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         errorMessage = '${l10n.errorLoadingQuizDetails}: $e'; // Using localization
         isLoading = false;

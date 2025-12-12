@@ -1,6 +1,9 @@
+import 'dart:developer' as developer;
+
 import 'package:depi_final_project/features/auth/cubit/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:screen_protector/screen_protector.dart';
 import '../../../home/presentation/Screens/wrapper_page.dart';
 import '../model/review_question.dart';
 import '../cubit/review_answers_cubit.dart';
@@ -27,11 +30,33 @@ class ReviewDetailsScreen extends StatefulWidget {
 
 class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
   int _currentIndex = 0;
+ Future<void> _configureWindow() async {
+    try {
+      await ScreenProtector.preventScreenshotOn();
+      await ScreenProtector.protectDataLeakageOn(); // Also prevents screen recording on Android
+      // Fluttertoast.showToast(
+      //   msg: "Screen secured from screenshots",
+      //   backgroundColor: AppColors.error,
+      //   gravity: ToastGravity.BOTTOM,
+      // );
+    } catch (e) {
+      developer.log('Error enabling screen protection: $e');
+    }
+  }
+
+  Future<void> _disableScreenProtection() async {
+    try {
+      await ScreenProtector.preventScreenshotOff();
+      await ScreenProtector.protectDataLeakageOff();
+    } catch (e) {
+      developer.log('Error disabling screen protection: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-
+_configureWindow();
     // لتأجيل التنفيذ لما بعد أول build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final reviewCubit = context.read<ReviewAnswersCubit>();
@@ -44,6 +69,11 @@ class _ReviewDetailsScreenState extends State<ReviewDetailsScreen> {
         reviewCubit.fetchCorrectAnswers();
       }
     });
+  }
+  @override
+  void dispose() {
+    _disableScreenProtection();
+    super.dispose();
   }
 
   @override

@@ -48,11 +48,11 @@ class _QuizPageState extends State<QuizPage> {
     try {
       await ScreenProtector.preventScreenshotOn();
       await ScreenProtector.protectDataLeakageOn(); // Also prevents screen recording on Android
-      Fluttertoast.showToast(
-        msg: "Screen secured from screenshots",
-        backgroundColor: AppColors.error,
-        gravity: ToastGravity.BOTTOM,
-      );
+      // Fluttertoast.showToast(
+      //   msg: "Screen secured from screenshots",
+      //   backgroundColor: AppColors.error,
+      //   gravity: ToastGravity.BOTTOM,
+      // );
     } catch (e) {
       developer.log('Error enabling screen protection: $e');
     }

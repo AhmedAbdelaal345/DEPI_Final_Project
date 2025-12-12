@@ -72,7 +72,7 @@ class AppDrawer extends StatelessWidget {
           const Divider(color: AppColors.primaryTeal),
           _buildDrawerItem(
             icon: Icons.history_edu_outlined,
-            text: l10n.profile,
+            text: l10n.quizHistory,
             onTap: () {
               Navigator.pop(context);
               onItemTapped(2);
